@@ -744,8 +744,22 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "exceptionElse"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "exceptionElse"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "exceptionElseTr"
+                  },
+                  "named": true,
+                  "value": "exceptionElse"
+                }
+              ]
             },
             {
               "type": "BLANK"
@@ -1786,8 +1800,22 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "exceptionElse"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "exceptionElse"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "exceptionElseTr"
+                  },
+                  "named": true,
+                  "value": "exceptionElse"
+                }
+              ]
             },
             {
               "type": "BLANK"
@@ -9992,6 +10020,13 @@
     [
       "exprIf",
       "statementTr"
+    ],
+    [
+      "exceptionElse",
+      "exceptionElseTr"
+    ],
+    [
+      "exceptionElse"
     ],
     [
       "declProcFwd"

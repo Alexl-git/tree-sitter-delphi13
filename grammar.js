@@ -167,7 +167,9 @@ function statements(trailing) {
 		[rn('_exceptionHandlers'), $ => seq(
 			repeat($.exceptionHandler),
 			choice($.exceptionHandler, tr($,'exceptionHandler')),
-			optional($.exceptionElse)
+			// exceptionElse's body is always followed by `end` (of try), so
+			// allow the trailing-form (last statement may omit `;`).
+			optional(choice($.exceptionElse, tr($,'exceptionElse')))
 		)],
 
 		[rn('try'),         $ => prec(2,seq(
@@ -298,6 +300,11 @@ module.exports = grammar({
 		// At a position where both are valid (e.g. RHS of `x := if ...`), let
 		// tree-sitter GLR-fork and decide via context.
 		[$.exprIf, $.statementTr],
+		// try-except `else` last-statement: trailing form lets last statement
+		// omit `;` since `end` follows; ambiguous with non-trailing repeat
+		// (both reach `_statement` before `end`). GLR resolves at parse time.
+		[$.exceptionElse, $.exceptionElseTr],
+		[$.exceptionElse],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
