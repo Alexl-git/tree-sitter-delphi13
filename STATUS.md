@@ -42,6 +42,7 @@
 | 4 | 2026-05-24 08:30 | 89.26% | 15,239 | pp_block added as `type` choice (IFDEF-as-type for declField/declVar/declArg types) |
 | 5 | 2026-05-24 09:00 | 89.53% | 15,285 | declProp accessor _ref (`read fChilds[0]`) + declSet allows subrange |
 | 6 | 2026-05-24 09:15 | **89.73%** | **15,318** | float regex accepts both `e` and `E` (`1E-3` was unparseable) |
+| 7 | 2026-05-24 09:30 | 89.73% | 15,318 | test/corpus/external-scanner.txt — 5 passing scanner unit tests (no grammar change, regression safety net) |
 
 ## Per-root focus snapshot (iter 6)
 

@@ -224,6 +224,74 @@ iterations 4-6. ORM3 up from 97.28% to 97.71%.
 
 ---
 
+## 2026-05-24 09:30  Iter 7 / Step 3 — External scanner unit tests
+
+**Step 3 of the 3-step autonomous batch (FINAL).** No grammar change —
+just regression safety for the scanner work in iter 1.
+
+Created `test/corpus/external-scanner.txt` with 5 passing tests:
+
+1. **pp_block wraps free text at file root** (eaten as one opaque token,
+   no `pp` siblings)
+2. **pp_block REFUSED when body starts with structural keyword**
+   (`{$IFNDEF X} unit Y; {$ENDIF}` parses as `pp` + `unit` + `pp`)
+3. **pp_block nested IFDEFs match outermost via depth counter**
+4. **char_literal: `^M` in case label** (followed by `:`)
+5. **char_literal: NOT matched for `^TFoo`** (typerefPtr with kHat + identifier)
+
+All 5 pass via `tree-sitter test`. Future scanner changes that regress
+any of these will fail immediately at dev-time rather than silently
+breaking the corpus pass rate.
+
+**Process notes for future contributors**: tree-sitter test format requires
+EXACT tree match including field labels (`name:`, `body:`, etc) and full
+node nesting. Trees were captured by running `tree-sitter parse` on tiny
+example files and pattern-matching the output. Don't write tests by hand
+without first seeing what the parser actually produces.
+
+---
+
+## Batch summary (steps 1-3, iters 4-7)
+
+| iter | what                                             | pass %   | files |
+|------|--------------------------------------------------|----------|-------|
+| 3 (start) | — (entering this session)                   | 89.03%   | 15,200 |
+| 4 | pp_block as `type` choice                            | 89.26%   | 15,239 |
+| 5 | declProp accessor _ref + declSet subrange            | 89.53%   | 15,285 |
+| 6 | float regex `[eE]`                                   | **89.73%** | **15,318** |
+| 7 | scanner unit tests (no grammar change)               | 89.73%   | 15,318 |
+
+**Net session delta**: +0.70pp / +118 files.
+
+**Per-root progression** (start → end):
+
+| Root          | Start  | End    | Files Δ |
+|---------------|--------|--------|---------|
+| ORM3          | 97.28% | 97.71% | +3      |
+| ORM3-SERVER   | 100%   | 100%   | 0       |
+| ORM3-CLIENT   | 96.57% | 97.42% | +2      |
+| ORM3-COMMON   | 96.45% | 96.77% | +1      |
+| DevExpress    | 94.72% | 95.26% | +24     |
+| OmniThread    | 92.13% | 92.51% | +1      |
+| Embarcadero   | 84.31% | 85.03% | +29     |
+| Spring4D     | 84.59% | 85.10% | +4      |
+
+**4 commits landed this batch**:
+- pp_block as type choice (+39)
+- declProp _ref + declSet subrange (+46)
+- float [eE] regex (+33)
+- scanner unit tests (regression safety, no metric change)
+
+**Stuck patterns remaining** (need scanner-level / preprocessor work):
+- IFDEF in expression position (`Foo({$IFDEF X}a{$ELSE}b{$ENDIF}, c)`)
+- IFDEF in argument-default-value position
+- IFDEF inside `else` keyword position (Spring4D HashMap pattern)
+- `{$I X.inc}` macro expansion (WARNINGHEADER and similar JEDI patterns —
+  rare in the curated Delphi-13 corpus, more common when adding JEDI back)
+
+---
+
+
 
 
 
