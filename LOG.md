@@ -291,6 +291,60 @@ without first seeing what the parser actually produces.
 
 ---
 
+## 2026-05-24 10:00-10:45  Iters 8-11 — Delphi 12+ features + declaration hints
+
+Continuation batch focused on closing real-Delphi-13 feature gaps:
+
+### Iter 8 — Inline if-then-else expression (Delphi 12+)
+  X := if Cond then 1 else 0;
+  Result := if Assigned(X) then X.Name else '';
+
+Added `exprIf` rule, registered in `_expr` choice, declared conflict with
+`statementTr` (both start with `if cond then`).
+
+Delta: +4 files (+0.02pp → 89.75%). ORM3 → **98.00%**.
+
+### Iter 9 — Inline-var in for-in loop (Delphi 12+)
+  for var fname in List do ...
+
+foreach iterator field widened: `field('iterator', choice($._expr, $.varAssignDef))`.
+
+Delta: **+29 files** (+0.17pp → 89.92%). ORM3 98.28%, ORM3-CLIENT 98.71%.
+
+### Iter 10 — Declaration hints on const
+  const X = 'foo' deprecated 'use Y instead';
+  const Z = 1 platform;
+
+declConst gained optional hint clause between defaultValue and `;`:
+  choice(seq(kDeprecated, optional(_expr)), kPlatform, kExperimental)
+
+Delta: **+26 files** (+0.15pp → 90.07%). **Crossed 90% real-Delphi-13.**
+Embarcadero +24 (RTL has lots of deprecated const aliases).
+
+### Iter 11 — `end deprecated` on class/interface
+  type IFoo = interface ... end deprecated;
+  type IBar = interface ... end deprecated 'use IBaz';
+
+_declClass appended optional hint after kEnd. Tried qualified-id
+subrange bound (`TFoo.Bar..TFoo.Baz`) — conflicts with typerefDot, reverted.
+
+Delta: **+58 files** (+0.34pp → **90.41%**). Biggest single iteration since
+the first batch's Iter 5 (declProp). Embarcadero +38, Spring4D +7, DevExpress +8.
+
+---
+
+**Cumulative session 2** (iters 4-11 since user returned from break):
+- Overall: 89.03% → **90.41%** (+1.38pp / +235 files)
+- ORM3: 97.28% → 98.28% (+7)
+- ORM3-CLIENT: 96.57% → 98.71% (+5)
+- Embarcadero: 84.31% → 86.57% (+120)
+- DevExpress: 94.72% → 95.44% (+36)
+- Spring4D: 84.59% → 86.24% (+13)
+- ORM3-SERVER: 100% (held)
+
+---
+
+
 
 
 

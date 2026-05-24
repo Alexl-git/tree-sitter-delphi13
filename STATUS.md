@@ -43,19 +43,23 @@
 | 5 | 2026-05-24 09:00 | 89.53% | 15,285 | declProp accessor _ref (`read fChilds[0]`) + declSet allows subrange |
 | 6 | 2026-05-24 09:15 | **89.73%** | **15,318** | float regex accepts both `e` and `E` (`1E-3` was unparseable) |
 | 7 | 2026-05-24 09:30 | 89.73% | 15,318 | test/corpus/external-scanner.txt — 5 passing scanner unit tests (no grammar change, regression safety net) |
+| 8 | 2026-05-24 10:00 | 89.75% | 15,322 | Delphi 12+ inline `if-then-else` expression (`x := if c then a else b`) |
+| 9 | 2026-05-24 10:15 | 89.92% | 15,351 | Delphi 12+ `for var X in Coll` inline-var in for-loop |
+|10 | 2026-05-24 10:30 | 90.07% | 15,377 | declaration hints on const (`= 'x' deprecated 'msg'`) |
+|11 | 2026-05-24 10:45 | **90.41%** | **15,435** | `end deprecated`/`end deprecated 'msg'` on class/interface |
 
-## Per-root focus snapshot (iter 6)
+## Per-root focus snapshot (iter 11)
 
 | Root               |   OK | FAIL | Pass % |
 |--------------------|------|------|--------|
-| **ORM3**           |  683 |   16 | **97.71%** |
-| **Embarcadero**    | 4509 |  794 | 85.03% |
-| **DevExpress**     | 4182 |  208 | **95.26%** |
-| **Spring4D**       |  668 |  117 | 85.10% |
+| **ORM3**           |  687 |   12 | **98.28%** |
+| **Embarcadero**    | 4591 |  712 | **86.57%** |
+| **DevExpress**     | 4190 |  200 | **95.44%** |
+| **Spring4D**       |  677 |  108 | **86.24%** |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
-| ORM3-CLIENT        |  227 |    6 | 97.42% |
-| ORM3-COMMON        |  300 |   10 | 96.77% |
+| ORM3-CLIENT        |  230 |    3 | **98.71%** |
+| ORM3-COMMON        |  301 |    9 | **97.10%** |
 
 ## Remaining failures (~1,915)
 
