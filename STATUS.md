@@ -58,15 +58,17 @@
 |20 | 2026-05-24 14:54 | 91.09% | 15,550 | `#NN` char-literal as subrange bound (ORM3 → **99.86%**; Spring4D held) |
 |21 | 2026-05-24 16:00 | 91.09% | 15,550 | REVERTED — defProc body=`pp_block+end` caused -502 file regression |
 |22 | 2026-05-24 18:00 | **91.25%** | **15,578** | unit-deprecated hint + `&&` identifier prefix (Embarcadero +18, Spring4D +5) |
+|23 | 2026-05-24 18:15 | 91.25% | 15,579 | inline `const NAME=value` in statement body (TableTools → **100%**) |
 
-## Per-root focus snapshot (iter 22)
+## Per-root focus snapshot (iter 23)
 
 | Root               |   OK | FAIL | Pass % |
 |--------------------|------|------|--------|
 | **ORM3**           |  698 |    1 | **99.86%** |
-| **Embarcadero**    | 4652 |  651 | **87.72%** |
-| **DevExpress**     | 4196 |  194 | **95.58%** |
+| **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  715 |   70 | **91.08%** |
+| **Embarcadero**    | 4652 |  651 | **87.72%** |
+| DevExpress         | 4196 |  194 | 95.58% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |

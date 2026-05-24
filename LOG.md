@@ -576,6 +576,31 @@ Delphi.NET operator-name convention: `&&op_Addition`, `&&op_Equality`, etc. — 
 
 ---
 
+## 2026-05-24 18:15  Iter 23 — Inline `const NAME=value` inside statement body
+
+User asked to also track **TableTools** (the user's own ORM tools project) — added to per-root-stats. Baseline: 12/13 = 92.31% with the single fail being `FieldsInfo.Model.pas` at row 1316 (Delphi 12+ inline const inside procedure body):
+
+```pascal
+const MAX_KEY_FIELD_LEN = 68;
+if Length(KeyField) > MAX_KEY_FIELD_LEN then ...
+```
+
+Grammar's `_statement` already supported `seq($.varDef, ...semicolon)` (inline `var x: T;`) and `seq($.assignment, ...semicolon)` (inline `var x := v;`) but lacked an inline-const form.
+
+**Fix**: new `constInline` rule + `seq($.constInline, ...semicolon)` choice in `_statement`.
+
+```js
+constInline: $ => seq(
+    $.kConst, field('name', $.identifier),
+    optional(seq(':', field('type', $.typeref))),
+    '=', field('value', $._expr)
+)
+```
+
+**Result**: TableTools 92.31% → **100%** ✓. Overall +1 file (91.25% held). No regressions.
+
+---
+
 
 
 
