@@ -1,0 +1,85 @@
+==================
+pp_block: IFDEF wrapping free text — eaten as one token
+==================
+
+{$IFDEF LINUX}
+This unit is only supported on Windows!
+{$ENDIF}
+
+unit Foo;
+interface
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+pp_block: REFUSES IFDEF wrapping unit decl (so parser sees the unit)
+==================
+
+{$IFNDEF Q1}
+unit Foo;
+{$ENDIF}
+
+interface
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+char_literal: ^M followed by comma in case label
+==================
+
+unit Foo;
+interface
+implementation
+procedure Bar;
+var Key: Char;
+begin
+  case Key of
+    ^M: WriteLn('CR');
+  end;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit) (moduleName (identifier))
+    (interface (kInterface))
+    (implementation (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (declProcName (identifier))
+          (declProcSemicolon))
+        (declVars (kVar) (declVar (identifier) (typeref (identifier))))
+        (block
+          (kBegin)
+          (case (kCase) (identifier) (kOf)
+            (caseCase
+              (caseLabel (char_literal))
+              (statement (exprCall (identifier) (literalString))))
+            (kEnd))
+          (kEnd))))
+    (kEnd) (kEndDot)))

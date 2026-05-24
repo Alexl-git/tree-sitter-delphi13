@@ -4642,15 +4642,24 @@
       ]
     },
     "literalChar": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "STRING",
-          "value": "#"
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "#"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_literalInt"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
-          "name": "_literalInt"
+          "name": "char_literal"
         }
       ]
     },
@@ -9490,35 +9499,8 @@
       "value": "[\\s\\r\\n\\t]+"
     },
     "pp": {
-      "type": "TOKEN",
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "PATTERN",
-                "value": "\\{\\$if[^}]*\\}",
-                "flags": "i"
-              },
-              {
-                "type": "PATTERN",
-                "value": "([^{]|\\{[^$]|\\{\\$[^iIeE]|\\{\\$[iI][^fF]|\\{\\$[eE][^nN]|\\{\\$[eE][nN][^dD])*"
-              },
-              {
-                "type": "PATTERN",
-                "value": "\\{\\$(end|ifend)[^}]*\\}",
-                "flags": "i"
-              }
-            ]
-          },
-          {
-            "type": "PATTERN",
-            "value": "\\{\\$[^}]*\\}"
-          }
-        ]
-      }
+      "type": "PATTERN",
+      "value": "\\{\\$[^}]*\\}"
     },
     "comment": {
       "type": "TOKEN",

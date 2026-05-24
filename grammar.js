@@ -627,7 +627,13 @@ module.exports = grammar({
 			/'[^']*'/,
 			$.literalChar
 		),
-		literalChar:     $ => seq('#', $._literalInt),
+		// Char literal: `#NN` decimal/hex char code, OR `^X` control char
+		// (the latter handled by the external scanner with proper lookahead
+		// to disambiguate from `^TFoo` pointer-to-type).
+		literalChar:     $ => choice(
+			seq('#', $._literalInt),
+			$.char_literal
+		),
 		literalNumber:   $ => choice($._literalInt, $._literalFloat),
 		_literalInt:     $ => choice(
 			token.immediate(/[-+]?[0-9]+/),
@@ -1311,28 +1317,10 @@ module.exports = grammar({
 		identifier:        $ => /[&]?[a-zA-Z_]+[0-9_a-zA-Z]*/,
 
 	  	_space:            $ => /[\s\r\n\t]+/,
-		// Preprocessor token. Greedily matches an entire `{$IFDEF X} ... {$ENDIF}`
-		// or `{$IFNDEF X} ... {$IFEND}` block before falling back to a single
-		// directive. The block form lets the parser skip over disabled-branch
-		// content that is not valid Pascal (e.g. `{$IFDEF LINUX} message text
-		// {$ENDIF}` patterns in JEDI archive units, or `{$IFDEF X} macro_call
-		// {$ENDIF}` patterns that depend on `{$I X.inc}` preprocessor
-		// definitions).
-		//
-		// Limitations:
-		//   - Single-level only (nested {$IFDEF} pairs match at the FIRST
-		//     {$ENDIF}, leaving the outer {$ENDIF} as a standalone pp token —
-		//     usually harmless because the outer pair is already balanced).
-		//   - Case-insensitive but does not distinguish IFDEF/IFNDEF/IF/IFEND
-		//     — any "{$if*}" opens, any "{$end*}" or "{$ifend*}" closes.
-		pp:                $ => token(choice(
-			seq(
-				/\{\$if[^}]*\}/i,
-				/([^{]|\{[^$]|\{\$[^iIeE]|\{\$[iI][^fF]|\{\$[eE][^nN]|\{\$[eE][nN][^dD])*/,
-				/\{\$(end|ifend)[^}]*\}/i
-			),
-			/\{\$[^}]*\}/
-		)),
+		// Single preprocessor directive. The external scanner (src/scanner.c)
+		// handles multi-line `{$IF*}...{$END*}` blocks via the pp_block token,
+		// refusing blocks that wrap structural decls so they parse normally.
+		pp:                $ => /\{\$[^}]*\}/,
 		comment:           $ => token(choice(
 			seq('//', /.*/),
 			seq('{', /([^$}][^}]*)?/, '}'),

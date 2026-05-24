@@ -5965,7 +5965,17 @@
   {
     "type": "literalChar",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "char_literal",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "literalNumber",
@@ -8033,6 +8043,10 @@
   },
   {
     "type": "asmBody",
+    "named": true
+  },
+  {
+    "type": "char_literal",
     "named": true
   },
   {
