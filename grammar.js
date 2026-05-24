@@ -248,6 +248,8 @@ function statements(trailing) {
 			...semicolon,
 			seq($.assignment, ...semicolon),
 			seq($.varDef, ...semicolon),
+			// Delphi 12+ inline `const NAME [: T] = value;` inside statement body.
+			seq($.constInline, ...semicolon),
 			alias($[rn('statement')], $.statement),
 			alias($[rn('if')],        $.if),
 			alias($[rn('ifElse')],    $.ifElse),
@@ -408,6 +410,14 @@ module.exports = grammar({
 				field('type', $.typeref)
 			))),
 		varDef:          $ => seq($.kVar, delimited1($.identifier), ':', field('type', $.typeref)),
+		// Delphi 12+ inline `const NAME [: T] = value`. Used inside statement
+		// bodies (begin..end blocks). Distinct from `declConst` which lives
+		// in unit/procedure-local `const X = 1;\n Y = 2;` blocks under kConst.
+		constInline:     $ => seq(
+			$.kConst, field('name', $.identifier),
+			optional(seq(':', field('type', $.typeref))),
+			'=', field('value', $._expr)
+		),
 		label:           $ => seq($.identifier, ':'),
 		caseLabel:       $ => seq(delimited1(choice($._expr, $.range)), ':'),
 

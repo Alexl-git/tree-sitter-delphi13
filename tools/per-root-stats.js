@@ -16,9 +16,10 @@ const file = process.argv[2] || 'work/results-baseline.jsonl';
 
 const targets = [
   { name: 'ORM3',        match: /^C:\\Projects\\DB\\ORM3\\/i },
+  { name: 'TableTools',  match: /^C:\\Projects\\TableTools\\/i },
+  { name: 'Spring4D',    match: /^C:\\Projects\\spring4d/i },
   { name: 'Embarcadero', match: /^C:\\Program Files \(x86\)\\Embarcadero\\/i },
   { name: 'DevExpress',  match: /^C:\\Program Files \(x86\)\\DevExpress\\/i },
-  { name: 'Spring4D',    match: /^C:\\Projects\\spring4d/i },
   { name: 'OmniThread',  match: /^C:\\Projects\\OmniThreadLibrary/i },
   { name: 'ORM3-CLIENT', match: /^C:\\Projects\\DB\\ORM3\\CLIENT\\/i },
   { name: 'ORM3-SERVER', match: /^C:\\Projects\\DB\\ORM3\\SERVER\\/i },
