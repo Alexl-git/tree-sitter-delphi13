@@ -501,6 +501,43 @@ Earlier attempt in iter history added the full `$.literalChar` choice (which inc
 
 ---
 
+## 2026-05-24 16:00  Iter 21 — REVERTED — defProc body=`pp_block + end`
+
+**Target**: MStreams.pas r1084 — Delphi's asm-vs-pascal switch pattern:
+
+```
+function BitCount(...): integer;
+{$IF Defined(CPUX86)...}
+asm
+  CMP eax,$00 JNZ @@NotZero ...
+  {$ELSE}
+  {$IF Defined(CPUX64)...}
+  asm
+    ...
+    {$ELSE}
+    var v: cardinal;
+    begin
+      ...
+      else Result := -1;
+  {$IFEND}
+  {$IFEND}
+end; // function
+```
+
+The scanner consumed the whole `{$IF}...{$IFEND}` block correctly. Issue: the closing `end;` sits OUTSIDE the pp_block, so the function body needed to be modeled as `pp_block + kEnd`.
+
+**Hypothesis tested**: `defProc.body = choice(block, asm, seq(pp_block, kEnd))`.
+
+**Result**: -502 files (15550 → 15048; 91.09% → 88.13%). REVERTED.
+
+**Why it broke things**: tree-sitter GLR began greedily consuming IFDEFs as pp_block in too many positions where the original regex-pp wrapper inside `pp(...)` had already handled them. The function-locals-IFDEF pattern (e.g. `function F; {$IFDEF X} var l: integer; {$ENDIF} begin ... end;`) was already covered correctly by regex-pp; my change made pp_block compete with that, and tree-sitter's parser preferred the new path which failed at `begin`.
+
+**BLOCKED** marker: handling IFDEF-wraps-body-internals requires invariants that distinguish "IFDEF wraps body internals + end outside" from "IFDEF wraps just locals, body normal". Likely needs scanner-aware classification, not a parser-level alternative.
+
+**Net for this iteration**: 0 grammar change, 1 documented dead-end.
+
+---
+
 
 
 
