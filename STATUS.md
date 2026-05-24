@@ -46,14 +46,16 @@
 | 8 | 2026-05-24 10:00 | 89.75% | 15,322 | Delphi 12+ inline `if-then-else` expression (`x := if c then a else b`) |
 | 9 | 2026-05-24 10:15 | 89.92% | 15,351 | Delphi 12+ `for var X in Coll` inline-var in for-loop |
 |10 | 2026-05-24 10:30 | 90.07% | 15,377 | declaration hints on const (`= 'x' deprecated 'msg'`) |
-|11 | 2026-05-24 10:45 | **90.41%** | **15,435** | `end deprecated`/`end deprecated 'msg'` on class/interface |
+|11 | 2026-05-24 10:45 | 90.41% | 15,435 | `end deprecated`/`end deprecated 'msg'` on class/interface |
+|12 | 2026-05-24 11:00 | 90.41% | 15,435 | single-quoted string handles `''` escape (no net change — multi-error files) |
+|13 | 2026-05-24 11:15 | **90.43%** | **15,438** | soft keywords (Reference/Message/Name/Index/Read/Write) as typeref alternatives |
 
-## Per-root focus snapshot (iter 11)
+## Per-root focus snapshot (iter 13)
 
 | Root               |   OK | FAIL | Pass % |
 |--------------------|------|------|--------|
 | **ORM3**           |  687 |   12 | **98.28%** |
-| **Embarcadero**    | 4591 |  712 | **86.57%** |
+| **Embarcadero**    | 4594 |  709 | **86.63%** |
 | **DevExpress**     | 4190 |  200 | **95.44%** |
 | **Spring4D**       |  677 |  108 | **86.24%** |
 | OmniThread         |  247 |   20 | 92.51% |

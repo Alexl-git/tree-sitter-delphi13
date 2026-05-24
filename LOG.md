@@ -344,6 +344,35 @@ the first batch's Iter 5 (declProp). Embarcadero +38, Spring4D +7, DevExpress +8
 
 ---
 
+## 2026-05-24 11:00-11:15  Iters 12-13 — Escape quote + soft keywords
+
+### Iter 12 — `''` escape inside single-quoted strings
+Old regex `/'[^']*'/` stopped at the first inner apostrophe so any string
+containing an escaped quote (`'Can''t find'` → `Can't find`) was broken.
+New regex `/'([^']|'')*'/` accepts non-quote chars OR doubled-quote pairs.
+
+Delta: net 0 (files containing escaped quotes were blocked by other issues
+too) but the fix is correct Delphi syntax.
+
+### Iter 13 — Soft keywords in typeref
+OLE Automation wrappers like Access2000.pas use type names that collide
+with Delphi soft keywords:
+
+  function AddOne(const Item: Reference); safecall;
+
+The lexer greedily takes `Reference` as `kReference`; typeref couldn't
+fall back to identifier. Added six soft keywords as alias-identifier
+alternatives in _typeref: Reference, Message, Name, Index, Read, Write.
+
+Delta: +3 files (+0.02pp → 90.43%). Embarcadero +3.
+
+The pattern likely repeats in other identifier positions (arg/field/method
+names). A generalized `_softIdent` helper used everywhere identifier appears
+would unlock more — deferred to a future restructure.
+
+---
+
+
 
 
 
