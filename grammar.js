@@ -846,6 +846,17 @@ module.exports = grammar({
 			field('name', $.identifier),
 			optional(seq(':', field('type', $.type))),
 			field('defaultValue', $.defaultValue),
+			// Declaration hints before the terminating ';':
+			//   const X = 'foo' deprecated 'use Y instead';
+			//   const Y = 1 platform;
+			//   const Z = 'bar' experimental;
+			optional(seq(
+				choice(
+					seq($.kDeprecated, optional($._expr)),
+					$.kPlatform,
+					$.kExperimental,
+				)
+			)),
 			';',
 			repeat($._procAttribute)
 		),
