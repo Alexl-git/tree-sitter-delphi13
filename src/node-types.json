@@ -6844,7 +6844,17 @@
   {
     "type": "literalNumber",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "trailing_dot_float",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "literalString",
@@ -9527,6 +9537,10 @@
   },
   {
     "type": "pp_block",
+    "named": true
+  },
+  {
+    "type": "trailing_dot_float",
     "named": true
   }
 ]

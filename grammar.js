@@ -282,6 +282,9 @@ module.exports = grammar({
 		// one of @A-Z[\]^_ and NOT followed by an identifier character.
 		// Disambiguates from `^TFoo` pointer-to-type.
 		$.char_literal,
+		// Trailing-dot float literal `100.` — disambiguated from `100..N`
+		// (int + range op) by scanner-level lookahead at the char after `.`.
+		$.trailing_dot_float,
 	],
 
 	word: $ => $.identifier,
@@ -702,7 +705,7 @@ module.exports = grammar({
 			seq('#', $._literalInt),
 			$.char_literal
 		),
-		literalNumber:   $ => choice($._literalInt, $._literalFloat),
+		literalNumber:   $ => choice($._literalInt, $._literalFloat, $.trailing_dot_float),
 		_literalInt:     $ => choice(
 			token.immediate(/[-+]?[0-9]+/),
 			token.immediate(/\$[a-fA-F0-9]+/)

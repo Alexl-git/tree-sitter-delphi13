@@ -4878,6 +4878,10 @@
         {
           "type": "SYMBOL",
           "name": "_literalFloat"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "trailing_dot_float"
         }
       ]
     },
@@ -10011,6 +10015,10 @@
     {
       "type": "SYMBOL",
       "name": "char_literal"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "trailing_dot_float"
     }
   ],
   "inline": [],

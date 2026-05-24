@@ -29,6 +29,11 @@
 enum TokenType {
     PP_BLOCK,
     CHAR_LITERAL,
+    TRAILING_DOT_FLOAT,  // `100.` form — float with trailing dot, no fraction.
+                         // Distinct from regex `_literalFloat` because tree-sitter
+                         // regex can't disambiguate `100.` (float) from `100..N`
+                         // (int + range op). The scanner peeks the char after `.`
+                         // and only emits if it isn't `.` or a digit.
 };
 
 void *tree_sitter_delphi13_external_scanner_create(void) { return NULL; }
@@ -231,6 +236,36 @@ static bool scan_char_literal(TSLexer *lexer) {
     return true;
 }
 
+// ---- trailing_dot_float ----
+//
+// `123.` style float literal — digits followed by a dot followed by ANYTHING
+// other than a dot or digit. Disambiguates from `123..N` (int + range op)
+// because tree-sitter regex can't peek-without-consuming.
+//
+// Examples:
+//   100. * x      -> trailing_dot_float
+//   6. ;          -> trailing_dot_float
+//   100..200      -> NOT matched (followed by another `.`)
+//   100.5         -> NOT matched (followed by digit)
+static bool scan_trailing_dot_float(TSLexer *lexer) {
+    // Must start with a digit.
+    if (lexer->lookahead < '0' || lexer->lookahead > '9') return false;
+    // Consume all leading digits.
+    while (lexer->lookahead >= '0' && lexer->lookahead <= '9') {
+        advance(lexer);
+    }
+    // Must see `.`
+    if (lexer->lookahead != '.') return false;
+    advance(lexer);
+    // The next char must NOT be `.` (range) or a digit (regular float `.N`).
+    if (lexer->lookahead == '.') return false;
+    if (lexer->lookahead >= '0' && lexer->lookahead <= '9') return false;
+    // Confirmed trailing-dot float.
+    lexer->result_symbol = TRAILING_DOT_FLOAT;
+    lexer->mark_end(lexer);
+    return true;
+}
+
 // ---- entry point ----
 
 bool tree_sitter_delphi13_external_scanner_scan(
@@ -251,6 +286,10 @@ bool tree_sitter_delphi13_external_scanner_scan(
     }
     if (valid_symbols[CHAR_LITERAL] && lexer->lookahead == '^') {
         if (scan_char_literal(lexer)) return true;
+    }
+    if (valid_symbols[TRAILING_DOT_FLOAT] &&
+        lexer->lookahead >= '0' && lexer->lookahead <= '9') {
+        if (scan_trailing_dot_float(lexer)) return true;
     }
     return false;
 }
