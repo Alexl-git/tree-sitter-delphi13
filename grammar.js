@@ -145,7 +145,10 @@ function statements(trailing) {
 
 		[rn('foreach'),     $ => seq(
 			$.kFor,
-			field('iterator', $._expr), $.kIn,
+			// Iterator can be an existing variable OR a Delphi 12+ inline-var
+			// declaration: `for var fname in List do`. The varAssignDef rule
+			// already handles `var x` and `var x: T`.
+			field('iterator', choice($._expr, $.varAssignDef)), $.kIn,
 			field('iterable', $._expr), $.kDo,
 			field('body', lastStatement($))
 		)],
