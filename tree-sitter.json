@@ -1,0 +1,39 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "delphi13",
+      "camelcase": "Delphi13",
+      "title": "Delphi 13",
+      "scope": "source.delphi",
+      "file-types": [
+        "pas",
+        "dpr",
+        "dpk",
+        "inc"
+      ],
+      "injection-regex": "^(delphi|pascal)$",
+      "class-name": "TreeSitterDelphi13"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Delphi 13",
+    "authors": [
+      {
+        "name": "Alexander Liberov"
+      },
+      {
+        "name": "Philip Zander (upstream tree-sitter-pascal author)"
+      },
+      {
+        "name": "Benjamin Gray / Isopod (upstream tree-sitter-pascal maintainer)"
+      }
+    ]
+  },
+  "bindings": {
+    "c": true,
+    "node": true
+  }
+}

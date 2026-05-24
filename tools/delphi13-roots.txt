@@ -1,0 +1,121 @@
+C:\Program Files (x86)\DevExpress\VCL\ExpressBars\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressCharts\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressCommon Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressCore Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressDataController\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressDBTree Suite\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressDocking Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressEditors Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressEntityMapping Framework\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressExport Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressFlowChart\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressGantt Control\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressGauge Control\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressGDI+ Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressLayout Control\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressLibrary\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressMap Control\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressMemData\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressNavBar\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressOfficeCore Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressOrgChart\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressPageControl\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressPDFViewer\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressPivotGrid\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressPrinting System\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressQuantumGrid\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressQuantumTreeList\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressRichEdit Control\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressScheduler\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressSkins Library\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressSpellChecker\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressSpreadSheet Core\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressSpreadSheet\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressTile Control\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressVerticalGrid\Sources
+C:\Program Files (x86)\DevExpress\VCL\ExpressWizard Control\Sources
+C:\Program Files (x86)\DevExpress\VCL\Library\RS37
+C:\Program Files (x86)\DevExpress\VCL\Library\RS37\Win64
+C:\Program Files (x86)\DevExpress\VCL\XP Theme Manager\Sources
+c:\program files (x86)\embarcadero\studio\37.0\lib\Win32\release
+C:\Program Files (x86)\Embarcadero\Studio\37.0\OCX\Servers
+c:\program files (x86)\embarcadero\studio\37.0\source\data
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\ado
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\cloud
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\datasnap
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\datasnap\connectors
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\datasnap\proxygen
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\dbx
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\dsnap
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\ems
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\firedac
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\rest
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\data\vclctrls
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\databinding\components
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\databinding\engine
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\databinding\graph
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DataExplorer
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\Contrib\DUnitWizard\Source\Common
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\Contrib\DUnitWizard\Source\Common\dunit
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\Contrib\DUnitWizard\Source\DelphiExperts\Common
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\Contrib\DUnitWizard\Source\DelphiExperts\DUnitProject
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\Contrib\DUnitWizard\Source\DelphiExperts\DUnitProject\dunit
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\Contrib\XMLReporting
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\Contrib\XPGen
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\src
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnit\tests
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\DUnitX
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\Experts
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\FlatBox2D
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\fmx
+C:\Program Files (x86)\Embarcadero\Studio\37.0\SOURCE\IBX
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\indy\abstraction
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\indy\implementation
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\Indy10\Core
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\Indy10\Protocols
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\Indy10\System
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\indyimpl
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\Internet
+C:\Program Files (x86)\Embarcadero\Studio\37.0\SOURCE\PROPERTY EDITORS
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\Property Editors\Indy10
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\rtl\common
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\rtl\net
+C:\Program Files (x86)\Embarcadero\Studio\37.0\SOURCE\RTL\SYS
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\rtl\win
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\rtl\win\winrt
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\soap
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\soap\wsdlimporter
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\tethering
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\ToolsAPI
+C:\Program Files (x86)\Embarcadero\Studio\37.0\SOURCE\VCL
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source\Visualizers
+C:\Program Files (x86)\Embarcadero\Studio\37.0\SOURCE\XML
+C:\Program Files (x86)\Neos Eureka S.r.l\EurekaLog 7\Lib\Common\
+C:\Program Files (x86)\Neos Eureka S.r.l\EurekaLog 7\Source\
+C:\Program Files (x86)\Neos Eureka S.r.l\EurekaLog 7\Source\Extras
+C:\Program Files (x86)\Nevrona\Rave11\Source\DataLink
+C:\Program Files (x86)\Nevrona\Rave11\Source\Designer
+C:\Program Files (x86)\Nevrona\Rave11\Source\Rvs
+C:\Program Files (x86)\Nevrona\Rave11\Source\SystemWin
+C:\Program Files (x86)\Nevrona\Rave11\Source\Win
+C:\Program Files (x86)\Raize\CS5\Source\Delphi
+C:\Projects\ArrayHelper
+C:\Projects\DelphiBigNumbers\Source
+C:\Projects\fibplus
+C:\Projects\M2022\SVG\Skins
+C:\Projects\OmniThreadLibrary
+C:\Projects\OmniThreadLibrary\src
+C:\Projects\spring4d\Source
+C:\Projects\spring4d\Source\Base
+C:\Projects\spring4d\Source\Base\Collections
+C:\Projects\spring4d\Source\Base\Logging
+C:\Projects\spring4d\Source\Base\Patches
+C:\Projects\spring4d\Source\Base\Patterns
+C:\Projects\spring4d\Source\Core\Container
+C:\Projects\spring4d\Source\Core\Interception
+C:\Projects\spring4d\Source\Core\Services
+C:\Projects\TbcParser\Distribute
+C:\Projects\TbcParser\Distribute\
+E:\CAD\CAD11\Delphi\Lib
+E:\OneDrive\Documents\Embarcadero\Studio\37.0\CatalogRepository\DOSCommand-13\2025.07\source\
+E:\OneDrive\Documents\Embarcadero\Studio\37.0\CatalogRepository\TulipErrorInline-13\1.0\
