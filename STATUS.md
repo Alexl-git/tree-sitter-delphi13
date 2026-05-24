@@ -39,20 +39,22 @@
 | 1 | 2026-05-24 07:00 | 87.18% | 14,882 | external scanner (pp_block + char_literal), reverts iter-14 greedy regex |
 | 2 | 2026-05-24 07:30 | 88.78% | 15,157 | sealed-typo fix + kFinal + kReadonly + kPlatform-in-delphi |
 | 3 | 2026-05-24 08:00 | 89.03% | 15,200 | declProcRef trailing calling-convention |
-| 4 | 2026-05-24 08:30 | **89.26%** | **15,239** | pp_block added as `type` choice (IFDEF-as-type for declField/declVar/declArg types) |
+| 4 | 2026-05-24 08:30 | 89.26% | 15,239 | pp_block added as `type` choice (IFDEF-as-type for declField/declVar/declArg types) |
+| 5 | 2026-05-24 09:00 | 89.53% | 15,285 | declProp accessor _ref (`read fChilds[0]`) + declSet allows subrange |
+| 6 | 2026-05-24 09:15 | **89.73%** | **15,318** | float regex accepts both `e` and `E` (`1E-3` was unparseable) |
 
-## Per-root focus snapshot (iter 4)
+## Per-root focus snapshot (iter 6)
 
 | Root               |   OK | FAIL | Pass % |
 |--------------------|------|------|--------|
-| **ORM3**           |  680 |   19 | **97.28%** |
-| **Embarcadero**    | 4480 |  823 | 84.48% |
-| **DevExpress**     | 4158 |  232 | **94.72%** |
-| **Spring4D**       |  664 |  121 | 84.59% |
+| **ORM3**           |  683 |   16 | **97.71%** |
+| **Embarcadero**    | 4509 |  794 | 85.03% |
+| **DevExpress**     | 4182 |  208 | **95.26%** |
+| **Spring4D**       |  668 |  117 | 85.10% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
-| ORM3-CLIENT        |  225 |    8 | 96.57% |
-| ORM3-COMMON        |  299 |   11 | 96.45% |
+| ORM3-CLIENT        |  227 |    6 | 97.42% |
+| ORM3-COMMON        |  300 |   10 | 96.77% |
 
 ## Remaining failures (~1,915)
 

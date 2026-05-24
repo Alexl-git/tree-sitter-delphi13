@@ -164,5 +164,66 @@ future scanner refinement.
 
 ---
 
+## 2026-05-24 09:00  Iter 5 — declProp accessor _ref + declSet subrange
+
+**Step 2 of the 3-step autonomous batch.** Two small targeted fixes from
+the priority-root cluster analysis (`tools/priority-clusters.js` added).
+
+### declProp accessor accepts _ref
+Original: `read identifier`, `write identifier`. Real code uses richer forms:
+  property X: T read fChilds[0];      // array element
+  property X: T read Self.FBar;       // qualified
+  property X: T read FBar.Field;      // dotted access
+
+Widened to `$._ref` which covers identifier, qualified-ident (typerefDot),
+typeref-with-tpl-args, and array element access.
+
+### declSet allows subrange
+Original: `kSet kOf type`. But `set of 1..100;` (subrange directly, no
+named ordinal type) is widespread in Embarcadero RTL and component code:
+  FFlags: set of 1..8;
+  TIntSet = set of 1..100;
+
+Added `choice($.type, $.subrangeType)` to declSet.
+
+**Delta**: +46 files (+0.27pp → 89.53%).
+**Per-root**: DevExpress 94.72%→95.08% (+16), Spring4D 84.59%→85.10% (+4).
+
+### Tried (REVERTED): dispid on procAttribute
+Added `kDispId` to the procAttribute keyword+expr choice so dispinterface
+methods like `procedure ItemAdded(...); dispid 1;` would parse. Generate
+required a [$.procAttribute] conflict declaration. After all the plumbing,
++0 files — the affected dispinterface files had multiple other issues
+upstream. Reverted to keep the grammar lean.
+
+---
+
+## 2026-05-24 09:15  Iter 6 — float regex accepts both `e` and `E`
+
+**Bug found** in inherited `_literalFloat` regex:
+  /[-+]?[0-9]*\.?[0-9]+(e[+-]?[0-9]+)?/
+                        ^ lowercase ONLY
+
+Real code uses both:
+  SpeedEpsilon = 1E-3;    (in FMX.Skia.pas, Vcl.Skia.pas)
+  SpeedEpsilon = 1e-3;    (other RTL files)
+
+Fix: `(e[+-]?[0-9]+)?` → `([eE][+-]?[0-9]+)?`. One character change.
+
+**Delta**: +33 files (+0.20pp → 89.73%).
+**Per-root**: ORM3 97.28%→**97.71%** (+3), Embarcadero +12, DevExpress +8.
+
+This is the same class of bug as kSealed (`/seled/`) and kSafecall
+(`/safecal/`) — copy-paste / case-sensitivity slips in token regexes that
+block real codebases on tiny technicalities. Worth a sweep through all
+token regexes whose names contain `e`/`E` chars... but I've already swept
+keyword regexes and found nothing further.
+
+**Step 2 cumulative**: 89.03% → 89.73% (+0.70pp / +118 files) across
+iterations 4-6. ORM3 up from 97.28% to 97.71%.
+
+---
+
+
 
 
