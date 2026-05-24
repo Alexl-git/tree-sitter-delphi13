@@ -949,7 +949,15 @@ module.exports = grammar({
 			optional($._classDeclarations),
 			repeat($.declSection),
 			optional($.declVariant),
-			$.kEnd
+			$.kEnd,
+			// Whole-type declaration hints AFTER `end`:
+			//   type IFoo = interface ... end deprecated;
+			//   type IBar = interface ... end deprecated 'use IBaz';
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
+			))
 		),
 
 		declSection:     $ => seq(
