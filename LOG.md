@@ -95,3 +95,39 @@ just one bad keyword each.
 
 ---
 
+## 2026-05-24 08:00  Iter 3 — declProcRef trailing calling convention + IFDEF-in-expression attempt (reverted)
+
+**Attempted**: add `pp_block` as a valid choice in `_expr` and `type` to handle
+inline IFDEFs like `: {$IFDEF X}System.Classes{$ELSE}Classes{$ENDIF}`.
+
+**Result**: full corpus dropped from 15,157 to 12,928 OK (-2,229 files,
+-14pp). The interaction between `pp_block` being in `extras` (scanner fires
+between tokens) AND being a rule alternative (explicit consumption) caused
+widespread parser confusion. Reverted.
+
+**Insight**: to handle IFDEF-in-expression properly, `pp_block` needs to
+be removed from `extras` AND added as an explicit alternative in MANY rule
+positions (_value, _expr, typeref, declArg type, declField type, etc).
+That's a larger restructuring deferred to a future iteration.
+
+**Tried instead**: trailing calling convention on declProcRef:
+
+  type TCreateHandleFunc = function(DriverName, DeviceName: PChar): HDC stdcall;
+                                                                    ^^^^^^^^
+
+Adding `repeat(field('attribute', $.procAttribute))` triggered a typeref
+conflict (procAttribute keywords like `final`/`platform` overlap with type
+identifiers). Narrowed the choice to a fixed keyword set:
+
+  optional(choice($.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+                  $.kRegister, $.kWinapi, $.kInline))
+
+**Full corpus delta**:
+- 15,157 → 15,200 OK (+43 files, +0.25pp → **89.03%**)
+
+**Keyword sweep**: ran a script over the 147 keyword regex definitions; no
+typos found beyond the ones already fixed.
+
+---
+
+

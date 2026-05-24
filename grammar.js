@@ -849,7 +849,14 @@ module.exports = grammar({
 				':',
 				field('type', $.typeref),
 			)),
-			optional(seq($.kOf, $.kObject))
+			optional(seq($.kOf, $.kObject)),
+			// Trailing calling convention. Restricted to a narrow keyword list
+			// (NOT the full procAttribute, which causes typeref ambiguity)
+			// to keep the grammar deterministic.
+			optional(choice(
+				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+				$.kRegister, $.kWinapi, $.kInline
+			))
 		)),
 
 		declMetaClass:   $ => seq($.kClass, $.kOf, $.typeref),

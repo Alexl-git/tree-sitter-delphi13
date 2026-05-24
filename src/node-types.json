@@ -1826,7 +1826,15 @@
       "required": true,
       "types": [
         {
+          "type": "kCdecl",
+          "named": true
+        },
+        {
           "type": "kFunction",
+          "named": true
+        },
+        {
+          "type": "kInline",
           "named": true
         },
         {
@@ -1838,6 +1846,10 @@
           "named": true
         },
         {
+          "type": "kPascal",
+          "named": true
+        },
+        {
           "type": "kProcedure",
           "named": true
         },
@@ -1846,7 +1858,23 @@
           "named": true
         },
         {
+          "type": "kRegister",
+          "named": true
+        },
+        {
+          "type": "kSafecall",
+          "named": true
+        },
+        {
+          "type": "kStdcall",
+          "named": true
+        },
+        {
           "type": "kTo",
+          "named": true
+        },
+        {
+          "type": "kWinapi",
           "named": true
         }
       ]
@@ -8567,6 +8595,10 @@
   },
   {
     "type": "kWhile",
+    "named": true
+  },
+  {
+    "type": "kWinapi",
     "named": true
   },
   {

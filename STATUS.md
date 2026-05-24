@@ -37,7 +37,8 @@
 |---|-----------|--------|----------|-------|
 | 0 | 2026-05-24 06:00 | 86.42% | 14,752 | scaffold baseline |
 | 1 | 2026-05-24 07:00 | 87.18% | 14,882 | external scanner (pp_block + char_literal), reverts iter-14 greedy regex |
-| 2 | 2026-05-24 07:30 | **88.78%** | **15,157** | sealed-typo fix + kFinal + kReadonly + kPlatform-in-delphi |
+| 2 | 2026-05-24 07:30 | 88.78% | 15,157 | sealed-typo fix + kFinal + kReadonly + kPlatform-in-delphi |
+| 3 | 2026-05-24 08:00 | **89.03%** | **15,200** | declProcRef trailing calling-convention (stdcall/cdecl/safecall/pascal/register/winapi/inline) |
 
 ## Remaining failures (~1,915)
 

@@ -6358,6 +6358,47 @@
                 "type": "BLANK"
               }
             ]
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "kStdcall"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kCdecl"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kSafecall"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kPascal"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kRegister"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kWinapi"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kInline"
+                  }
+                ]
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
