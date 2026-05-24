@@ -538,6 +538,44 @@ The scanner consumed the whole `{$IF}...{$IFEND}` block correctly. Issue: the cl
 
 ---
 
+## 2026-05-24 18:00  Iter 22 — Unit-deprecated hint + `&&` identifier prefix
+
+Pivoted from BLOCKED MStreams asm-vs-pascal pattern. Mined Spring4D failure clusters for tractable fixes.
+
+### Change 1: unit-level deprecated hint
+```
+unit Spring.Services.Logging deprecated 'Use Spring.Logging instead';
+```
+
+The `unit` rule was: `kUnit moduleName ';'`. Extended with optional clause between moduleName and `;`:
+```
+optional(seq($.kDeprecated, optional($._expr)))
+```
+
+Same syntax already supported on declConst (iter 10), declClass (iter 11), and typeref (iter 11). The unit-level form was missed.
+
+### Change 2: `&&` identifier prefix
+```
+class function &&op_Equality<T>(...): T; static;
+class function &&op_Inequality<T>(...): T; static;
+```
+
+Delphi.NET operator-name convention: `&&op_Addition`, `&&op_Equality`, etc. — still used by Spring4D.Mocking. The grammar's identifier regex was `/[&]?[a-zA-Z_]+.../` (single `&` for keyword escape). Widened to `/&{0,2}[a-zA-Z_]+.../`.
+
+**Combined result**: **+28 files** (15550 → 15578; 91.09% → **91.25%**).
+- Embarcadero: 87.38% → **87.72%** (+18 — RTL legacy units use `unit X deprecated` heavily)
+- Spring4D: 90.45% → **91.08%** (+5 — Logging units + Mocking.Matching)
+- ORM3 / DevExpress / OmniThread / others held
+
+**Why the unit-deprecated win was bigger than expected**: hundreds of RTL units have legacy deprecation banners (`unit IBX.IBQuery deprecated 'use FireDAC';`, `unit JPEG deprecated;`, etc.). The grammar was failing on the very first line.
+
+**Next clusters worth chasing** (after combined iter 22):
+- Spring4D's `else{$ELSE}begin{$ENDIF}` (8 files) — BLOCKED, same shape as MStreams
+- Spring4D's RTL-asm-vs-pascal `function F; {$IFDEF CPUX86} asm ...` (7 files across multiple `function`s) — BLOCKED
+- Embarcadero remaining 651 fails — needs cluster analysis to find next tractable pattern
+
+---
+
 
 
 

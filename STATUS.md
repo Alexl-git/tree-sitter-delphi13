@@ -56,21 +56,23 @@
 |18 | 2026-05-24 13:00 | 91.07% | 15,547 | trailing-dot float (`100.`) via external scanner; ORM3 99.43% |
 |19 | 2026-05-24 13:30 | **91.09%** | **15,549** | try-except `else` last stmt may omit `;` (ORM3 99.71%, CLIENT 100%) |
 |20 | 2026-05-24 14:54 | 91.09% | 15,550 | `#NN` char-literal as subrange bound (ORM3 → **99.86%**; Spring4D held) |
+|21 | 2026-05-24 16:00 | 91.09% | 15,550 | REVERTED — defProc body=`pp_block+end` caused -502 file regression |
+|22 | 2026-05-24 18:00 | **91.25%** | **15,578** | unit-deprecated hint + `&&` identifier prefix (Embarcadero +18, Spring4D +5) |
 
-## Per-root focus snapshot (iter 20)
+## Per-root focus snapshot (iter 22)
 
 | Root               |   OK | FAIL | Pass % |
 |--------------------|------|------|--------|
 | **ORM3**           |  698 |    1 | **99.86%** |
-| **Embarcadero**    | 4634 |  669 | **87.38%** |
+| **Embarcadero**    | 4652 |  651 | **87.72%** |
 | **DevExpress**     | 4196 |  194 | **95.58%** |
-| **Spring4D**       |  710 |   75 | **90.45%** |
+| **Spring4D**       |  715 |   70 | **91.08%** |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |
 | **ORM3-COMMON**    |  309 |    1 | **99.68%** |
 
-Remaining ORM3 fail (1): MStreams.pas r1084 `{$IFEND}` chain — scanner depth-counter not handling this dialect cleanly.
+Remaining ORM3 fail (1): MStreams.pas r1084 — IFDEF wraps body internals (asm-vs-pascal switch); same structural shape as Spring4D `else{$ELSE}begin{$ENDIF}`. BLOCKED — needs preprocessor or scanner-classifier.
 
 ## Remaining failures (~1,915)
 
