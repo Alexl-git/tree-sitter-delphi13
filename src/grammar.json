@@ -4067,6 +4067,10 @@
                 {
                   "type": "SYMBOL",
                   "name": "declClass"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "pp_block"
                 }
               ]
             }
@@ -4123,6 +4127,10 @@
                 {
                   "type": "SYMBOL",
                   "name": "declClass"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "pp_block"
                 }
               ]
             },
@@ -4179,6 +4187,10 @@
                       {
                         "type": "SYMBOL",
                         "name": "declClass"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "pp_block"
                       }
                     ]
                   }

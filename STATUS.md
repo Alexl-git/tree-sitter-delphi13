@@ -38,7 +38,21 @@
 | 0 | 2026-05-24 06:00 | 86.42% | 14,752 | scaffold baseline |
 | 1 | 2026-05-24 07:00 | 87.18% | 14,882 | external scanner (pp_block + char_literal), reverts iter-14 greedy regex |
 | 2 | 2026-05-24 07:30 | 88.78% | 15,157 | sealed-typo fix + kFinal + kReadonly + kPlatform-in-delphi |
-| 3 | 2026-05-24 08:00 | **89.03%** | **15,200** | declProcRef trailing calling-convention (stdcall/cdecl/safecall/pascal/register/winapi/inline) |
+| 3 | 2026-05-24 08:00 | 89.03% | 15,200 | declProcRef trailing calling-convention |
+| 4 | 2026-05-24 08:30 | **89.26%** | **15,239** | pp_block added as `type` choice (IFDEF-as-type for declField/declVar/declArg types) |
+
+## Per-root focus snapshot (iter 4)
+
+| Root               |   OK | FAIL | Pass % |
+|--------------------|------|------|--------|
+| **ORM3**           |  680 |   19 | **97.28%** |
+| **Embarcadero**    | 4480 |  823 | 84.48% |
+| **DevExpress**     | 4158 |  232 | **94.72%** |
+| **Spring4D**       |  664 |  121 | 84.59% |
+| OmniThread         |  247 |   20 | 92.51% |
+| **ORM3-SERVER**    |  147 |    0 | **100.00%** |
+| ORM3-CLIENT        |  225 |    8 | 96.57% |
+| ORM3-COMMON        |  299 |   11 | 96.45% |
 
 ## Remaining failures (~1,915)
 

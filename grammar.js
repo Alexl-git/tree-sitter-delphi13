@@ -566,6 +566,11 @@ module.exports = grammar({
 			//   const Errors: array [0..N] of record A: T; B: T; end = (...);
 			//   var X: record I: Integer; end;
 			$.declClass,
+			// IFDEF-as-type: `FStream: {$IFDEF X}System.Classes{$ELSE}Classes{$ENDIF};`
+			// (the external scanner produces pp_block as one opaque token at this
+			// position; the regex pp / pp_block-in-extras paths still handle the
+			// "wraps a whole statement/declaration" case.)
+			$.pp_block,
 		)),
 
 		typeref:         $ => seq(

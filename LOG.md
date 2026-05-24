@@ -130,4 +130,39 @@ typos found beyond the ones already fixed.
 
 ---
 
+## 2026-05-24 08:30  Iter 4 — pp_block as `type` choice (IFDEF-as-type)
+
+**Pattern target**:
+  FStream: {$IFDEF USE_NAMESPACES}System.Classes{$ELSE}Classes{$ENDIF};
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The external scanner already consumes the whole `{$IF*}...{$END*}` block
+as `pp_block`. Adding it as a `type` alternative makes that opaque token
+acceptable wherever a type is expected.
+
+**Grammar diff**: one line added to the `type` choice array.
+
+**Also attempted (REVERTED)**: adding pp_block to `_expr` to handle
+IFDEF-as-value in call args. That dropped the corpus from 15,239 → 12,959
+(-2,280 files): when pp_block is a valid expression, the scanner consumes
+IFDEFs aggressively even between statements where they should be silent
+extras, and the parser then tries to use them as values in wrong contexts.
+Reverted to type-only.
+
+**Per-root snapshot**: ORM3 still 97.28%, ORM3-SERVER still 100%, DevExpress
+94.72% (+0.10), Embarcadero 84.48% (+0.17), OmniThread 92.51% (+0.38).
+Small gains across the board.
+
+**Full corpus**: 15,200 → 15,239 OK (+39 files, +0.23pp → 89.26%).
+
+**Insight for IFDEF-in-expression**: pp_block-as-extras and pp_block-as-rule
+fundamentally conflict. To handle inline IFDEFs in expression position
+properly, the scanner needs to differentiate between "this is a value-shaped
+IFDEF" (peek the body to see if it's expression-like) and "this is a
+statement-shaped IFDEF" (body has `;`s, control flow). Deferred to a
+future scanner refinement.
+
+---
+
+
 

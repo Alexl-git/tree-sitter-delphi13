@@ -7328,6 +7328,10 @@
           "named": true
         },
         {
+          "type": "pp_block",
+          "named": true
+        },
+        {
           "type": "typeref",
           "named": true
         }
