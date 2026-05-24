@@ -5687,8 +5687,24 @@
         "required": false,
         "types": [
           {
+            "type": ",",
+            "named": false
+          },
+          {
             "type": ":",
             "named": false
+          },
+          {
+            "type": "kClass",
+            "named": true
+          },
+          {
+            "type": "kConstructor",
+            "named": true
+          },
+          {
+            "type": "kRecord",
+            "named": true
           },
           {
             "type": "typeref",

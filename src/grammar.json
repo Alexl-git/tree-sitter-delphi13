@@ -4722,7 +4722,23 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "typeref"
+                    "name": "_genericConstraint"
+                  },
+                  {
+                    "type": "REPEAT",
+                    "content": {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": ","
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_genericConstraint"
+                        }
+                      ]
+                    }
                   }
                 ]
               },
@@ -4747,6 +4763,27 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "_genericConstraint": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "typeref"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kClass"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kRecord"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kConstructor"
         }
       ]
     },

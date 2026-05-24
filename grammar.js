@@ -650,8 +650,26 @@ module.exports = grammar({
 		genericArgs:     $ => delimited1($.genericArg, ';'),
 		genericArg:      $ => seq(
 			field('name', delimited1($.identifier)),
-			field('type', optional(seq(':', $.typeref))),
+			// Type constraint: `T: BaseType` or one/more of the special
+			// constraint keywords `class` / `record` / `constructor`, comma-
+			// separated. Examples:
+			//   <T: class>                          must be a class type
+			//   <T: constructor>                    must have parameterless ctor
+			//   <T: class, constructor>             both
+			//   <T: IFoo>                           must implement interface
+			//   <T: IFoo, constructor>              both
+			field('type', optional(seq(
+				':',
+				$._genericConstraint,
+				repeat(seq(',', $._genericConstraint))
+			))),
 			field('defaultValue', optional($.defaultValue))
+		),
+		_genericConstraint: $ => choice(
+			$.typeref,
+			$.kClass,
+			$.kRecord,
+			$.kConstructor,
 		),
 
 		// LITERALS -----------------------------------------------------------
