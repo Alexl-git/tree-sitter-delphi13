@@ -604,6 +604,17 @@ module.exports = grammar({
 			$.identifier, $.typerefDot,
 			...enable_if(templates, $.typerefTpl),
 			$.typerefPtr,
+			// Soft keywords that can also serve as type names. Delphi allows
+			// many context-sensitive keywords to be used as identifiers when
+			// the surrounding syntax requires one. These come up most often
+			// in OleServer / Excel / Word automation wrappers where the OLE
+			// IDL was translated mechanically and used clashing names.
+			alias($.kReference, $.identifier),
+			alias($.kMessage,   $.identifier),
+			alias($.kName,      $.identifier),
+			alias($.kIndex,     $.identifier),
+			alias($.kRead,      $.identifier),
+			alias($.kWrite,     $.identifier),
 		),
 
 		typerefDot:      $ => op.infix(1,$._typeref, $.kDot, $._typeref),
