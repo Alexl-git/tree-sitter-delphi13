@@ -2645,8 +2645,57 @@
         {
           "type": "SYMBOL",
           "name": "exprUnary"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exprIf"
         }
       ]
+    },
+    "exprIf": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "kIf"
+          },
+          {
+            "type": "FIELD",
+            "name": "condition",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_expr"
+            }
+          },
+          {
+            "type": "SYMBOL",
+            "name": "kThen"
+          },
+          {
+            "type": "FIELD",
+            "name": "then",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_expr"
+            }
+          },
+          {
+            "type": "SYMBOL",
+            "name": "kElse"
+          },
+          {
+            "type": "FIELD",
+            "name": "else",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_expr"
+            }
+          }
+        ]
+      }
     },
     "_ref": {
       "type": "CHOICE",
@@ -9651,6 +9700,10 @@
     [
       "type",
       "declType"
+    ],
+    [
+      "exprIf",
+      "statementTr"
     ],
     [
       "declProcFwd"

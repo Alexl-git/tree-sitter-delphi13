@@ -281,6 +281,10 @@ module.exports = grammar({
 		// type-declaration form (`type Foo = record ... end;`). Both reach
 		// declClass but at different parser states.
 		[$.type, $.declType],
+		// Inline if-expression vs if-statement: both start with `if cond then`.
+		// At a position where both are valid (e.g. RHS of `x := if ...`), let
+		// tree-sitter GLR-fork and decide via context.
+		[$.exprIf, $.statementTr],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -412,8 +416,22 @@ module.exports = grammar({
 		// EXPRESSIONS ---------------------------------------------------------
 
 		_expr:           $ => choice(
-			$._ref, $.exprBinary, $.exprUnary
+			$._ref, $.exprBinary, $.exprUnary,
+			// Delphi 12+ inline if-then-else expression:
+			//   X := if Cond then 1 else 0;
+			//   Result := (if Assigned(X) then X.Name else '');
+			$.exprIf,
 		),
+
+		// Inline if-expression: `if <cond> then <a> else <b>`. Distinct from
+		// the if-then-else STATEMENT (rn('ifElse')) — this one returns a value.
+		// Right-associative + lower precedence than binary operators so that
+		// `a + if c then x else y` groups as `a + (if c then x else y)`.
+		exprIf:          $ => prec.right(0, seq(
+			$.kIf, field('condition', $._expr),
+			$.kThen, field('then', $._expr),
+			$.kElse, field('else', $._expr),
+		)),
 
 		_ref:            $ => choice(
 			...enable_if(templates && fpc,
@@ -646,6 +664,9 @@ module.exports = grammar({
 		),
 		// Float: optional sign, digits with optional decimal portion, optional
 		// scientific exponent. Exponent letter is `e` OR `E` (case-insensitive).
+		// NOTE: trailing-dot form (`100.`) is intentionally NOT supported here
+		// because it conflicts with the `..` range operator (e.g. `array [0..N]`
+		// would be lex-greedy-matched as `0.` float + `.N` and break the array).
 		_literalFloat:   $ => prec(10, /[-+]?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/),
 
 		range:           $ => seq(
