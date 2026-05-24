@@ -1,5 +1,5 @@
 ==================
-pp_block: IFDEF wrapping free text — eaten as one token
+pp_block: IFDEF wraps free text at file root (eaten as one token)
 ==================
 
 {$IFDEF LINUX}
@@ -14,6 +14,7 @@ end.
 ---
 
 (root
+  (pp_block)
   (unit
     (kUnit)
     (moduleName (identifier))
@@ -23,10 +24,10 @@ end.
     (kEndDot)))
 
 ==================
-pp_block: REFUSES IFDEF wrapping unit decl (so parser sees the unit)
+pp_block: REFUSED when body starts with structural keyword
 ==================
 
-{$IFNDEF Q1}
+{$IFNDEF QSOMETHING}
 unit Foo;
 {$ENDIF}
 
@@ -37,6 +38,35 @@ end.
 ---
 
 (root
+  (pp)
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (pp)
+    (interface (kInterface))
+    (implementation (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+pp_block: nested IFDEFs match outermost {$END} (depth counter)
+==================
+
+{$IFDEF A}
+foo
+{$IFDEF B}
+bar
+{$ENDIF}
+baz
+{$ENDIF}
+
+unit X;
+interface implementation end.
+
+---
+
+(root
+  (pp_block)
   (unit
     (kUnit)
     (moduleName (identifier))
@@ -46,10 +76,10 @@ end.
     (kEndDot)))
 
 ==================
-char_literal: ^M followed by comma in case label
+char_literal: ^M in case label (followed by ':')
 ==================
 
-unit Foo;
+unit X;
 interface
 implementation
 procedure Bar;
@@ -65,21 +95,67 @@ end.
 
 (root
   (unit
-    (kUnit) (moduleName (identifier))
+    (kUnit)
+    (moduleName (identifier))
     (interface (kInterface))
     (implementation (kImplementation)
       (defProc
-        (declProc
+        header: (declProc
           (kProcedure)
-          (declProcName (identifier))
-          (declProcSemicolon))
-        (declVars (kVar) (declVar (identifier) (typeref (identifier))))
-        (block
+          name: (identifier))
+        local: (declVars
+          (kVar)
+          (declVar
+            name: (identifier)
+            type: (type (typeref (identifier)))))
+        body: (block
           (kBegin)
-          (case (kCase) (identifier) (kOf)
+          (case
+            (kCase)
+            (identifier)
+            (kOf)
             (caseCase
-              (caseLabel (char_literal))
-              (statement (exprCall (identifier) (literalString))))
+              label: (caseLabel
+                (literalString
+                  (literalChar
+                    (char_literal))))
+              body: (statement
+                (exprCall
+                  entity: (identifier)
+                  args: (exprArgs (literalString)))))
             (kEnd))
           (kEnd))))
-    (kEnd) (kEndDot)))
+    (kEnd)
+    (kEndDot)))
+
+==================
+char_literal: NOT matched for ^TFoo (pointer-to-type case)
+==================
+
+unit X;
+interface
+type PFoo = ^TFoo;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          name: (identifier)
+          (kEq)
+          type: (type
+            (typeref
+              (typerefPtr
+                operator: (kHat)
+                operand: (identifier)))))))
+    (implementation (kImplementation))
+    (kEnd)
+    (kEndDot)))
