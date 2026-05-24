@@ -48,19 +48,22 @@
 |10 | 2026-05-24 10:30 | 90.07% | 15,377 | declaration hints on const (`= 'x' deprecated 'msg'`) |
 |11 | 2026-05-24 10:45 | 90.41% | 15,435 | `end deprecated`/`end deprecated 'msg'` on class/interface |
 |12 | 2026-05-24 11:00 | 90.41% | 15,435 | single-quoted string handles `''` escape (no net change — multi-error files) |
-|13 | 2026-05-24 11:15 | **90.43%** | **15,438** | soft keywords (Reference/Message/Name/Index/Read/Write) as typeref alternatives |
+|13 | 2026-05-24 11:15 | 90.43% | 15,438 | soft keywords (Reference/Message/Name/Index/Read/Write) as typeref alternatives |
+|14 | 2026-05-24 11:30 | 90.45% | 15,441 | caseCase allows Pascal label between caseLabel and body (Spring4D state machines) |
+|15 | 2026-05-24 11:45 | 90.59% | 15,466 | more procAttribute keywords (export/varargs/winapi/interrupt) |
+|16 | 2026-05-24 12:00 | **91.02%** | **15,539** | generic-type constraints `<T: class, constructor>` (huge Spring4D win) |
 
-## Per-root focus snapshot (iter 13)
+## Per-root focus snapshot (iter 16)
 
 | Root               |   OK | FAIL | Pass % |
 |--------------------|------|------|--------|
-| **ORM3**           |  687 |   12 | **98.28%** |
-| **Embarcadero**    | 4594 |  709 | **86.63%** |
-| **DevExpress**     | 4190 |  200 | **95.44%** |
-| **Spring4D**       |  677 |  108 | **86.24%** |
+| **ORM3**           |  688 |   11 | **98.43%** |
+| **Embarcadero**    | 4634 |  669 | **87.38%** |
+| **DevExpress**     | 4198 |  192 | **95.63%** |
+| **Spring4D**       |  710 |   75 | **90.45%** |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
-| ORM3-CLIENT        |  230 |    3 | **98.71%** |
+| ORM3-CLIENT        |  231 |    2 | **99.14%** |
 | ORM3-COMMON        |  301 |    9 | **97.10%** |
 
 ## Remaining failures (~1,915)

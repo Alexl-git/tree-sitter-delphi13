@@ -372,6 +372,72 @@ would unlock more — deferred to a future restructure.
 
 ---
 
+## 2026-05-24 11:30-12:00  Iters 14-16 — case-label-Pascal-label + procAttrs + generic constraints
+
+### Iter 14 — caseCase Pascal-label between caseLabel and body
+Spring4D state machines use Pascal labels as goto targets inside case
+clauses:
+  STATE_RUNNING:
+  _STATE_RUNNING:                  // pascal label
+    begin if Done then goto _STATE_RUNNING; end;
+
+Added `field('jumpLabel', optional($.label))` between caseLabel and body.
+
+Also tried (REVERTED -12): adding `type` (and broader: var/const/function/
+record/class) to the scanner's refuse-list. The Embarcadero pattern
+`{$IFDEF X}type {$ENDIF}DWord` would benefit but legit uses elsewhere
+broke. Net regression.
+
+Delta: +3 files (+0.02pp → 90.45%). Spring4D +1, Embarcadero +2.
+
+### Iter 15 — more procAttribute keywords
+procAttribute was missing: kExport (legacy DLL export), kVarargs (cdecl
+variadic), kWinapi (calling convention alias), kInterrupt (legacy ISR).
+kForward intentionally NOT added — conflicts with declProcFwd's own
+`; forward;` handling.
+
+Delta: +25 files (+0.14pp → 90.59%). ORM3 +1 (sndkey32.pas), ORM3-CLIENT
++1, Embarcadero +14.
+
+### Iter 16 — Generic-type constraints `<T: class, constructor>`
+Spring4D's IoC container uses constraint syntax heavily:
+  class function GetInstance<T: class, constructor>: T; static;
+  procedure AddExtension<T: IContainerExtension, constructor>; overload;
+
+genericArg was: `name [: typeref] [= default]`
+                          ^ single typeref only
+
+New: `name [: constraint (, constraint)*] [= default]`
+where constraint = typeref | kClass | kRecord | kConstructor
+
+Delta: **+73 files** (+0.43pp → **91.02%**). Spring4D 86.37% → **90.45%**
+(+32, Spring's most-used feature). Embarcadero +24, DevExpress +8.
+
+### Tried (REVERTED): dual pp_block / pp_block_value external token
+Attempted to solve IFDEF-in-expression by adding a separate `pp_block_value`
+token emitted only when expression-position context. Scanner overproduced
+PP_BLOCK_VALUE in too many positions causing massive regression (-2,283
+files). Single-token pp_block-in-extras stays as the design.
+
+The IFDEF-in-expression case (`Result := {$IFDEF X}a{$ELSE}b{$ENDIF};`)
+remains the largest structural unfixed cluster. A proper fix likely
+needs the scanner to peek at the body to classify it as value-shaped
+(no semicolons, single expression in each branch) vs statement-shaped —
+that's more involved scanner work for a future iteration.
+
+---
+
+**Cumulative session 3** (iters 14-16 + iter 13 from prior batch):
+- Overall: 90.43% → **91.02%** (+0.59pp / +101 files)
+- Spring4D: 86.24% → **90.45%** (+33 — generic constraints unlock)
+- Embarcadero: 86.63% → 87.38% (+40)
+- DevExpress: 95.44% → 95.63% (+8)
+- ORM3: 98.28% → 98.43% (+1)
+- ORM3-CLIENT: 98.71% → 99.14% (+1)
+
+---
+
+
 
 
 
