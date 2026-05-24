@@ -863,6 +863,11 @@ module.exports = grammar({
 			seq('+', $._literalInt),
 			$.identifier,
 			seq($.identifier, '(', $.identifier, ')'),
+			// `hid - 1`, `MaxN + 2` — narrow `identifier OP integer` form for
+			// real-corpus patterns like `TNmbrRange = 0 .. hid - 1;`.
+			// Kept narrow (no full _expr) to avoid the conflict cascade hit
+			// when wider _expr was tried earlier.
+			seq($.identifier, choice('-', '+'), $._literalInt),
 		),
 
 		declProc:        $ => seq(
@@ -918,7 +923,9 @@ module.exports = grammar({
 			optional($.kPacked),
 			$.kArray,
 			optional(seq('[', delimited(choice($.range, $._expr)), ']')),
-			$.kOf, $.type
+			// Element type can be a regular type OR an inline subrange:
+			//   array [0..7] of 0..9 = (0, 1, 2, ...);
+			$.kOf, choice($.type, $.subrangeType)
 		),
 		declFile:        $ => seq($.kFile, optional(seq($.kOf, $.type))),
 		declString:      $ => prec.left(seq(

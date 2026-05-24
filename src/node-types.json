@@ -971,6 +971,10 @@
           "named": true
         },
         {
+          "type": "subrangeType",
+          "named": true
+        },
+        {
           "type": "type",
           "named": true
         }
