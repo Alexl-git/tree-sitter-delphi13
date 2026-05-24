@@ -8509,11 +8509,55 @@
       "required": true,
       "types": [
         {
+          "type": "exprBinary",
+          "named": true
+        },
+        {
+          "type": "exprBrackets",
+          "named": true
+        },
+        {
+          "type": "exprCall",
+          "named": true
+        },
+        {
+          "type": "exprDot",
+          "named": true
+        },
+        {
+          "type": "exprIf",
+          "named": true
+        },
+        {
+          "type": "exprParens",
+          "named": true
+        },
+        {
+          "type": "exprSubscript",
+          "named": true
+        },
+        {
+          "type": "exprTpl",
+          "named": true
+        },
+        {
+          "type": "exprUnary",
+          "named": true
+        },
+        {
           "type": "finalization",
           "named": true
         },
         {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "implementation",
+          "named": true
+        },
+        {
+          "type": "inherited",
           "named": true
         },
         {
@@ -8525,6 +8569,10 @@
           "named": true
         },
         {
+          "type": "kDeprecated",
+          "named": true
+        },
+        {
           "type": "kEnd",
           "named": true
         },
@@ -8533,7 +8581,31 @@
           "named": true
         },
         {
+          "type": "kFalse",
+          "named": true
+        },
+        {
+          "type": "kNil",
+          "named": true
+        },
+        {
+          "type": "kTrue",
+          "named": true
+        },
+        {
           "type": "kUnit",
+          "named": true
+        },
+        {
+          "type": "lambda",
+          "named": true
+        },
+        {
+          "type": "literalNumber",
+          "named": true
+        },
+        {
+          "type": "literalString",
           "named": true
         },
         {

@@ -352,7 +352,11 @@ module.exports = grammar({
 		),
 
 		unit:               $ => seq(
-			$.kUnit, $.moduleName, ';',
+			$.kUnit, $.moduleName,
+			// `unit Spring.Foo deprecated 'Use Spring.Bar instead';` — unit-level
+			// deprecation hint (Spring4D pattern in retired units).
+			optional(seq($.kDeprecated, optional($._expr))),
+			';',
 			repeat(choice(
 				$.interface,
 				$.implementation,
@@ -1449,7 +1453,11 @@ module.exports = grammar({
 		kIfndef:           $ => /ifndef/i,
 		kEndif:            $ => /endif/i,
 
-		identifier:        $ => /[&]?[a-zA-Z_]+[0-9_a-zA-Z]*/,
+		// `&` prefix escapes a keyword as an identifier (`&type`).
+		// `&&` prefix is the Delphi.NET operator-name convention
+		// (`&&op_Equality`, `&&op_Implicit`, etc.) still used in Spring4D's
+		// generic operator overloads.
+		identifier:        $ => /&{0,2}[a-zA-Z_]+[0-9_a-zA-Z]*/,
 
 	  	_space:            $ => /[\s\r\n\t]+/,
 		// Single preprocessor directive. The external scanner (src/scanner.c)
