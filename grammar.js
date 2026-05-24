@@ -833,7 +833,8 @@ module.exports = grammar({
 
 		declEnum:        $ => seq('(', delimited1($.declEnumValue), ')'),
 		declEnumValue:   $ => seq(field('name', $.identifier), field('value', optional($.defaultValue))),
-		declSet:         $ => seq($.kSet, $.kOf, $.type),
+		// `set of T` where T is a type OR a subrange (`set of 1..100;`).
+		declSet:         $ => seq($.kSet, $.kOf, choice($.type, $.subrangeType)),
 		declArray:       $ => seq(
 			optional($.kPacked),
 			$.kArray,
@@ -945,8 +946,11 @@ module.exports = grammar({
 			repeat(choice(
 				seq($.kIndex, field('index', $._expr)),
 				...enable_if(delphi, seq($.kDispId, field('dispid', $._expr))),
-				seq($.kRead, field('getter', $.identifier)),
-				seq($.kWrite, field('setter', $.identifier)),
+				// read/write may reference: identifier (plain), qualified
+				// identifier (Foo.Bar), or array-element access (fChilds[0])
+				// — full _ref covers all of these.
+				seq($.kRead, field('getter', $._ref)),
+				seq($.kWrite, field('setter', $._ref)),
 				seq($.kImplements, field('implements', delimited($._expr))),
 				seq($.kDefault, field('defaultValue', $._expr)),
 				seq($.kStored, field('stored', $._expr)),

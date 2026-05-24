@@ -6078,8 +6078,17 @@
           "name": "kOf"
         },
         {
-          "type": "SYMBOL",
-          "name": "type"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "type"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "subrangeType"
+            }
+          ]
         }
       ]
     },
@@ -7156,7 +7165,7 @@
                     "name": "getter",
                     "content": {
                       "type": "SYMBOL",
-                      "name": "identifier"
+                      "name": "_ref"
                     }
                   }
                 ]
@@ -7173,7 +7182,7 @@
                     "name": "setter",
                     "content": {
                       "type": "SYMBOL",
-                      "name": "identifier"
+                      "name": "_ref"
                     }
                   }
                 ]
