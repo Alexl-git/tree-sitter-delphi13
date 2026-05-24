@@ -52,19 +52,22 @@
 |14 | 2026-05-24 11:30 | 90.45% | 15,441 | caseCase allows Pascal label between caseLabel and body (Spring4D state machines) |
 |15 | 2026-05-24 11:45 | 90.59% | 15,466 | more procAttribute keywords (export/varargs/winapi/interrupt) |
 |16 | 2026-05-24 12:00 | **91.02%** | **15,539** | generic-type constraints `<T: class, constructor>` (huge Spring4D win) |
+|17 | 2026-05-24 12:30 | 91.04% | 15,541 | declArray allows subrange element + narrow ident-OP-int subrange |
+|18 | 2026-05-24 13:00 | 91.07% | 15,547 | trailing-dot float (`100.`) via external scanner; ORM3 99.43% |
+|19 | 2026-05-24 13:30 | **91.09%** | **15,549** | try-except `else` last stmt may omit `;` (ORM3 99.71%, CLIENT 100%) |
 
-## Per-root focus snapshot (iter 16)
+## Per-root focus snapshot (iter 19)
 
 | Root               |   OK | FAIL | Pass % |
 |--------------------|------|------|--------|
-| **ORM3**           |  688 |   11 | **98.43%** |
+| **ORM3**           |  697 |    2 | **99.71%** |
 | **Embarcadero**    | 4634 |  669 | **87.38%** |
-| **DevExpress**     | 4198 |  192 | **95.63%** |
+| **DevExpress**     | 4196 |  194 | **95.58%** |
 | **Spring4D**       |  710 |   75 | **90.45%** |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
-| ORM3-CLIENT        |  231 |    2 | **99.14%** |
-| ORM3-COMMON        |  301 |    9 | **97.10%** |
+| **ORM3-CLIENT**    |  233 |    0 | **100.00%** |
+| ORM3-COMMON        |  308 |    2 | **99.35%** |
 
 ## Remaining failures (~1,915)
 

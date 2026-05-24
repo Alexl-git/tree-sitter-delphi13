@@ -437,6 +437,56 @@ that's more involved scanner work for a future iteration.
 
 ---
 
+## 2026-05-24 12:30  Iter 17 — declArray allows subrange element + narrow ident-OP-int subrange
+
+Tightened `declArray` to accept subrange element type (`array of 0..255` outside type-position contexts) without explosion. Narrowed the `_subrangeBound` pattern to prevent false positives where qualified-id range was previously ambiguous.
+
+Delta: +2 files (+0.02pp → 91.04%).
+
+---
+
+## 2026-05-24 13:00  Iter 18 — Trailing-dot float `100.` via external scanner
+
+Added `TRAILING_DOT_FLOAT` external token. Scanner peeks the char after `.` and only emits if it's NOT another `.` (would be range op) or a digit (would be regular float). Tree-sitter regex can't disambiguate `100.` (float, e.g. `100. * x`) from `100..N` (int + range) without lookahead.
+
+Delta: +6 files (+0.03pp → 91.07%). ORM3 → **99.43%**.
+
+---
+
+## 2026-05-24 13:30  Iter 19 — try-except `else` last statement may omit `;`
+
+Investigating ORM3 BASICSF.pas (CLIENT + COMMON copies — `MISSING ";"` insertion at row 841). The construct:
+
+```
+except
+  on EConvertError do
+  begin
+    ...
+    raise EMicroniteMessage.Create(...)    // no trailing ;
+  end;
+  else
+    raise EMicroniteMessage.Create(...)    // no trailing ; — followed by `end` of try
+end;
+```
+
+The `_exceptionHandlers` rule was using non-trailing `$.exceptionElse` even inside the trailing context (`_exceptionHandlersTr`, which is what `try`'s `except` clause invokes). The non-trailing form requires the last statement to end in `;` — but the `else` body is always followed by `end` (close of try), so the trailing form should be allowed.
+
+**Fix**: `optional(choice($.exceptionElse, tr($,'exceptionElse')))`. Added two conflict declarations: `[$.exceptionElse, $.exceptionElseTr]` and `[$.exceptionElse]` (to resolve the repeat-vs-end ambiguity).
+
+Delta: **+9 files** in ORM3 alone (the pattern was wider than just BASICSF — also in COMMON utility units). Overall +2 (91.07% → **91.09%**). 
+
+**Per-root jump**:
+- ORM3: 98.43% → **99.71%** (+9 files)
+- ORM3-CLIENT: 99.14% → **100%** ✓
+- ORM3-COMMON: 97.10% → **99.35%**
+- All other roots flat (no regression)
+
+Remaining ORM3 failures (2):
+- MSCTYPES.PAS r160: `TCodeLetter = #64..#82;` char-literal subrange bound
+- MStreams.pas r1084: `{$IFEND}` chain — scanner depth-counter not handling this dialect
+
+---
+
 
 
 
