@@ -883,6 +883,22 @@
         },
         {
           "type": "FIELD",
+          "name": "jumpLabel",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "label"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FIELD",
           "name": "body",
           "content": {
             "type": "SYMBOL",
@@ -1901,6 +1917,22 @@
           "content": {
             "type": "SYMBOL",
             "name": "caseLabel"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "jumpLabel",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "label"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         },
         {

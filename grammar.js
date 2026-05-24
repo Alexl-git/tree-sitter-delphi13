@@ -191,6 +191,13 @@ function statements(trailing) {
 
 		[rn('caseCase'),    $ => seq(
 			field('label', $.caseLabel),
+			// Optional Pascal `label:` prefix before the body. Spring4D's
+			// enumerator state-machines use this to expose goto targets
+			// from inside a case clause:
+			//   STATE_RUNNING:
+			//   _STATE_RUNNING:    // pascal label
+			//     begin ... end;
+			field('jumpLabel', optional($.label)),
 			field('body', lastStatement($))
 		)],
 

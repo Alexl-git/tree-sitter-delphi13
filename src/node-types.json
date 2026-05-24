@@ -696,6 +696,16 @@
           }
         ]
       },
+      "jumpLabel": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "label",
+            "named": true
+          }
+        ]
+      },
       "label": {
         "multiple": false,
         "required": true,
