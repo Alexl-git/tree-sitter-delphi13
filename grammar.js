@@ -939,6 +939,7 @@ module.exports = grammar({
 				seq($.kDefault, field('defaultValue', $._expr)),
 				seq($.kStored, field('stored', $._expr)),
 				$.kNodefault,
+				$.kReadonly,  // OLE dispinterface property: readonly dispid 0
 			)),
 			';',
 			repeat($._procAttribute)
@@ -1067,6 +1068,8 @@ module.exports = grammar({
 			$.kCdecl, $.kPascal, $.kRegister, $.kSafecall, $.kAssembler,
 			$.kNoreturn, $.kLocal,  $.kFar, $.kNear,
 			$.kDefault, $.kNodefault, $.kDeprecated, $.kExperimental,
+			$.kFinal,    // sealed-method modifier: 'function X; override; final;'
+			$.kPlatform, // valid in Delphi too (was fpc-only)
 
 			seq(
 				choice(
@@ -1260,7 +1263,9 @@ module.exports = grammar({
 		kStatic:           $ => /static/i,
 		kVirtual:          $ => /virtual/i,
 		kAbstract:         $ => /abstract/i,
-		kSealed:           $ => /seled/i,
+		kSealed:           $ => /sealed/i,
+		kFinal:            $ => /final/i,
+		kReadonly:         $ => /readonly/i,
 		kDynamic:          $ => /dynamic/i,
 		kOverride:         $ => /override/i,
 		kOverload:         $ => /overload/i,

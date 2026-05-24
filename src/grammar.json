@@ -7220,6 +7220,10 @@
               {
                 "type": "SYMBOL",
                 "name": "kNodefault"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kReadonly"
               }
             ]
           }
@@ -8320,6 +8324,14 @@
           "name": "kExperimental"
         },
         {
+          "type": "SYMBOL",
+          "name": "kFinal"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kPlatform"
+        },
+        {
           "type": "SEQ",
           "members": [
             {
@@ -9247,7 +9259,17 @@
     },
     "kSealed": {
       "type": "PATTERN",
-      "value": "seled",
+      "value": "sealed",
+      "flags": "i"
+    },
+    "kFinal": {
+      "type": "PATTERN",
+      "value": "final",
+      "flags": "i"
+    },
+    "kReadonly": {
+      "type": "PATTERN",
+      "value": "readonly",
       "flags": "i"
     },
     "kDynamic": {

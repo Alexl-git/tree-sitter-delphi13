@@ -33,9 +33,27 @@
 
 ## Iteration history
 
-| # | timestamp | pass % | notes |
-|---|-----------|--------|-------|
-| 0 | (baseline) | — | initial measurement pending |
+| # | timestamp | pass % | files OK | notes |
+|---|-----------|--------|----------|-------|
+| 0 | 2026-05-24 06:00 | 86.42% | 14,752 | scaffold baseline |
+| 1 | 2026-05-24 07:00 | 87.18% | 14,882 | external scanner (pp_block + char_literal), reverts iter-14 greedy regex |
+| 2 | 2026-05-24 07:30 | **88.78%** | **15,157** | sealed-typo fix + kFinal + kReadonly + kPlatform-in-delphi |
+
+## Remaining failures (~1,915)
+
+Top clusters after iter 2:
+- IFDEF inside expression-position (type, args, fields, function-call args) — scanner doesn't help when the IFDEF content is one token in a larger expression
+- Various `class function`/`class procedure` modifier combos with `class sealed`/`override; final`
+- `declVariant` with IFDEF inside variant record case
+- `declProcRef` (procedural types `type T = function(...): R`)
+- Long tail of small constructs
+
+## What's next
+
+1. IFDEF-in-expression handling — extend scanner to handle `{$IFDEF X}a{$ELSE}b{$ENDIF}` as a single value-token at any position
+2. `class sealed` modifier on classes (separate from `sealed` on methods)
+3. `declProcRef` named-arg form
+4. More keyword sweep (might be more typos hiding)
 
 ## Goal
 

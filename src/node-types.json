@@ -2308,6 +2308,10 @@
           "named": true
         },
         {
+          "type": "kReadonly",
+          "named": true
+        },
+        {
           "type": "kStored",
           "named": true
         },
@@ -6251,6 +6255,10 @@
           "named": true
         },
         {
+          "type": "kFinal",
+          "named": true
+        },
+        {
           "type": "kInline",
           "named": true
         },
@@ -6292,6 +6300,10 @@
         },
         {
           "type": "kPascal",
+          "named": true
+        },
+        {
+          "type": "kPlatform",
           "named": true
         },
         {
@@ -8210,6 +8222,10 @@
     "named": true
   },
   {
+    "type": "kFinal",
+    "named": true
+  },
+  {
     "type": "kFinalization",
     "named": true
   },
@@ -8394,6 +8410,10 @@
     "named": true
   },
   {
+    "type": "kPlatform",
+    "named": true
+  },
+  {
     "type": "kPrivate",
     "named": true
   },
@@ -8427,6 +8447,10 @@
   },
   {
     "type": "kRead",
+    "named": true
+  },
+  {
+    "type": "kReadonly",
     "named": true
   },
   {
