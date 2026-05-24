@@ -1155,6 +1155,12 @@ module.exports = grammar({
 			$.kDefault, $.kNodefault, $.kDeprecated, $.kExperimental,
 			$.kFinal,    // sealed-method modifier: 'function X; override; final;'
 			$.kPlatform, // valid in Delphi too (was fpc-only)
+			$.kExport,   // legacy DLL-export modifier (valid in Delphi too)
+			$.kVarargs,  // variadic-arg modifier on cdecl functions
+			$.kWinapi,   // calling convention (alias for stdcall on Win32)
+			$.kInterrupt,
+			// NOTE: kForward intentionally NOT here — it conflicts with the
+			// declProcFwd rule which has its own `; forward;` handling.
 
 			seq(
 				choice(

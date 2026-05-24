@@ -8639,6 +8639,22 @@
           "name": "kPlatform"
         },
         {
+          "type": "SYMBOL",
+          "name": "kExport"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kVarargs"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kWinapi"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kInterrupt"
+        },
+        {
           "type": "SEQ",
           "members": [
             {

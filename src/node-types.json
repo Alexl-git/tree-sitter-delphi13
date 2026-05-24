@@ -7095,6 +7095,10 @@
           "named": true
         },
         {
+          "type": "kExport",
+          "named": true
+        },
+        {
           "type": "kFalse",
           "named": true
         },
@@ -7108,6 +7112,10 @@
         },
         {
           "type": "kInline",
+          "named": true
+        },
+        {
+          "type": "kInterrupt",
           "named": true
         },
         {
@@ -7179,7 +7187,15 @@
           "named": true
         },
         {
+          "type": "kVarargs",
+          "named": true
+        },
+        {
           "type": "kVirtual",
+          "named": true
+        },
+        {
+          "type": "kWinapi",
           "named": true
         },
         {
@@ -9086,6 +9102,10 @@
     "named": true
   },
   {
+    "type": "kExport",
+    "named": true
+  },
+  {
     "type": "kExports",
     "named": true
   },
@@ -9187,6 +9207,10 @@
   },
   {
     "type": "kInterface",
+    "named": true
+  },
+  {
+    "type": "kInterrupt",
     "named": true
   },
   {
@@ -9447,6 +9471,10 @@
   },
   {
     "type": "kVar",
+    "named": true
+  },
+  {
+    "type": "kVarargs",
     "named": true
   },
   {
