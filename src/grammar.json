@@ -4711,8 +4711,11 @@
           }
         },
         {
-          "type": "PATTERN",
-          "value": "'[^']*'"
+          "type": "TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "'([^']|'')*'"
+          }
         },
         {
           "type": "SYMBOL",

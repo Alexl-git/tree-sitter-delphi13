@@ -649,8 +649,14 @@ module.exports = grammar({
 		// longest-match. The body matches any chars (including newlines and
 		// single quotes) up to a closing `'''`.
 		_literalString:  $ => choice(
+			// Delphi 12+ triple-quoted multi-line string. prec(2) so the
+			// regex engine prefers this over the single-quoted form when
+			// three quotes start the literal.
 			token(prec(2, /'''[\s\S]*?'''/)),
-			/'[^']*'/,
+			// Single-quoted string. `''` (doubled single-quote) is Delphi's
+			// escape for one literal apostrophe — `'Can''t'` is "Can't".
+			// Body alternation: any non-quote char, OR a doubled quote.
+			token(/'([^']|'')*'/),
 			$.literalChar
 		),
 		// Char literal: `#NN` decimal/hex char code, OR `^X` control char
