@@ -487,6 +487,20 @@ Remaining ORM3 failures (2):
 
 ---
 
+## 2026-05-24 14:54  Iter 20 — `#NN` char-literal as subrange bound
+
+MSCTYPES.PAS r160: `TCodeLetter = #64..#82;` — Delphi character type subrange via numeric char literals. Grammar's `_subrangeBound` accepted integer/float/identifier but not `#N`.
+
+Earlier attempt in iter history added the full `$.literalChar` choice (which includes both `#N` AND the `^X` external char_literal) — that triggered Spring4D regression of -4 files (likely conflict with `^TFoo` pointer-to-type appearing in subrange-adjacent contexts). This iteration uses the **narrow form** `seq('#', $._literalInt)` only, excluding the `char_literal` external token.
+
+**Result**: +1 file. ORM3 99.71% → **99.86%** (COMMON 99.35% → 99.68%). Spring4D held at 90.45% (no regression confirmed). Overall 91.09% → 91.09% (+1 / +0.006pp).
+
+**Why this fixed only 1 file even though the pattern exists**: `#NN` numeric char-literal in subrange position is rare — most code uses `'A'..'Z'` char string-literal or named-constant ranges. Worth keeping for correctness regardless.
+
+**Last remaining ORM3 fail**: MStreams.pas r1084 `{$IFEND}` chain. Needs scanner investigation — the depth counter handles `{$ifend}` matching `{$if...}`, but something about this specific chain isn't closing cleanly.
+
+---
+
 
 
 
