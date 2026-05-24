@@ -5920,6 +5920,19 @@
               "name": "_literalInt"
             }
           ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "#"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_literalInt"
+            }
+          ]
         }
       ]
     },

@@ -878,6 +878,10 @@ module.exports = grammar({
 			// Kept narrow (no full _expr) to avoid the conflict cascade hit
 			// when wider _expr was tried earlier.
 			seq($.identifier, choice('-', '+'), $._literalInt),
+			// `#NN` numeric char-literal bound: `TCodeLetter = #64..#82;`.
+			// (Excluding `^X` external char_literal — narrower keeps Spring4D
+			// safe from the earlier regression.)
+			seq('#', $._literalInt),
 		),
 
 		declProc:        $ => seq(
