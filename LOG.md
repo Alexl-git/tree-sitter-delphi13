@@ -1176,6 +1176,27 @@ Reverted to iter 54 baseline.
 
 ---
 
+## 2026-05-25 07:30  Iter 56 — Inline calling-conv before `;` in _declProc
+
+Embarcadero `Bde.pas` (BDE RTL bindings) has 205 MISSING insertions — by far the largest remaining MISSING-only cluster. Pattern:
+
+```pascal
+function DbiInitFn(
+    iVer: Word;
+    pEnv: pDBIEnv
+  ): DBIResult stdcall;
+```
+
+The calling-convention `stdcall` is inline (no `;` before it) but the grammar's `_declProc` required `; stdcall;` shape. Added `optional(choice(stdcall|cdecl|safecall|...))` between the type and the terminating `;`.
+
+**Result**: +15 files (15827 → 15842; 92.73% → **92.82%**).
+- Embarcadero: 90.51% → **90.78%** (+14 — Bde.pas + similar RTL imports)
+- Spring4D / DevExpress / others: held
+
+The single Bde.pas file unlocked accounted for 205 MISSING tokens. The grammar fix is structurally important even though file-count only +14 (Bde was 1 file with massive MISSING cascade).
+
+---
+
 
 
 
