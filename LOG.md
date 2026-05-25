@@ -705,6 +705,19 @@ Biggest single-iter win since iter 16 (generic-type constraints, +73 files). The
 
 ---
 
+## 2026-05-24 20:55  Iter 29 — REVERTED — `cdecl;` trailing after declField
+
+Tried adding optional trailing calling-convention pseudo-statement after declField's `;` to handle Apache HTTPD pattern:
+```pascal
+rewrite_args: procedure(process: Pprocess_rec); cdecl;
+```
+
+**Result**: -2 files (15674 → 15672). Embarcadero -2. The HTTPD20/22/24 files didn't flip (still 13 errors each) but two other files broke — the optional trailing-conv pattern matched somewhere it shouldn't have.
+
+Reverted. The Apache HTTPD files have many other parse issues; a single-pattern fix doesn't promote them.
+
+---
+
 
 
 
