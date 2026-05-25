@@ -320,6 +320,10 @@ module.exports = grammar({
 		// Iter 58: exprTpl args narrowed to typeref — generic-arg identifier
 		// vs general expression-ref identifier conflict.
 		[$._ref, $._typeref],
+		// Iter 61: declField has optional declaration hint AND typeref allows
+		// trailing kDeprecated. Ambiguous which level the `deprecated` belongs.
+		[$.typeref],
+		[$._declClass],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1145,6 +1149,14 @@ module.exports = grammar({
 			':',
 			field('type', $.type),
 			field('defaultValue', optional($.defaultValue)),
+			// Declaration hints on record/class fields (Embarcadero RTL):
+			//   FMin: Integer deprecated;
+			//   FOldField: T platform;
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental
+			)),
 			';'
 		),
 
