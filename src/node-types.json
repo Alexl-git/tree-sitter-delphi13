@@ -2250,6 +2250,10 @@
       "required": true,
       "types": [
         {
+          "type": "kAbstract",
+          "named": true
+        },
+        {
           "type": "kCdecl",
           "named": true
         },
@@ -2263,6 +2267,14 @@
         },
         {
           "type": "kDestructor",
+          "named": true
+        },
+        {
+          "type": "kDynamic",
+          "named": true
+        },
+        {
+          "type": "kFinal",
           "named": true
         },
         {
@@ -2282,6 +2294,14 @@
           "named": true
         },
         {
+          "type": "kOverload",
+          "named": true
+        },
+        {
+          "type": "kOverride",
+          "named": true
+        },
+        {
           "type": "kPascal",
           "named": true
         },
@@ -2294,11 +2314,23 @@
           "named": true
         },
         {
+          "type": "kReintroduce",
+          "named": true
+        },
+        {
           "type": "kSafecall",
           "named": true
         },
         {
+          "type": "kStatic",
+          "named": true
+        },
+        {
           "type": "kStdcall",
+          "named": true
+        },
+        {
+          "type": "kVirtual",
           "named": true
         },
         {

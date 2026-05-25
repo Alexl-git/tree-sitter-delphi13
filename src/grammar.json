@@ -8687,45 +8687,72 @@
           }
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "kStdcall"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "kCdecl"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "kSafecall"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "kPascal"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "kRegister"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "kWinapi"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "kInline"
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "kStdcall"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kCdecl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kSafecall"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kPascal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kRegister"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kWinapi"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kInline"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kOverload"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kVirtual"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kAbstract"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kOverride"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kReintroduce"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kStatic"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kDynamic"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kFinal"
+              }
+            ]
+          }
         },
         {
           "type": "STRING",

@@ -1220,12 +1220,16 @@ module.exports = grammar({
 				field('type', $.typeref),
 			)),
 			field('assign', optional($.defaultValue)),
-			// Inline calling-convention BEFORE the terminating ';' — Embarcadero
-			// BDE imports (`function DbiInitFn(...): DBIResult stdcall;`) use this
-			// form instead of the standard `; stdcall;` shape.
-			optional(choice(
+			// Inline calling-convention or procAttribute BEFORE the terminating
+			// ';' — Embarcadero RTL / AzureAPI use lenient forms:
+			//   function DbiInitFn(...): DBIResult stdcall;   (iter 56)
+			//   procedure PreflightBlobRequest(...) overload; (iter 60)
+			// `repeat` allows multiple chained attributes like `... cdecl overload`.
+			repeat(choice(
 				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
-				$.kRegister, $.kWinapi, $.kInline
+				$.kRegister, $.kWinapi, $.kInline,
+				$.kOverload, $.kVirtual, $.kAbstract, $.kOverride,
+				$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal
 			)),
 			';',
 			repeat($._procAttributeNoExt)
