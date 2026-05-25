@@ -747,9 +747,11 @@ module.exports = grammar({
 			$.char_literal
 		),
 		literalNumber:   $ => choice($._literalInt, $._literalFloat, $.trailing_dot_float),
+		// Delphi 11+ allows `_` as a digit-group separator: `1_000_000_000`
+		// or `$FFFF_FFFF`. Underscore is between digits, never leading/trailing.
 		_literalInt:     $ => choice(
-			token.immediate(/[-+]?[0-9]+/),
-			token.immediate(/\$[a-fA-F0-9]+/)
+			token.immediate(/[-+]?[0-9](_?[0-9])*/),
+			token.immediate(/\$[a-fA-F0-9](_?[a-fA-F0-9])*/)
 		),
 		// Float: optional sign, digits with optional decimal portion, optional
 		// scientific exponent. Exponent letter is `e` OR `E` (case-insensitive).
