@@ -80,6 +80,7 @@
 |43 | 2026-05-25 02:30 | **92.10%** | **15,719** | Delphi 11+ underscore digit-separator `1_000_000_000` in int literals (Embarcadero **89.32%**) |
 |44 | 2026-05-25 02:45 | **92.35%** | **15,762** | `raise X at addr` exception re-raise w/ address (Embarcadero **89.91%**, +43 files) |
 |45 | 2026-05-25 03:00 | **92.38%** | **15,766** | Soft-keyword names in declConst (DevExpress **95.90%**, +4 files) |
+|46 | 2026-05-25 03:15 | **92.44%** | **15,777** | `T.Not/T.And/T.Or/T.Xor` keyword-as-identifier on exprDot RHS (DevExpress **96.13%**, Spring4D **91.59%**, +11) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -87,9 +88,9 @@
 |--------------------|------|------|--------|
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
-| **Spring4D**       |  718 |   67 | **91.46%** |
+| **Spring4D**       |  719 |   66 | **91.59%** |
 | **Embarcadero**    | 4766 |  535 | **89.91%** |
-| DevExpress         | 4210 |  180 | 95.90% |
+| DevExpress         | 4220 |  170 | 96.13% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |

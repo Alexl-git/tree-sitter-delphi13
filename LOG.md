@@ -996,6 +996,22 @@ public const
 
 ---
 
+## 2026-05-25 03:15  Iter 46 — Keyword-as-identifier on exprDot RHS
+
+DevExpress dxEMF.DB.Criteria has enum classes whose members are named after logical operators:
+```pascal
+if AOperand.OperatorType = TdxUnaryOperatorType.Not then ...
+```
+
+The `Not` after `.` is lexed as kNot keyword, breaking the expression. Added a specific exprDot variant that allows `kNot`/`kAnd`/`kOr`/`kXor` aliased to identifier on the RHS of dot. Narrow set (not all keywords) to minimize GLR impact.
+
+**Result**: +11 files (15766 → 15777; 92.38% → **92.44%**).
+- DevExpress: 95.90% → **96.13%** (+10)
+- Spring4D: 91.46% → **91.59%** (+1)
+- Other roots held
+
+---
+
 
 
 
