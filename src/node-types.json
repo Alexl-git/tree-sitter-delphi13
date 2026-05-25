@@ -1298,6 +1298,10 @@
           "named": true
         },
         {
+          "type": "kAlign",
+          "named": true
+        },
+        {
           "type": "kClass",
           "named": true
         },
@@ -1962,6 +1966,10 @@
           "named": true
         },
         {
+          "type": "kAlign",
+          "named": true
+        },
+        {
           "type": "kClass",
           "named": true
         },
@@ -2143,6 +2151,10 @@
         },
         {
           "type": "inherited",
+          "named": true
+        },
+        {
+          "type": "kAlign",
           "named": true
         },
         {
@@ -9518,6 +9530,10 @@
   },
   {
     "type": "kAbstract",
+    "named": true
+  },
+  {
+    "type": "kAlign",
     "named": true
   },
   {

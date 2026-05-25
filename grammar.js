@@ -1176,6 +1176,17 @@ module.exports = grammar({
 			repeat($.declSection),
 			optional($.declVariant),
 			$.kEnd,
+			// Record alignment hint (Win API patterns):
+			//   _SLIST_ENTRY = record ... end align 16;
+			//   _SLIST_ENTRY = record ... end align(16);
+			//   sockaddr_storage = record ... end align (_SS_ALIGNSIZE);
+			optional(seq(
+				$.kAlign,
+				choice(
+					$._literalInt,
+					seq('(', choice($._literalInt, $.identifier), ')'),
+				),
+			)),
 			// Whole-type declaration hints AFTER `end`:
 			//   type IFoo = interface ... end deprecated;
 			//   type IBar = interface ... end deprecated 'use IBaz';
@@ -1613,6 +1624,10 @@ module.exports = grammar({
 		kDeprecated:       $ => /deprecated/i,
 		kExperimental:     $ => /experimental/i,
 		kPlatform:         $ => /platform/i,
+		// Soft keyword: only used in `record ... end align N` record-alignment
+		// hint (Win API records). Tokenizes everywhere but only consumed
+		// structurally in _declClass post-end clause.
+		kAlign:            $ => /align/i,
 		kUnimplemented:    $ => /unimplemented/i,
 		kCvar:             $ => /cvar/i,
 		kExport:           $ => /export/i,

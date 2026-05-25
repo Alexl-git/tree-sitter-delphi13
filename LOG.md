@@ -1457,3 +1457,23 @@ Two new alternatives in `_subrangeBound`:
 First commit-worthy win after 4 reverts. Subrange narrow-grammar additions don't conflict with the GLR machinery because they're specific shape-matches with no alternative paths.
 
 ---
+
+## 2026-05-25 14:05  Phase 3b iter 6 — Record `end align N` hint
+
+Added `kAlign` soft keyword (`/align/i`) and optional `end align <int>` / `end align(<int|ident>)` clause in `_declClass` post-end, before the deprecated/platform hint slot.
+
+Pattern coverage:
+- `end align 16;` — bare integer (WindowsAPIs.inc, Vcl.OleCtrls, YADF alignedrecords)
+- `end align(16);` — parenthesized integer (Winapi.Windows _SLIST_ENTRY)
+- `end align (_SS_ALIGNSIZE);` — parenthesized identifier (Winapi.Winsock2)
+
+**Result**: +12 files (16241 -> 16253; 96.83% -> **96.91%**).
+- Embarcadero: 95.50 -> **95.69%** (+10 — Win API records)
+- DevExpress / Spring4D / OmniThread / ORM3: held
+- 2 files in YADF/alignedrecords paths
+
+`kAlign` introduced as new soft keyword — risk was that `align` used as a variable/parameter name elsewhere would regress. No regressions observed. The narrow shape match in _declClass post-end doesn't conflict with other rules.
+
+Cumulative since iter 1 of Phase 3b: +15 files (4 reverts intermixed). 96.91% holds; 519 fails remain.
+
+---
