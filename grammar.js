@@ -1385,7 +1385,9 @@ module.exports = grammar({
 		),
 
 		// array initializer
-		arrInitializer:  $ => prec(1,seq('(', delimited1($._initializer), ')')),
+		// Array / set initializer. Allows empty `()` (Spring4D const sentinels:
+		// `Arg: TArg = ();`) as well as `(a, b, c)` populated form.
+		arrInitializer:  $ => prec(1,seq('(', delimited($._initializer), ')')),
 
 		// TERMINAL SYMBOLS ----------------------------------------------------
 

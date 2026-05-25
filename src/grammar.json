@@ -9733,39 +9733,47 @@
             "value": "("
           },
           {
-            "type": "SEQ",
+            "type": "CHOICE",
             "members": [
               {
-                "type": "CHOICE",
+                "type": "SEQ",
                 "members": [
                   {
-                    "type": "REPEAT1",
-                    "content": {
-                      "type": "PREC",
-                      "value": 0,
-                      "content": {
-                        "type": "SEQ",
-                        "members": [
-                          {
-                            "type": "SYMBOL",
-                            "name": "_initializer"
-                          },
-                          {
-                            "type": "STRING",
-                            "value": ","
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "REPEAT1",
+                        "content": {
+                          "type": "PREC",
+                          "value": 0,
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "SYMBOL",
+                                "name": "_initializer"
+                              },
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              }
+                            ]
                           }
-                        ]
+                        }
+                      },
+                      {
+                        "type": "BLANK"
                       }
-                    }
+                    ]
                   },
                   {
-                    "type": "BLANK"
+                    "type": "SYMBOL",
+                    "name": "_initializer"
                   }
                 ]
               },
               {
-                "type": "SYMBOL",
-                "name": "_initializer"
+                "type": "BLANK"
               }
             ]
           },
