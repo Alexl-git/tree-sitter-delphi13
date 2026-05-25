@@ -313,6 +313,8 @@ module.exports = grammar({
 		// Soft-keyword identifiers (Message, Name, Index, Read, Write, Reference)
 		// allowed as variable names — ambiguous with next-statement starts.
 		[$.declVar],
+		// Same alias set on const names (`Default = $00010203;` etc.)
+		[$.declConst],
 		// Qualified-id subrange `TFoo.Bar..TFoo.Baz` vs `_typeref` (typerefDot).
 		[$._typeref, $._subrangeBound],
 		// The following conflict rules are only needed because "public" can be
@@ -964,7 +966,19 @@ module.exports = grammar({
 
 		declConst:       $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			field('name', $.identifier),
+			// Allow soft-keyword names as const identifiers (DevExpress
+			// dxCoreGraphics uses `Default` as a color-name constant; other
+			// libraries use Message/Name/Index/etc.)
+			field('name', choice(
+				$.identifier,
+				alias($.kDefault,   $.identifier),
+				alias($.kMessage,   $.identifier),
+				alias($.kName,      $.identifier),
+				alias($.kIndex,     $.identifier),
+				alias($.kRead,      $.identifier),
+				alias($.kWrite,     $.identifier),
+				alias($.kReference, $.identifier),
+			)),
 			optional(seq(':', field('type', $.type))),
 			field('defaultValue', $.defaultValue),
 			// Declaration hints before the terminating ';':
