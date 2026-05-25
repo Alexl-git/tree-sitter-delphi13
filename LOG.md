@@ -1107,6 +1107,29 @@ All remaining patterns are either:
 
 ---
 
+## 2026-05-25 05:30  Iter 53 — `writeonly` property modifier (PLATEAU BROKEN)
+
+Investigated MISSING-only fails (files with no first_error but missing_count > 0). Embarcadero `OCX/Servers/Access2000.pas` had a single MISSING insertion at the property modifier list:
+
+```pascal
+_WizHookDisp = dispinterface
+  ['{CB9D3171-...}']
+  property Key: SYSINT writeonly dispid 2237;
+```
+
+Grammar had `kReadonly` in the declProp modifier set but was **missing `kWriteonly`** — symmetric oversight from iter 2's keyword sweep. Added the kWriteonly token + entry in declProp's `repeat(choice(...))`.
+
+**Result**: **+22 files** (15777 → 15799; 92.44% → **92.57%**).
+- Embarcadero: 89.91% → **90.25%** (+18 — crosses 90% threshold!)
+- Spring4D: 91.59% → **91.72%** (+1)
+- DevExpress / OmniThread / ORM3 / TableTools: held
+
+Files unlocked across OCX/Servers (Access2000/2010/AccessXP, DAO2000/2010, plus equivalents in OleServer). The single-keyword fix had broad reach because OLE dispinterface declarations are heavily used in the entire `OCX/Servers/` tree.
+
+**Plateau decisively broken.** Continuing piecemeal — there may be more single-keyword oversights to find by hunting MISSING-only cluster.
+
+---
+
 
 
 

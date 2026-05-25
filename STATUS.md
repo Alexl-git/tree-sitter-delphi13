@@ -81,6 +81,8 @@
 |44 | 2026-05-25 02:45 | **92.35%** | **15,762** | `raise X at addr` exception re-raise w/ address (Embarcadero **89.91%**, +43 files) |
 |45 | 2026-05-25 03:00 | **92.38%** | **15,766** | Soft-keyword names in declConst (DevExpress **95.90%**, +4 files) |
 |46 | 2026-05-25 03:15 | **92.44%** | **15,777** | `T.Not/T.And/T.Or/T.Xor` keyword-as-identifier on exprDot RHS (DevExpress **96.13%**, Spring4D **91.59%**, +11) |
+|47-52| 2026-05-25 04:00 | 92.44% | 15,777 | 6 iters at ceiling: refactor attempts (-3031 each) reverted; investigations no-op |
+|53 | 2026-05-25 05:30 | **92.57%** | **15,799** | `writeonly` property modifier (Embarcadero crosses **90.25%**, Spring4D **91.72%**, +22 files) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -88,8 +90,8 @@
 |--------------------|------|------|--------|
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
-| **Spring4D**       |  719 |   66 | **91.59%** |
-| **Embarcadero**    | 4766 |  535 | **89.91%** |
+| **Spring4D**       |  720 |   65 | **91.72%** |
+| **Embarcadero**    | 4784 |  517 | **90.25%** |
 | DevExpress         | 4220 |  170 | 96.13% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
