@@ -1291,6 +1291,14 @@ Plateau holding at **93.46%** (iter 61).
 
 ---
 
+## 2026-05-25 09:30  Iter 63 — While-body Pascal-label — 0 delta reverted
+
+Spring4D MongoDB superobject.pas uses `while true do redo: case ... end;` — a Pascal label between `do` and the case body. Added optional `jumpLabel` to `while` rule.
+
+**Result**: 0 file delta. superobject.pas went from MISSING to 2 ERRORs (other unrelated issues in the same file). Pattern fix works but doesn't unlock files in isolation. Reverted to avoid bloat.
+
+---
+
 
 
 
