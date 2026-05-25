@@ -1130,6 +1130,31 @@ Files unlocked across OCX/Servers (Access2000/2010/AccessXP, DAO2000/2010, plus 
 
 ---
 
+## 2026-05-25 06:30  Iter 54 — Trailing `;` in record initializer
+
+DevExpress dxCore.pas has 15 MISSING-only failures from generated Unicode-equivalence tables:
+```pascal
+const
+  CEquivalents: array[...] of TItem = (
+    ( Letters: #$A732;
+      Replacement: 'AA'; ),   // <-- trailing ; before )
+    ( Letters: #$00C6#$01FC#$01E2;
+      Replacement: 'AE'; ),
+    ...
+  );
+```
+
+The trailing `;` after `'AA'` before `)` wasn't allowed by `recInitializer`. Delphi compiler accepts it (and many tools generate code this way). Added `optional(';')` between the delimited fields and the closing `)`.
+
+**Result**: **+28 files** (15799 → 15827; 92.57% → **92.73%**).
+- Embarcadero: 90.25% → **90.51%** (+14)
+- DevExpress: 96.13% → **96.40%** (+12)
+- Other roots held
+
+The fix unlocked dxCore and similar DevExpress data-table files plus Embarcadero RTL files using the same idiom.
+
+---
+
 
 
 

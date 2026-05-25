@@ -83,6 +83,7 @@
 |46 | 2026-05-25 03:15 | **92.44%** | **15,777** | `T.Not/T.And/T.Or/T.Xor` keyword-as-identifier on exprDot RHS (DevExpress **96.13%**, Spring4D **91.59%**, +11) |
 |47-52| 2026-05-25 04:00 | 92.44% | 15,777 | 6 iters at ceiling: refactor attempts (-3031 each) reverted; investigations no-op |
 |53 | 2026-05-25 05:30 | **92.57%** | **15,799** | `writeonly` property modifier (Embarcadero crosses **90.25%**, Spring4D **91.72%**, +22 files) |
+|54 | 2026-05-25 06:30 | **92.73%** | **15,827** | Trailing `;` in record initializer (Embarcadero **90.51%**, DevExpress **96.40%**, +28 files) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -91,8 +92,8 @@
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  720 |   65 | **91.72%** |
-| **Embarcadero**    | 4784 |  517 | **90.25%** |
-| DevExpress         | 4220 |  170 | 96.13% |
+| **Embarcadero**    | 4798 |  503 | **90.51%** |
+| DevExpress         | 4232 |  158 | 96.40% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |
