@@ -1980,7 +1980,35 @@
         "required": true,
         "types": [
           {
-            "type": "type",
+            "type": "declClass",
+            "named": true
+          },
+          {
+            "type": "declEnum",
+            "named": true
+          },
+          {
+            "type": "declFile",
+            "named": true
+          },
+          {
+            "type": "declMetaClass",
+            "named": true
+          },
+          {
+            "type": "declProcRef",
+            "named": true
+          },
+          {
+            "type": "declSet",
+            "named": true
+          },
+          {
+            "type": "pp_block",
+            "named": true
+          },
+          {
+            "type": "typeref",
             "named": true
           }
         ]

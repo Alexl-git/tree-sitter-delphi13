@@ -1557,3 +1557,26 @@ Future iter to try: special-case declString with `[N]` size spec so it forces de
 Cumulative since Phase 3b iter 1: +51 files / 4 reverts. 483 fails remain.
 
 ---
+
+## 2026-05-25 15:55  Phase 3b iter 11 — Narrow declFieldNoSemi type set, recover ORM3
+
+Iter 10 broke ORM3 because declFieldNoSemi accepted declString as the type, and in GLR fork the parser took declFieldNoSemi for `plnName: string[30]` interpretation, leaving `[30]` outside the type.
+
+Fix: declFieldNoSemi's type field uses an explicit narrow choice that EXCLUDES declString and declArray. Both are types where `[N]` follows the keyword and confuse the no-`;` path. They almost never appear in the corpus as last-field-without-`;` patterns.
+
+```
+declFieldNoSemi: type = choice(typeref, declMetaClass, declEnum, declSet,
+                                 declFile, declProcRef, declClass, pp_block)
+```
+
+Required `[$.type, $.declFieldNoSemi]` conflict for GLR.
+
+**Result**: +8 net files (16289 -> 16297; 97.12% -> **97.17%**).
+- **ORM3: 99.43 -> 99.86% (RECOVERED — back to master baseline)**
+- DevExpress: 99.26% (held)
+- Embarcadero: 96.21 -> 96.12% (-5 — cases where last anon-record field IS declString/declArray; acceptable since the design's protection target is on ORM3)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +59 files / 4 reverts. 475 fails remain.
+
+---

@@ -361,6 +361,9 @@ module.exports = grammar({
 		// trailing declFieldNoSemi — both reach declField from the same state.
 		[$._declFields],
 		[$.declClass],
+		// Phase 3b iter 11: declFieldNoSemi uses a narrower type set; conflicts
+		// with the full `type` rule's choices.
+		[$.type, $.declFieldNoSemi],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1244,7 +1247,23 @@ module.exports = grammar({
 			...enable_if(rtti, optional($.rttiAttributes)),
 			field('name', delimited1($.identifier)),
 			':',
-			field('type', $.type),
+			// Narrower type set than declField. Excludes declString with the
+			// `[N]` short-string size spec — that conflicts with declFieldNoSemi
+			// because the `[N]` looks like declFieldNoSemi's continuation when
+			// in GLR fork. Excludes declArray for the same reason
+			// (`Array[0..4] of String[1]` in ORM3 Z19b5.pas).
+			// declString and declArray almost never appear as last-field with
+			// no `;` in the corpus (those use the trailing `;` form already).
+			field('type', choice(
+				$.typeref,
+				$.declMetaClass,
+				$.declEnum,
+				$.declSet,
+				$.declFile,
+				$.declProcRef,
+				$.declClass,
+				prec(-1, $.pp_block),
+			)),
 			field('defaultValue', optional($.defaultValue)),
 		),
 

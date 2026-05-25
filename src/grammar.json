@@ -8197,8 +8197,45 @@
           "type": "FIELD",
           "name": "type",
           "content": {
-            "type": "SYMBOL",
-            "name": "type"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "typeref"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "declMetaClass"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "declEnum"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "declSet"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "declFile"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "declProcRef"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "declClass"
+              },
+              {
+                "type": "PREC",
+                "value": -1,
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "pp_block"
+                }
+              }
+            ]
           }
         },
         {
@@ -11211,6 +11248,10 @@
     ],
     [
       "declClass"
+    ],
+    [
+      "type",
+      "declFieldNoSemi"
     ],
     [
       "declProcFwd"
