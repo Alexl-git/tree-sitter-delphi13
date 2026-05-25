@@ -7975,6 +7975,10 @@
           "named": true
         },
         {
+          "type": "kDependency",
+          "named": true
+        },
+        {
           "type": "kExternal",
           "named": true
         },
@@ -8000,6 +8004,10 @@
         },
         {
           "type": "lambda",
+          "named": true
+        },
+        {
+          "type": "literalChar",
           "named": true
         },
         {
@@ -9938,6 +9946,10 @@
   },
   {
     "type": "kDelayed",
+    "named": true
+  },
+  {
+    "type": "kDependency",
     "named": true
   },
   {

@@ -1544,6 +1544,13 @@ module.exports = grammar({
 			optional($._expr),
 			optional(seq(choice($.kName, $.kIndex), $._expr)),
 			...enable_if(delphi, optional($.kDelayed)),
+			// Phase 3b iter 17: native library dependency hint
+			//   function f; cdecl; external LIB name 'foo' dependency 'c++_static','c++abi';
+			// (Embarcadero FlatBox2D Android/iOS linker pattern.)
+			optional(seq(
+				$.kDependency,
+				delimited1($._literalString),
+			)),
 			';'
 		),
 
@@ -1734,6 +1741,8 @@ module.exports = grammar({
 		// hint (Win API records). Tokenizes everywhere but only consumed
 		// structurally in _declClass post-end clause.
 		kAlign:            $ => /align/i,
+		// Soft keyword: native library dependency hint in procExternal.
+		kDependency:       $ => /dependency/i,
 		kUnimplemented:    $ => /unimplemented/i,
 		kCvar:             $ => /cvar/i,
 		kExport:           $ => /export/i,

@@ -1686,3 +1686,22 @@ Also discovered during investigation: iter 15's bare `[Ref]/[in]` fix actually u
 Cumulative since Phase 3b iter 1: +112 files / 5 reverts. 422 fails remain.
 
 ---
+
+## 2026-05-25 18:10  Phase 3b iter 17 — `dependency 'lib1','lib2'` on procExternal
+
+Added optional `dependency 'string','string'...` clause to procExternal. Pattern:
+```
+function b2Foo_Create: b2Foo; cdecl; external LIB_NAME name _PU + 'b2Foo_b2Foo'
+  {$IF DEFINED(ANDROID)} dependency 'c++_static','c++abi' {$ELSEIF DEFINED(IOS)} {$ENDIF};
+```
+(Embarcadero FlatBox2D Android/iOS native-linker hints.)
+
+Required new soft keyword `kDependency: /dependency/i`.
+
+**Result**: +8 files (16350 -> 16358; 97.48% -> **97.53%**).
+- **Embarcadero: 96.92 -> 97.08%** (+8 — Box2D.Collision, Box2D.Common, Box2D.Dynamics, Box2D.Rope, etc.)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +120 files / 5 reverts. 414 fails remain. Embarcadero crosses 97%.
+
+---
