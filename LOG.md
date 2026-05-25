@@ -678,6 +678,33 @@ Same magnitude as iter 14's broader attempt. Embarcadero RTL has many `{$IFDEF X
 
 ---
 
+## 2026-05-24 20:40  Iter 28 — pp_block in declUses/declRequires (BIG WIN)
+
+Investigating Embarcadero `procedure OSExecute; begin {$IFDEF MSWINDOWS}` cluster (6 files). The actual root cause turned out to be the preceding `uses` clause, not the procedure body:
+
+```pascal
+uses
+{$IFDEF MSWINDOWS}
+  Winapi.ShellAPI, Winapi.Windows;     <-- ';' INSIDE the IFDEF
+{$ENDIF MSWINDOWS}
+{$IFDEF POSIX}
+Posix.Stdlib;                          <-- ';' INSIDE this IFDEF too
+{$ENDIF POSIX}
+```
+
+The scanner consumes each `{$IFDEF}...{$ENDIF}` block as one external pp_block token (in extras). The terminating `;` is INSIDE the pp_block — so the parser sees `uses (extras) (extras) procedure ...` with no `;` for the uses clause, fails, and cascades errors through the rest of the file.
+
+Fix: add `$.pp_block` to the `repeat1(choice(...))` of `declUses` (and `declRequires` for `.dpk`). Both are designed permissively to allow `pp / , / ;` interleaving — pp_block was the missing piece.
+
+**Result**: **+69 files** (15605 → 15674; 91.41% → **91.81%**).
+- Embarcadero: 88.21% → **89.01%** (+42)
+- Spring4D: 91.08% → **91.34%** (+2 — likely Spring4D's uses-clauses also had this pattern)
+- ORM3 / TableTools / DevExpress / OmniThread held
+
+Biggest single-iter win since iter 16 (generic-type constraints, +73 files). The pattern is heavily used in Embarcadero RTL's cross-platform shims and Spring4D's compatibility layer.
+
+---
+
 
 
 

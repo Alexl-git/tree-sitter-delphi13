@@ -62,6 +62,8 @@
 |24 | 2026-05-24 18:50 | 91.25% | 15,579 | REVERTED — prec(-1) pp_block+end body still −502; ORM3 ceiling FINAL |
 |25 | 2026-05-24 19:30 | **91.41%** | **15,605** | `const [ref]` arg attr + prec(-1) on pp_block-as-type (Embarcadero **88.21%**) |
 |26 | 2026-05-24 20:10 | 91.41% | 15,605 | scanner: add `packed` to refuse-list (foundation — 0 file delta, fixes IFDEF-packed pattern, DBClient errors 7→5) |
+|27 | 2026-05-24 20:25 | 91.41% | 15,605 | REVERTED — `type` in refuse-list net -12 (Spring +2 / Embarcadero -6) |
+|28 | 2026-05-24 20:40 | **91.81%** | **15,674** | `pp_block` in declUses/declRequires (Embarcadero **89.01%**, +42; Spring4D **91.34%**, +2) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -69,8 +71,8 @@
 |--------------------|------|------|--------|
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
-| **Spring4D**       |  715 |   70 | **91.08%** |
-| **Embarcadero**    | 4678 |  625 | **88.21%** |
+| **Spring4D**       |  717 |   68 | **91.34%** |
+| **Embarcadero**    | 4720 |  583 | **89.01%** |
 | DevExpress         | 4196 |  194 | 95.58% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
