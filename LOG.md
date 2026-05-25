@@ -758,6 +758,18 @@ Both reverted to avoid grammar bloat without functional gain. Aliases-everywhere
 
 ---
 
+## 2026-05-24 23:05  Iter 33 — Investigation-only — DevExpress cluster
+
+Added `Default` and `Operator` to `declEnumValue` soft-keyword aliases for DevExpress's `TdxChartToolTipMode = (Default, None, ...)` enum (2 files). Generated cleanly. **0 file delta** because each of those files ALSO has the qualified-id-subrange pattern at the next type decl (`TdxChartActualToolTipMode = TdxChartToolTipMode.None..TdxChartToolTipMode.Crosshair;`) which was tried + reverted in iter 11.
+
+Reverted iter 33 grammar change.
+
+**Investigation note**: Spring4D's remaining 68 fails are dominated by patterns already marked BLOCKED (asm-vs-pascal, else-IFDEF, IFDEF-in-expression). OmniThread's 20 fails are similarly IFDEF-in-expression dominated. DevExpress's 192 fails would mostly need qualified-id-subrange to unlock — itself a BLOCKED-on-conflict pattern.
+
+Cohort of "easy wins" largely exhausted at iter 28-31. The remaining cliffs require multi-pattern combos or preprocessor expansion.
+
+---
+
 
 
 
