@@ -324,6 +324,11 @@ module.exports = grammar({
 		// trailing kDeprecated. Ambiguous which level the `deprecated` belongs.
 		[$.typeref],
 		[$._declClass],
+		// Iter 65: trailing `inline` (no `;`) before body in defProc conflicts
+		// with `_declProc`'s `inline ;` _procAttributeNoExt repeat. Same for
+		// _declOperator (class operators can also be inlined).
+		[$._declProc],
+		[$._declOperator],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -832,6 +837,12 @@ module.exports = grammar({
 
 		defProc:         $ => seq(
 			/*pp($,*/ field('header', $.declProc)/*)*/,
+			// DevExpress nested fn pattern (iter 65):
+			//   function Production(...): Single; inline
+			//   begin ... end;
+			// Trailing `inline` without `;` before body.
+			// Restricted to kInline only (kDeprecated 'msg' conflicts with []).
+			optional(field('trailingAttr', $.kInline)),
 			pp(
 			 	$,
 				field('local', optional($._definitions)),

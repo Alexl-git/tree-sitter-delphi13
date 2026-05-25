@@ -5453,6 +5453,22 @@
           "type": "CHOICE",
           "members": [
             {
+              "type": "FIELD",
+              "name": "trailingAttr",
+              "content": {
+                "type": "SYMBOL",
+                "name": "kInline"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
               "type": "SEQ",
               "members": [
                 {
@@ -10777,6 +10793,12 @@
     ],
     [
       "_declClass"
+    ],
+    [
+      "_declProc"
+    ],
+    [
+      "_declOperator"
     ],
     [
       "declProcFwd"

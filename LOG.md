@@ -1299,6 +1299,16 @@ Spring4D MongoDB superobject.pas uses `while true do redo: case ... end;` — a 
 
 ---
 
+## 2026-05-25 09:40  Iter 64 — Investigation only (no new piecemeal wins)
+
+Re-scanned tracked-root remaining fails for any non-IFDEF patterns that haven't been addressed:
+- GpLists.pas r7556: `end; { TFifoBlock.Create }` ERROR — likely cascade from IFDEF-in-expression on line 7653 (`{$IFDEF GpLists_HasAtomic}AtomicIncrement{$ELSE}InterlockedAdd{$ENDIF}(...)`)
+- DevExpress cascade cluster: `LookAndFeel.Refresh; end; function ...` — same iter-48 BLOCKED asymmetric-IFDEF root cause
+- Spring.Persistence.SQL.Generators.Ansi: `i < index then Continue` — exprBinary `<` is being parsed with `then` absorbed as identifier inside ERROR. Subtle interaction with exprTpl narrowing. Not easily fixable without re-evaluating precedence.
+
+**No commit-worthy single-pattern fix.** The remaining ~93.46% → ~95% gap is dominated by IFDEF-cascade root causes. Returns from MISSING-only mining are diminishing.
+
+---
 
 
 
@@ -1306,3 +1316,26 @@ Spring4D MongoDB superobject.pas uses `while true do redo: case ... end;` — a 
 
 
 
+
+
+## 2026-05-25 10:30  Iter 65 — Trailing `inline` (no `;`) before body in defProc
+
+DevExpress `dxChartXYSeriesLineView.pas` r640 nested fn:
+```pascal
+function Production(const P, A, B: TdxPointF): Single; inline
+begin
+  Result := (B.X - A.X) * (P.Y - A.Y) - (B.Y - A.Y) * (P.X - A.X);
+end;
+```
+
+Delphi accepts `inline` between `;` and `begin` without a separating `;`. The grammar's `_procAttributeNoExt` repeat requires `attr ;` so the trailing `inline` (followed by `begin`) didn't match.
+
+Fix: in `defProc`, added `optional(field('trailingAttr', $.kInline))` between declProc header and body. Restricted to `kInline` (using full `procAttribute` conflicted with `kDeprecated 'msg'` ambiguity vs `[...]`). Added GLR conflicts `[$._declProc]` and `[$._declOperator]` for the `; inline` choice point (continue _procAttributeNoExt repeat vs end and absorb as trailingAttr).
+
+**Result**: +3 files (15950 -> 15953; 93.46% -> **93.47%**).
+- DevExpress: 97.72% -> **97.77%** (+2)
+- ORM3 / TableTools / Spring4D / Embarcadero / OmniThread: all held
+
+Small but pattern-correct fix. Restricting to `kInline` keeps the change minimal-surface.
+
+---

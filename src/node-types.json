@@ -3787,6 +3787,16 @@
             "named": true
           }
         ]
+      },
+      "trailingAttr": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "kInline",
+            "named": true
+          }
+        ]
       }
     },
     "children": {

@@ -91,6 +91,8 @@
 |59 | 2026-05-25 08:30 | **93.38%** | **15,938** | Empty `()` in arrInitializer (Spring4D **92.10%**, Embarcadero **91.13%**, +12 files) |
 |60 | 2026-05-25 08:50 | **93.44%** | **15,948** | Extended inline procAttr (overload/virtual/etc.) in _declProc (Spring4D **92.36%**, +10 files) |
 |61 | 2026-05-25 09:00 | **93.46%** | **15,950** | declField allows deprecated/platform/experimental hint (Embarcadero **91.28%**, +2 files) |
+|62-64| 2026-05-25 09:15-09:40 | 93.46% | 15,950 | Investigation only — anonymous-record `;` optional reverted (-3 ORM3); while-label 0Δ reverted; iter 64 confirmed remaining gap is IFDEF-cascade dominated |
+|65 | 2026-05-25 10:30 | **93.47%** | **15,953** | Trailing `inline` (no `;`) before body in defProc (DevExpress **97.77%**, +3 files; nested fn `function F(...): T; inline begin`) |
 
 ## Per-root focus snapshot (iter 23)
 
