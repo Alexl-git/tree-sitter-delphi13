@@ -1238,6 +1238,21 @@ This was a long-standing pessimization in the original tree-sitter-pascal gramma
 
 ---
 
+## 2026-05-25 08:30  Iter 59 — Empty `()` in arrInitializer
+
+Spring4D Mocking framework uses `Arg: TArg = ();` empty sentinels for default-value placeholders. The grammar's `arrInitializer` used `delimited1` (requires >=1 element) so empty `()` was rejected.
+
+Switched to `delimited` (allows empty).
+
+**Result**: +12 files (15926 → 15938; 93.31% → **93.38%**).
+- Spring4D: 91.46% → **92.10%** (+5 — recovered iter 58's -2 and added more)
+- Embarcadero: 91.08% → **91.13%** (+3 — similar empty-tuple sentinels in RTL)
+- Others held
+
+The Spring4D recovery proves iter 58's narrowing was net positive (-2 then +5 = +3 net on Spring4D after iter 59 fix).
+
+---
+
 
 
 
