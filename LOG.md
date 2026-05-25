@@ -663,6 +663,21 @@ New char-by-char prune state machine properly distinguishes:
 
 ---
 
+## 2026-05-24 20:25  Iter 27 — REVERTED — `type` in scanner refuse-list
+
+Added `type` keyword to scanner refuse-list so `{$IFDEF TYPE_IDENTITY}type {$ENDIF}DWord` would split into pp + type-keyword + pp, letting the grammar's `declType` distinct-type-alias path handle it.
+
+**Result**: net -12 files. Breakdown:
+- Spring4D: **+2** (715 → 717)
+- Embarcadero: **-6** (4678 → 4672)
+- Others held
+
+Same magnitude as iter 14's broader attempt. Embarcadero RTL has many `{$IFDEF X}type Foo = ...{$ENDIF}` patterns where the IFDEF wraps a whole type declaration; refusing the block leaves these orphaned because the regex-pp wrapper only handles single-level if-else-end balanced patterns and the surrounding context isn't a simple statement.
+
+**Trade-off net negative — reverted.** Spring4D's +2 wasn't worth Embarcadero's -6.
+
+---
+
 
 
 
