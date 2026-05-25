@@ -6,7 +6,7 @@
   "types": "bindings/node",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexanderliberov/tree-sitter-delphi13.git"
+    "url": "git+https://github.com/Alexl-git/tree-sitter-delphi13.git"
   },
   "keywords": [
     "parser",
@@ -15,9 +15,9 @@
     "delphi13",
     "pascal"
   ],
-  "homepage": "https://github.com/alexanderliberov/tree-sitter-delphi13",
+  "homepage": "https://github.com/Alexl-git/tree-sitter-delphi13",
   "bugs": {
-    "url": "https://github.com/alexanderliberov/tree-sitter-delphi13/issues"
+    "url": "https://github.com/Alexl-git/tree-sitter-delphi13/issues"
   },
   "author": "Alexander Liberov",
   "license": "MIT",
