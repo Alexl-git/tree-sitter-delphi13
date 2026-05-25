@@ -980,6 +980,11 @@ module.exports = grammar({
 					// Subrange types: `type TJvMargin = 2..24;`, also
 					// `type T = Low(Integer)..High(Integer);`
 					$.subrangeType,
+					// Phase 3b iter 8: strong-typed string with code-page
+					// argument — `UTF8String = type _AnsiString(65001);`
+					// and `RawByteString = type _AnsiString($ffff);`
+					// (System.pas RTL pattern).
+					seq($.kType, $.identifier, '(', $._literalInt, ')'),
 				)
 			),
 			';',

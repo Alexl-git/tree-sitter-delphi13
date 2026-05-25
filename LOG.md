@@ -1497,3 +1497,13 @@ Did not attempt `type _AnsiString(N)` parameterized type this iter — time pres
 Cumulative since Phase 3b iter 1: +19 files / 4 reverts intermixed. 515 fails remain.
 
 ---
+
+## 2026-05-25 14:42  Phase 3b iter 8 — Strong-typed parameterized string
+
+Added to declType the alternative `seq($.kType, $.identifier, '(', $._literalInt, ')')` covering `UTF8String = type _AnsiString(65001);` and `RawByteString = type _AnsiString($ffff);` (System.pas RTL pattern).
+
+**Result**: 0 file delta (16257 unchanged). The fix moved System.pas's first error from r1232 to r1568 — the type _AnsiString line now parses, but the file has another blocker further down (declClass with function-typed field + trailing cdecl, no `;` between). Next iter targets that.
+
+Kept the change in spite of 0 delta — it's a correct narrow grammar pattern that will unlock System.pas combined with the next fix.
+
+---

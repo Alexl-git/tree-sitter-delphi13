@@ -3466,6 +3466,14 @@
         "required": true,
         "types": [
           {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
             "type": "declClass",
             "named": true
           },
@@ -3475,6 +3483,10 @@
           },
           {
             "type": "declIntf",
+            "named": true
+          },
+          {
+            "type": "identifier",
             "named": true
           },
           {
