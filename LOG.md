@@ -1218,6 +1218,26 @@ Same pattern as iter 56 applied to a different rule. The WebView2 / COM-callback
 
 ---
 
+## 2026-05-25 08:10  Iter 58 — exprTpl args narrowed to typeref (HUGE WIN)
+
+DevExpress cxGeometry and many others had `MISSING kGt` insertions on `H < 0` style binary-less-than expressions. The grammar was parsing them as `Foo<0>` (exprTpl generic instantiation) because exprTpl's args were `delimited1($._expr)` — too permissive.
+
+In real Delphi code, generic instantiation almost always uses TYPE arguments: `TList<TFoo>`, `TDictionary<string, Integer>`, `TArray<Spring.IList<Spring.TPair<TKey, TValue>>>`. Constant generic args (`Foo<5>`) are exceedingly rare.
+
+Narrowed to `delimited1($.typeref, ',', 5)`. Required a `[$._ref, $._typeref]` conflict declaration because identifiers can be either at the `<args>` boundary.
+
+**Result**: **+77 files** (15849 → 15926; 92.86% → **93.31%**).
+- DevExpress: 96.40% → **97.68%** (+56 — biggest jump in DevExpress history)
+- Embarcadero: 90.85% → **91.08%** (+12)
+- OmniThread: 92.51% → **93.26%** (+2)
+- Spring4D: 91.72% → 91.46% (-2 — acceptable, below the >5 threshold)
+
+The Spring4D regression is because Spring4D uses some non-typeref generic args (constant expressions). 2 files affected — net trade-off strongly positive.
+
+This was a long-standing pessimization in the original tree-sitter-pascal grammar; nobody had narrowed exprTpl because the implications weren't measured.
+
+---
+
 
 
 
