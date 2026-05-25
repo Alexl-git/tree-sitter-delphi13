@@ -4301,8 +4301,12 @@
                   "name": "declClass"
                 },
                 {
-                  "type": "SYMBOL",
-                  "name": "pp_block"
+                  "type": "PREC",
+                  "value": -1,
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "pp_block"
+                  }
                 }
               ]
             }
@@ -4361,8 +4365,12 @@
                   "name": "declClass"
                 },
                 {
-                  "type": "SYMBOL",
-                  "name": "pp_block"
+                  "type": "PREC",
+                  "value": -1,
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "pp_block"
+                  }
                 }
               ]
             },
@@ -4421,8 +4429,12 @@
                         "name": "declClass"
                       },
                       {
-                        "type": "SYMBOL",
-                        "name": "pp_block"
+                        "type": "PREC",
+                        "value": -1,
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "pp_block"
+                        }
                       }
                     ]
                   }
@@ -8554,6 +8566,18 @@
                 {
                   "type": "SYMBOL",
                   "name": "kConstref"
+                }
+              ]
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "rttiAttributes"
+                },
+                {
+                  "type": "BLANK"
                 }
               ]
             },

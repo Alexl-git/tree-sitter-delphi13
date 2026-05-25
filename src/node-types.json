@@ -967,7 +967,7 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
         {
@@ -984,6 +984,10 @@
         },
         {
           "type": "kVar",
+          "named": true
+        },
+        {
+          "type": "rttiAttributes",
           "named": true
         }
       ]

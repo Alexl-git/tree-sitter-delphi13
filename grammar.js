@@ -622,7 +622,10 @@ module.exports = grammar({
 			// (the external scanner produces pp_block as one opaque token at this
 			// position; the regex pp / pp_block-in-extras paths still handle the
 			// "wraps a whole statement/declaration" case.)
-			$.pp_block,
+			// prec(-1): only used when no real type follows the pp_block — handles
+			// `TRecInfo = {$IFDEF CPUX86}packed{$ENDIF} record...end;` correctly
+			// (pp_block becomes extras, real type is `packed record...` after).
+			prec(-1, $.pp_block),
 		)),
 
 		typeref:         $ => seq(
@@ -1170,6 +1173,10 @@ module.exports = grammar({
 		declArg:         $ => choice(
 			seq(
 				choice($.kVar, $.kConst, $.kOut, $.kConstref),
+				// Inline attribute between modifier and name:
+				//   `const [ref] X: T` — pass-by-reference const (Delphi 10+).
+				//   Generally any bracketed attribute is allowed here.
+				optional($.rttiAttributes),
 				field('name', delimited1($.identifier)),
 				optional(seq(
 					':', field('type', $.type),
