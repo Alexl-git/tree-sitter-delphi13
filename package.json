@@ -4,7 +4,21 @@
   "description": "Tree-sitter grammar focused on Delphi 13 (RAD Studio 37.0)",
   "main": "bindings/node",
   "types": "bindings/node",
-  "repository": null,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexanderliberov/tree-sitter-delphi13.git"
+  },
+  "keywords": [
+    "parser",
+    "tree-sitter",
+    "delphi",
+    "delphi13",
+    "pascal"
+  ],
+  "homepage": "https://github.com/alexanderliberov/tree-sitter-delphi13",
+  "bugs": {
+    "url": "https://github.com/alexanderliberov/tree-sitter-delphi13/issues"
+  },
   "author": "Alexander Liberov",
   "license": "MIT",
   "devDependencies": {

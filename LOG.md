@@ -462,10 +462,10 @@ except
   on EConvertError do
   begin
     ...
-    raise EMicroniteMessage.Create(...)    // no trailing ;
+    raise EAppException.Create(...)    // no trailing ;
   end;
   else
-    raise EMicroniteMessage.Create(...)    // no trailing ; — followed by `end` of try
+    raise EAppException.Create(...)    // no trailing ; — followed by `end` of try
 end;
 ```
 
