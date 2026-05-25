@@ -770,6 +770,26 @@ Cohort of "easy wins" largely exhausted at iter 28-31. The remaining cliffs requ
 
 ---
 
+## 2026-05-24 23:30  Iter 34 — Qualified-id subrange (DevExpress unlock)
+
+Iter 11 tried `TFoo.Bar..TFoo.Baz` and reverted due to typerefDot conflict. This iter retries with proper conflict declaration `[$._typeref, $._subrangeBound]`.
+
+Added narrow 2-level form `seq($.identifier, '.', $.identifier)` to `_subrangeBound`. Conflict declared. Generated cleanly.
+
+**Result**: +8 files (15687 → 15695; 91.89% → **91.93%**).
+- DevExpress: 95.63% → **95.76%** (+6)
+- Embarcadero: 89.21% → **89.25%** (+2)
+- Others held
+
+The DevExpress ChartCore enum-class subrange pattern is now parsed:
+```pascal
+TdxChartActualToolTipMode = TdxChartToolTipMode.None..TdxChartToolTipMode.Crosshair;
+```
+
+This was the cluster blocked behind iter 11's revert. With the proper conflict, the resolution works.
+
+---
+
 
 
 

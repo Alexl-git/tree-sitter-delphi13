@@ -67,6 +67,8 @@
 |29 | 2026-05-24 20:55 | 91.81% | 15,674 | REVERTED — cdecl-after-declField -2 |
 |30 | 2026-05-24 21:25 | 91.81% | 15,674 | REVERTED — pp_block in range -97 (IFDEF-in-expr BLOCKED) |
 |31 | 2026-05-24 22:30 | **91.89%** | **15,687** | soft-keyword names in declVar (Embarcadero **89.21%**) |
+|32-33| 2026-05-24 22:50 | 91.89% | 15,687 | 0-delta investigations (declField/Arg + Operator + enum Default; reverted) |
+|34 | 2026-05-24 23:30 | **91.93%** | **15,695** | qualified-id subrange `TFoo.Bar..TFoo.Baz` (DevExpress **95.76%**) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -75,8 +77,8 @@
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  717 |   68 | **91.34%** |
-| **Embarcadero**    | 4731 |  572 | **89.21%** |
-| DevExpress         | 4198 |  192 | 95.63% |
+| **Embarcadero**    | 4733 |  570 | **89.25%** |
+| DevExpress         | 4204 |  186 | 95.76% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |
