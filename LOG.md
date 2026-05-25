@@ -790,6 +790,16 @@ This was the cluster blocked behind iter 11's revert. With the proper conflict, 
 
 ---
 
+## 2026-05-24 23:50  Iter 35 — REVERTED — declEnumValue Default+Operator aliases
+
+Hoped that with qualified-id-subrange now in (iter 34), the enum-Default alias would flip more DevExpress chart files.
+
+**Result**: 0 file delta. The dxChartCore.pas file STILL has another blocking issue beyond the two patterns we addressed. Reverted to avoid grammar bloat.
+
+Recent iter cadence: 32 reverted, 33 0-delta, 34 +8, 35 0-delta. Approaching but not yet at the "3 consecutive non-improvement" stage-transition trigger.
+
+---
+
 
 
 
