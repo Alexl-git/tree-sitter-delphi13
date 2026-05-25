@@ -1705,3 +1705,16 @@ Required new soft keyword `kDependency: /dependency/i`.
 Cumulative since Phase 3b iter 1: +120 files / 5 reverts. 414 fails remain. Embarcadero crosses 97%.
 
 ---
+
+## 2026-05-25 18:28  Phase 3b iter 18 — asm `@@label:` local-label syntax
+
+asmBody regex was stopping at `@@end:` because it parsed `@@` as two `[^eE]` chars then `end` as the asm-block terminator. Added `@@[a-zA-Z_][a-zA-Z0-9_]*` and `@[a-zA-Z_][a-zA-Z0-9_]*` chunks so labels are consumed as one piece — `end` after a label-prefix `@@` no longer falsely closes the asm body.
+
+**Result**: +7 files (16358 -> 16365; 97.53% -> **97.57%**).
+- Spring4D: 97.05 -> **97.56%** (+4 — CRC, SHA crypto asm)
+- 3 more in other roots (likely OtlSync similar)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +127 files / 5 reverts. 407 fails remain.
+
+---

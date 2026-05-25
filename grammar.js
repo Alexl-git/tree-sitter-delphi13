@@ -502,6 +502,13 @@ module.exports = grammar({
 			// embedded `end` substring (like in `addend` or `xchg ext`)
 			// doesn't falsely terminate the body.
 			/[a-df-zA-DF-Z_][a-zA-Z0-9_]*/,
+			// Phase 3b iter 18: local asm labels `@@end:` / `@@loop:` etc.
+			// Without this the `@@end` parses as `@@` (two `[^eE]`) + `end`
+			// (asm terminator), falsely closing the asm block.
+			// Match `@@<ident>` as one chunk so `end` after `@@` doesn't
+			// terminate.
+			/@@[a-zA-Z_][a-zA-Z0-9_]*/,
+			/@[a-zA-Z_][a-zA-Z0-9_]*/,
 			// Single-char alternatives — preserve the original e/E word-boundary
 			// detection: stop when we see the bare `end` keyword.
 			/[^eE]/,
