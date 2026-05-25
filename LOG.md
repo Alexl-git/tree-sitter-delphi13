@@ -1253,6 +1253,18 @@ The Spring4D recovery proves iter 58's narrowing was net positive (-2 then +5 = 
 
 ---
 
+## 2026-05-25 08:50  Iter 60 — Extended inline procAttribute in _declProc
+
+AzureAPI uses lenient `procedure F(args) overload;` (no `;` between `)` and `overload`). Iter 56's inline-attr was calling-conv only; extended to include `overload`/`virtual`/`abstract`/`override`/`reintroduce`/`static`/`dynamic`/`final`. Changed `optional` → `repeat` to allow chained attrs like `... cdecl overload`.
+
+**Result**: +10 files (15938 → 15948; 93.38% → **93.44%**).
+- Spring4D: 92.10% → **92.36%** (+2)
+- Embarcadero: 91.13% → **91.25%** (+6)
+- DevExpress: 97.68% → **97.72%** (+2)
+- ORM3 / TableTools / OmniThread held
+
+---
+
 
 
 

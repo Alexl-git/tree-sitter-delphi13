@@ -89,6 +89,7 @@
 |57 | 2026-05-25 07:50 | **92.86%** | **15,849** | Inline calling-conv on lambdas (Vcl.Edge WebView2 anon-method callbacks, +7) |
 |58 | 2026-05-25 08:10 | **93.31%** | **15,926** | exprTpl args narrowed to typeref — fixes `<` ambiguity (DevExpress **97.68%**, OmniThread **93.26%**, +77 files) |
 |59 | 2026-05-25 08:30 | **93.38%** | **15,938** | Empty `()` in arrInitializer (Spring4D **92.10%**, Embarcadero **91.13%**, +12 files) |
+|60 | 2026-05-25 08:50 | **93.44%** | **15,948** | Extended inline procAttr (overload/virtual/etc.) in _declProc (Spring4D **92.36%**, +10 files) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -96,9 +97,9 @@
 |--------------------|------|------|--------|
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
-| **Spring4D**       |  723 |   62 | **92.10%** |
-| **Embarcadero**    | 4831 |  470 | **91.13%** |
-| DevExpress         | 4288 |  102 | 97.68% |
+| **Spring4D**       |  725 |   60 | **92.36%** |
+| **Embarcadero**    | 4837 |  464 | **91.25%** |
+| DevExpress         | 4290 |  100 | 97.72% |
 | OmniThread         |  249 |   18 | 93.26% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |
