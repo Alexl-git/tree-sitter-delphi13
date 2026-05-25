@@ -6873,15 +6873,43 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "kCdecl",
+          "named": true
+        },
         {
           "type": "kFunction",
           "named": true
         },
         {
+          "type": "kInline",
+          "named": true
+        },
+        {
+          "type": "kPascal",
+          "named": true
+        },
+        {
           "type": "kProcedure",
+          "named": true
+        },
+        {
+          "type": "kRegister",
+          "named": true
+        },
+        {
+          "type": "kSafecall",
+          "named": true
+        },
+        {
+          "type": "kStdcall",
+          "named": true
+        },
+        {
+          "type": "kWinapi",
           "named": true
         }
       ]

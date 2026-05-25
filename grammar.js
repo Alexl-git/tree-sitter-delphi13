@@ -517,6 +517,14 @@ module.exports = grammar({
 				':',
 				field('type', $.typeref),
 			)),
+			// Optional inline calling-convention on the lambda (Vcl.Edge.pas
+			// passes anonymous-method callbacks with `stdcall` to interop with
+			// WebView2 COM):
+			//   var h := function(R: HRESULT): HRESULT stdcall begin ... end;
+			optional(choice(
+				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+				$.kRegister, $.kWinapi, $.kInline
+			)),
 			field('local', optional($._definitions)),
 			field('body', choice(tr($, 'block'), tr($, 'asm'))),
 		),
