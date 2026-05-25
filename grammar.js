@@ -317,6 +317,9 @@ module.exports = grammar({
 		[$.declConst],
 		// Qualified-id subrange `TFoo.Bar..TFoo.Baz` vs `_typeref` (typerefDot).
 		[$._typeref, $._subrangeBound],
+		// Iter 58: exprTpl args narrowed to typeref — generic-arg identifier
+		// vs general expression-ref identifier conflict.
+		[$._ref, $._typeref],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -593,7 +596,14 @@ module.exports = grammar({
 		// template. Then the existing node is simply "renamed". Because of
 		// this, we can't have an extra node in only one of the branches.
 		//
-		exprTpl:         $ => op.args(5, $._ref, $.kLt, delimited1($._expr, ',', 5),  $.kGt),
+		// Generic instantiation `Foo<A, B, C>`. Originally `delimited1($._expr)`
+		// but that caused `H < 0` (binary less-than) to be parsed as `Foo<0>`
+		// (exprTpl) and parser then inserted MISSING `>` when no matching `>`
+		// arrived. Narrowed to `typeref` — covers `TList<TFoo>`,
+		// `TDictionary<string, TBar>` etc. (real generic instantiation).
+		// Constant generic args (rare in Delphi corpus) lose structural parsing
+		// but the program-as-a-whole parses cleanly.
+		exprTpl:         $ => op.args(5, $._ref, $.kLt, delimited1($.typeref, ',', 5),  $.kGt),
 		exprSubscript:   $ => op.args(5, $._ref, '[',   $.exprArgs,  ']'  ),
 		exprCall:        $ => op.args(5, $._ref, '(',   optional($.exprArgs), ')'  ),
 

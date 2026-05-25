@@ -3368,7 +3368,7 @@
                           "members": [
                             {
                               "type": "SYMBOL",
-                              "name": "_expr"
+                              "name": "typeref"
                             },
                             {
                               "type": "STRING",
@@ -3385,7 +3385,7 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "_expr"
+                  "name": "typeref"
                 }
               ]
             }
@@ -10690,6 +10690,10 @@
     [
       "_typeref",
       "_subrangeBound"
+    ],
+    [
+      "_ref",
+      "_typeref"
     ],
     [
       "declProcFwd"
