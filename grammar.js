@@ -837,12 +837,18 @@ module.exports = grammar({
 
 		defProc:         $ => seq(
 			/*pp($,*/ field('header', $.declProc)/*)*/,
-			// DevExpress nested fn pattern (iter 65):
+			// DevExpress nested fn pattern (iter 65, extended iter 66):
 			//   function Production(...): Single; inline
 			//   begin ... end;
-			// Trailing `inline` without `;` before body.
-			// Restricted to kInline only (kDeprecated 'msg' conflicts with []).
-			optional(field('trailingAttr', $.kInline)),
+			//   function EnumChildProc(...): BOOL; stdcall
+			//   var ...
+			// Trailing calling-conv / inline without `;` before body.
+			// Restricted to safe keyword set (kDeprecated 'msg' conflicts with []).
+			optional(field('trailingAttr', choice(
+				$.kInline,
+				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+				$.kRegister, $.kWinapi
+			))),
 			pp(
 			 	$,
 				field('local', optional($._definitions)),

@@ -93,6 +93,7 @@
 |61 | 2026-05-25 09:00 | **93.46%** | **15,950** | declField allows deprecated/platform/experimental hint (Embarcadero **91.28%**, +2 files) |
 |62-64| 2026-05-25 09:15-09:40 | 93.46% | 15,950 | Investigation only — anonymous-record `;` optional reverted (-3 ORM3); while-label 0Δ reverted; iter 64 confirmed remaining gap is IFDEF-cascade dominated |
 |65 | 2026-05-25 10:30 | **93.47%** | **15,953** | Trailing `inline` (no `;`) before body in defProc (DevExpress **97.77%**, +3 files; nested fn `function F(...): T; inline begin`) |
+|66 | 2026-05-25 11:00 | **93.48%** | **15,955** | Extended trailingAttr to calling conventions stdcall/cdecl/safecall/pascal/register/winapi (DevExpress **97.81%**, +2 files) |
 
 ## Per-root focus snapshot (iter 23)
 

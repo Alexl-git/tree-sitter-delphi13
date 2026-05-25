@@ -1339,3 +1339,27 @@ Fix: in `defProc`, added `optional(field('trailingAttr', $.kInline))` between de
 Small but pattern-correct fix. Restricting to `kInline` keeps the change minimal-surface.
 
 ---
+
+## 2026-05-25 11:00  Iter 66 — Extended trailingAttr to calling conventions
+
+cxPropEditors.pas r148 nested fn:
+```pascal
+function EnumChildProc(WND: HWND; LParam: Integer): BOOL; stdcall
+var
+  AName: array[0..255] of Char;
+```
+
+Same pattern as iter 65 but with `stdcall` instead of `inline` (no `;` between callconv and local-var section).
+
+Extended `trailingAttr` in defProc to the safe keyword set:
+`kInline | kStdcall | kCdecl | kSafecall | kPascal | kRegister | kWinapi`.
+
+Excluded `kDeprecated` etc. — the `'msg'` form (`deprecated 'msg'`) conflicts with the rttiAttributes `[...]` syntax that may follow in some contexts.
+
+**Result**: +2 files (15953 -> 15955; 93.47% -> **93.48%**).
+- DevExpress: 97.77% -> **97.81%** (+2)
+- All other roots held
+
+Diminishing-returns regime — these are 1-2 file wins per iter — but the pattern-correct fixes still apply and no regressions.
+
+---
