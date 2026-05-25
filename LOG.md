@@ -1418,3 +1418,27 @@ None of these fit in a 10-min iter. Reverted.
 Next iter: try the scanner-level unbalanced-IFDEF heuristic instead (different angle — attacks the structural-IFDEF cluster rather than the soft-keyword cluster).
 
 ---
+
+## 2026-05-25 13:15  Phase 3b iter 4 — Scanner heuristic refuses too much
+
+Implemented scanner-level heuristic: when DIR_OPEN classified, peek first significant token of THEN body (skipping whitespace and comments). If first non-comment token is word-bounded `begin`/`asm`/`end`, refuse PP_OPEN and fall through to PP_BLOCK opaque emission.
+
+Probe still parsed cleanly. Full corpus: -94 files (16238 -> 16144).
+
+The heuristic was too aggressive. Many legitimate IFDEFs wrap whole begin/asm blocks that DO parse correctly under THEN-wins (e.g. `{$IFDEF CPUX86}asm ... end{$ELSE}begin ... end{$ENDIF}` for platform-specific implementations). Refusing them silently emits opaque pp_block, losing the structural parse of code that previously worked.
+
+Reverted. Back at 16238 / 96.82%.
+
+The remaining 534 failures are dominated by patterns that need either:
+1. Soft-keyword identifier disambiguation (kIndex/kRead/kWrite tokenization conflict — needs grammar-wide refactor of the word/keyword boundary)
+2. Preprocessor pass for code-injection IFDEFs (Datasnap pattern)
+3. Asymmetric IFDEF whose THEN-only parse doesn't fit the parent context
+
+All three are architectural rather than tactical. Phase 3b's "refuse-read-through" angle assumed a clean structural signal, but the structural signal that DOES work (begin/asm at start) cuts too broadly. A more refined signal would need parser-context awareness which scanners don't have.
+
+Net session result: 96.82% is likely close to the practical ceiling without the planned delphi13-preprocessor companion. Recommend pausing iteration and either:
+- Starting the preprocessor package
+- Starting the delphi13-ifdef-resolver post-pass (recovers ELSE info on the 96.82% we have)
+- Accepting 96.82% as the shipped baseline and merging refactor branch (already merged)
+
+---
