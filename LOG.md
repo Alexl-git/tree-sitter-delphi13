@@ -977,6 +977,25 @@ Biggest single-iter win since iter 28 (uses-clause pp_block, +69 files). The pat
 
 ---
 
+## 2026-05-25 03:00  Iter 45 — Soft-keyword names in declConst
+
+DevExpress `dxCoreGraphics.pas` has a color palette where `Default` is one of the named constants:
+```pascal
+public const
+  Empty                = $00000000;
+  Transparent          = $00FFFFFF;
+  Default              = $00010203;
+  AliceBlue            = $FFF0F8FF;
+```
+
+`Default` is a Delphi keyword (used in property `default` specifier) so the lexer matched it as kDefault. Added the same soft-keyword alias set used for declVar to declConst — Default + Message/Name/Index/Read/Write/Reference.
+
+**Result**: +4 files (15762 → 15766; 92.35% → **92.38%**).
+- DevExpress: 95.81% → **95.90%** (+4)
+- Other roots held
+
+---
+
 
 
 

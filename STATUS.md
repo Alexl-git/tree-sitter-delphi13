@@ -79,6 +79,7 @@
 |42 | 2026-05-25 02:10 | 92.09% | 15,717 | Investigation only (xCreate cdecl + padding-array both blocked) |
 |43 | 2026-05-25 02:30 | **92.10%** | **15,719** | Delphi 11+ underscore digit-separator `1_000_000_000` in int literals (Embarcadero **89.32%**) |
 |44 | 2026-05-25 02:45 | **92.35%** | **15,762** | `raise X at addr` exception re-raise w/ address (Embarcadero **89.91%**, +43 files) |
+|45 | 2026-05-25 03:00 | **92.38%** | **15,766** | Soft-keyword names in declConst (DevExpress **95.90%**, +4 files) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -88,7 +89,7 @@
 | **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  718 |   67 | **91.46%** |
 | **Embarcadero**    | 4766 |  535 | **89.91%** |
-| DevExpress         | 4206 |  184 | 95.81% |
+| DevExpress         | 4210 |  180 | 95.90% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |
