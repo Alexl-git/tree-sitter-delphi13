@@ -2795,6 +2795,10 @@
             "members": [
               {
                 "type": "PATTERN",
+                "value": "[a-df-zA-DF-Z_][a-zA-Z0-9_]*"
+              },
+              {
+                "type": "PATTERN",
                 "value": "[^eE]"
               },
               {

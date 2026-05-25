@@ -446,6 +446,12 @@ module.exports = grammar({
 		// en/EN not followed by d/D, end immediately followed by ident-char
 		// (so it's NOT the keyword, e.g. 'endif' / 'endloop').
 		asmBody: $ => token(prec(-1, repeat1(choice(
+			// Identifier not starting with e/E — consume as a unit so an
+			// embedded `end` substring (like in `addend` or `xchg ext`)
+			// doesn't falsely terminate the body.
+			/[a-df-zA-DF-Z_][a-zA-Z0-9_]*/,
+			// Single-char alternatives — preserve the original e/E word-boundary
+			// detection: stop when we see the bare `end` keyword.
 			/[^eE]/,
 			/[eE][^nN]/,
 			/[eE][nN][^dD]/,
