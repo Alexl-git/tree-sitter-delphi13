@@ -818,7 +818,12 @@ module.exports = grammar({
 		// strictness for parsing robustness on real-world JEDI/JCL/Indy code.
 		declUses:        $ => seq(
 			$.kUses,
-			repeat1(choice($.declUsesUnit, ',', $.pp, ';'))
+			// pp_block (external-scanner token) is added so a uses-clause whose
+			// `;` lives INSIDE an IFDEF block doesn't dangle:
+			//   uses
+			//     {$IFDEF MSWINDOWS}Winapi.Windows;{$ENDIF MSWINDOWS}
+			//     {$IFDEF POSIX}Posix.Stdlib;{$ENDIF POSIX}
+			repeat1(choice($.declUsesUnit, ',', $.pp, $.pp_block, ';'))
 		),
 		// A unit reference inside a uses / contains clause. In program (.dpr) and
 		// package (.dpk) files the unit may carry an explicit source-file path
@@ -828,7 +833,7 @@ module.exports = grammar({
 		// Permissive same as declUses — allows IFDEF interleaving / wrapping.
 		declRequires:    $ => seq(
 			$.kRequires,
-			repeat1(choice($.moduleName, ',', $.pp, ';'))
+			repeat1(choice($.moduleName, ',', $.pp, $.pp_block, ';'))
 		),
 		declContains:    $ => seq(
 			$.kContains,

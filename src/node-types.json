@@ -3020,6 +3020,10 @@
         {
           "type": "pp",
           "named": true
+        },
+        {
+          "type": "pp_block",
+          "named": true
         }
       ]
     }
@@ -3304,6 +3308,10 @@
         },
         {
           "type": "pp",
+          "named": true
+        },
+        {
+          "type": "pp_block",
           "named": true
         }
       ]
