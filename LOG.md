@@ -921,6 +921,21 @@ This consumes `addend` whole. The e-starting char-by-char alts remain for identi
 
 ---
 
+## 2026-05-25 02:10  Iter 42 — Investigation only — `xCreate: function() ; cdecl ;`
+
+Two FireDAC files (Phys.SQLiteCli, Phys.MongoDBCli) fail at sqlite3_module record field declarations:
+```pascal
+xCreate: function(db: psqlite3; pAux: Pointer; ...): Integer; cdecl;
+```
+
+The `cdecl` sits AFTER the field-terminating `;`. iter 29 attempted to fix this with an optional trailing `;cdecl;` clause on `declField` — caused -2 regression because the optional clause matched starts of next fields where `cdecl:` appeared as a field name.
+
+Padding `:array of Byte` cluster (FireDAC.Phys.MongoDBCli line 139) has invalid Delphi syntax (missing `;` after `Byte` before the next line's `end;`); parser correctly rejects.
+
+No commit-worthy fix for either. Plateau holding at 92.09%.
+
+---
+
 
 
 
