@@ -59,6 +59,8 @@
 |21 | 2026-05-24 16:00 | 91.09% | 15,550 | REVERTED — defProc body=`pp_block+end` caused -502 file regression |
 |22 | 2026-05-24 18:00 | **91.25%** | **15,578** | unit-deprecated hint + `&&` identifier prefix (Embarcadero +18, Spring4D +5) |
 |23 | 2026-05-24 18:15 | 91.25% | 15,579 | inline `const NAME=value` in statement body (TableTools → **100%**) |
+|24 | 2026-05-24 18:50 | 91.25% | 15,579 | REVERTED — prec(-1) pp_block+end body still −502; ORM3 ceiling FINAL |
+|25 | 2026-05-24 19:30 | **91.41%** | **15,605** | `const [ref]` arg attr + prec(-1) on pp_block-as-type (Embarcadero **88.21%**) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -67,7 +69,7 @@
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  715 |   70 | **91.08%** |
-| **Embarcadero**    | 4652 |  651 | **87.72%** |
+| **Embarcadero**    | 4678 |  625 | **88.21%** |
 | DevExpress         | 4196 |  194 | 95.58% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |

@@ -619,6 +619,34 @@ Reverted to iter 23 state.
 
 ---
 
+## 2026-05-24 19:30  Iter 25 — `const [ref]` arg attr + prec(-1) on pp_block-as-type
+
+Pivoted to Embarcadero (largest fail pool, 651 fails). Cluster analysis revealed:
+
+### Change 1: `const [ref]` in arg list
+Delphi 10+ `const [ref] X: T` modifier for forcing pass-by-reference of large records. Pattern from `Embarcadero/source/data/ems/EMSHosting.Yaml.pas`:
+```pascal
+class operator Assign(var Dest: TYamlElement; const [ref] Src: TYamlElement);
+```
+
+`declArg` was: `(var|const|out|constref) name [: type [= default]]`. Added `optional($.rttiAttributes)` between modifier and name to accept the inline `[ref]` (or any `[attr]`) bracket.
+
+### Change 2: `prec(-1)` on pp_block-as-type
+The pp_block-as-type choice was greedily consuming `{$IFDEF X}packed{$ENDIF}` as if it were the entire type, leaving `record...end` orphaned. Pattern from Datasnap.DBClient/Data.Win.ADODB:
+```pascal
+TRecInfo = {$IFDEF CPUX86}packed{$ENDIF} record
+  ...
+end;
+```
+
+Lowered pp_block's precedence in the _typeref choice list so the GLR parser prefers the path where pp_block is consumed as extras + the real `record` type follows.
+
+**Combined result**: +26 files (15579 → 15605; 91.25% → **91.41%**).
+- Embarcadero: 87.72% → **88.21%** (+26)
+- All other roots held
+
+---
+
 
 
 
