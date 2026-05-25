@@ -1012,6 +1012,12 @@ The `Not` after `.` is lexed as kNot keyword, breaking the expression. Added a s
 
 ---
 
+## 2026-05-25 03:30  Iter 47 — Tried typerefDot keyword-RHS — 0 delta, reverted
+
+Extended iter 46's `exprDot` keyword-RHS (Not/And/Or/Xor) to typerefDot. **0 file delta** — pattern doesn't appear in TYPE position in the corpus, only expression position. Reverted to avoid grammar bloat.
+
+---
+
 
 
 
