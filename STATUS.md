@@ -73,6 +73,9 @@
 |36 | 2026-05-25 00:15 | **91.96%** | **15,695** | .inc fragment skip filter + IFDEF stats tool (real-Pascal denominator 17072→17067) |
 |37 | 2026-05-25 00:45 | 91.96% | 15,695 | REVERTED — Stage-A.1 IFDEF-as-AST refactor -2977 (all-positions-needed) |
 |38 | 2026-05-25 01:10 | **92.09%** | **15,717** | `pp_block.kDot.typeref` qualified-type prefix (EurekaLog/RTL XE2+ +22) |
+|39 | 2026-05-25 01:25 | 92.09% | 15,717 | REVERTED — pp_block in exprDot -3048 (4th BLOCKED confirmation) |
+|40 | 2026-05-25 01:35 | 92.09% | 15,717 | REVERTED — typerefDot pp_block alt -9 tracked roots |
+|41 | 2026-05-25 01:55 | 92.09% | 15,717 | asmBody atomic-identifier fix (foundation, 0 delta, OtlSync asm-probe clean) |
 
 ## Per-root focus snapshot (iter 23)
 

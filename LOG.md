@@ -899,6 +899,28 @@ Reverted. The narrower iter-38 type-rule version stays.
 
 ---
 
+## 2026-05-25 01:55  Iter 41 — asmBody atomic-identifier fix (foundation)
+
+Bug found: `asm lock xadd [addend], value end;` — parser failed because the asmBody regex matched `end` inside `addend` (the embedded `end` substring).
+
+Original regex was char-by-char with 4 alternatives:
+```
+/[^eE]/, /[eE][^nN]/, /[eE][nN][^dD]/, /[eE][nN][dD][A-Za-z0-9_]/
+```
+
+The 4th alt requires alphanumeric AFTER `end` — `addend]` has `]` (non-alpha), so none of the 4 match. asmBody terminated at the `e` of `addend`, parser saw `end` as kEnd keyword (wrongly closing the asm).
+
+**Fix**: prepend a full-identifier alternative for idents NOT starting with e/E:
+```
+/[a-df-zA-DF-Z_][a-zA-Z0-9_]*/
+```
+
+This consumes `addend` whole. The e-starting char-by-char alts remain for identifiers like `endif`/`endloop`/`extension` and for the actual keyword `end` (none of which match, so asmBody terminates at the correct boundary).
+
+**Result**: 0 file delta (OtlSync.pas has unrelated downstream errors that prevent flip), but the asm probe `asm lock xadd [addend], value end;` now parses clean. Foundation commit — likely flips other files when their other errors are also addressed.
+
+---
+
 
 
 
