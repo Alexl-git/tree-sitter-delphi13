@@ -76,6 +76,8 @@
 |39 | 2026-05-25 01:25 | 92.09% | 15,717 | REVERTED — pp_block in exprDot -3048 (4th BLOCKED confirmation) |
 |40 | 2026-05-25 01:35 | 92.09% | 15,717 | REVERTED — typerefDot pp_block alt -9 tracked roots |
 |41 | 2026-05-25 01:55 | 92.09% | 15,717 | asmBody atomic-identifier fix (foundation, 0 delta, OtlSync asm-probe clean) |
+|42 | 2026-05-25 02:10 | 92.09% | 15,717 | Investigation only (xCreate cdecl + padding-array both blocked) |
+|43 | 2026-05-25 02:30 | **92.10%** | **15,719** | Delphi 11+ underscore digit-separator `1_000_000_000` in int literals (Embarcadero **89.32%**) |
 
 ## Per-root focus snapshot (iter 23)
 

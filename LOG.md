@@ -936,6 +936,25 @@ No commit-worthy fix for either. Plateau holding at 92.09%.
 
 ---
 
+## 2026-05-25 02:30  Iter 43 — Underscore digit separator `1_000_000_000`
+
+Delphi 11+ allows underscore as digit-group separator in numeric literals:
+```pascal
+LNewTime := AFrameTimeNanos / 1_000_000_000;
+```
+
+First attempt extended both `_literalInt` and `_literalFloat` regex with `(_?[0-9])` groups. The float regex rewrite (two-alternation form for leading-digit vs `.N` forms) was too aggressive — **−39 files** (ORM3-CLIENT -3, Embarcadero -16, DevExpress -14). Reverted.
+
+Narrower attempt — only `_literalInt`:
+```
+/[-+]?[0-9](_?[0-9])*/
+/\$[a-fA-F0-9](_?[a-fA-F0-9])*/
+```
+
+**Result**: +2 files (Embarcadero **89.32%**). Float left alone (no real-world `3.14_159` patterns in corpus).
+
+---
+
 
 
 
