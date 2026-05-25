@@ -64,6 +64,9 @@
 |26 | 2026-05-24 20:10 | 91.41% | 15,605 | scanner: add `packed` to refuse-list (foundation — 0 file delta, fixes IFDEF-packed pattern, DBClient errors 7→5) |
 |27 | 2026-05-24 20:25 | 91.41% | 15,605 | REVERTED — `type` in refuse-list net -12 (Spring +2 / Embarcadero -6) |
 |28 | 2026-05-24 20:40 | **91.81%** | **15,674** | `pp_block` in declUses/declRequires (Embarcadero **89.01%**, +42; Spring4D **91.34%**, +2) |
+|29 | 2026-05-24 20:55 | 91.81% | 15,674 | REVERTED — cdecl-after-declField -2 |
+|30 | 2026-05-24 21:25 | 91.81% | 15,674 | REVERTED — pp_block in range -97 (IFDEF-in-expr BLOCKED) |
+|31 | 2026-05-24 22:30 | **91.89%** | **15,687** | soft-keyword names in declVar (Embarcadero **89.21%**) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -72,8 +75,8 @@
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  717 |   68 | **91.34%** |
-| **Embarcadero**    | 4720 |  583 | **89.01%** |
-| DevExpress         | 4196 |  194 | 95.58% |
+| **Embarcadero**    | 4731 |  572 | **89.21%** |
+| DevExpress         | 4198 |  192 | 95.63% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
 | **ORM3-CLIENT**    |  233 |    0 | **100.00%** |

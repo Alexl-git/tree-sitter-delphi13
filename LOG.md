@@ -733,6 +733,21 @@ pp_block in expression-adjacent positions opens the GLR parser to wholesale path
 
 ---
 
+## 2026-05-24 22:30  Iter 31 — Soft-keyword names in declVar
+
+Datasnap.DSCommonServer.pas has variables named `Message`, `Param`, etc. — soft keywords. Grammar's declVar required strict `identifier` for the name, lexer-matched `Message` as kMessage → parse fail.
+
+Iter 13 added the same alias set (`Message/Name/Index/Read/Write/Reference`) for `_typeref` positions. This iter extends it to `declVar.name`. Required a `[$.declVar]` conflict declaration because `var X: T; <next-decl-start-keyword>` and `var X: T; <kMessage-as-var-name>` are ambiguous at the lookahead.
+
+**Result**: +13 files (15674 → 15687; 91.81% → **91.89%**).
+- Embarcadero: 89.01% → **89.21%** (+11)
+- DevExpress: 95.58% → **95.63%** (+2)
+- ORM3 / TableTools / Spring4D held
+
+Same alias set can probably be extended to declField and declArg names in a future iter for additional wins.
+
+---
+
 
 
 
