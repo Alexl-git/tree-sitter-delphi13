@@ -3,74 +3,40 @@
 # This is a focused subset — we want files that the modern Delphi 13 compiler
 # accepts. FPC code, Lazarus, Borland Turbo Vision era stuff is excluded.
 #
+# Roots are read from tools/corpus-roots.txt (one path per line, # for comments).
+# A starter file is provided — edit it to point at your own Delphi 13 sources.
+#
 # Usage:
 #   pwsh tools/build-manifest.ps1 -OutFile work/manifest.txt
 param(
-  [string]$OutFile = "work/manifest.txt"
+  [string]$OutFile = "work/manifest.txt",
+  [string]$RootsFile = ""
 )
 
 $ErrorActionPreference = 'Stop'
 
-# Modern Delphi 13 codebases (user's own + Embarcadero + curated third-party).
-$roots = @(
-  # User projects (modern Delphi 13)
-  'C:\Projects\DB\ORM3',
-  'C:\Projects\TableTools',
-  'C:\Projects\Loader2019',
-  'C:\Projects\YADF',
-  'C:\Projects\Micronite',
-  'C:\Projects\MMSRV',
-  'C:\Projects\MMMicronite',
+# Resolve roots file (default: tools/corpus-roots.txt next to this script).
+if (-not $RootsFile) {
+  $RootsFile = Join-Path (Split-Path -Parent $PSCommandPath) 'corpus-roots.txt'
+}
 
-  # Embarcadero RAD Studio 13 sources
-  'C:\Program Files (x86)\Embarcadero\Studio\37.0\source',
+$roots = @()
+if (Test-Path $RootsFile) {
+  $roots = Get-Content $RootsFile | ForEach-Object {
+    $line = $_.Trim()
+    if ($line -and -not $line.StartsWith('#')) { $line }
+  }
+} else {
+  Write-Host "  no roots file at $RootsFile — using empty manifest"
+}
 
-  # Modern third-party (Delphi-targeting)
-  'C:\Program Files (x86)\DevExpress\VCL',
-  'C:\Projects\spring4d',
-  'C:\Projects\dsharp',
-  'C:\Projects\mvvm-in-delphi',
-  'C:\Projects\Delphi_Mocks',
-  'C:\Projects\Virtual-TreeView',
-  'C:\Projects\RADStudio12Demos',
-  'C:\Projects\Indy',
-  'C:\Projects\FireDAC',
-  'C:\Projects\DUnitX',
-  'C:\Projects\OmniThreadLibrary',
-  'C:\Projects\jcf-pascal-format',
-  'C:\Projects\pasfmt-rad',
-
-  # Modern Raize / Konopka (Delphi-only since CS5)
-  'C:\Program Files (x86)\Raize\CS5\Source\Delphi',
-
-  # EurekaLog (Delphi-only error reporting)
-  'C:\Program Files (x86)\Neos Eureka S.r.l\EurekaLog 7\Source',
-
-  # AsyncPro — user actively uses it for COM port handling.
-  'C:\Projects\AsyncPro',
-  # Orpheus — user still uses; gradually migrating to DevExpress.
-  'C:\Projects\Orpheus',
-
-  # DEMOSDIR — Delphi samples directory (very useful test corpus).
-  'C:\Users\Public\Documents\Embarcadero\Studio\37.0\Samples'
-
-  # NOTE: Intentionally excluded — FPC / Borland-era / non-Delphi-13:
-  #   C:\Projects\JCL              (heavy FPC support)
-  #   C:\Projects\JEDI / JVCL      (Delphi 7 era + FPC archives)
-  #   C:\Projects\Orpheus / AsyncPro / SysTools  (Turbo Vision era)
-  #   C:\Projects\FastMM4          (old, but still useful — debatable)
-  #   C:\Projects\fibplus*         (older FB access layer, lots of legacy)
-  #   C:\Projects\Loader2018       (succeeded by Loader2019)
-  #   C:\Projects\BACKUP_ALL       (duplicate of other roots)
-)
-
-# Additionally pull any roots imported from Delphi 13's registry-defined
+# Additionally pull any roots imported from Delphi's registry-defined
 # library/browsing paths (run `tools/import-delphi-paths.ps1` to regenerate).
 $registryRootsFile = Join-Path (Split-Path -Parent $PSCommandPath) 'delphi13-roots.txt'
 if (Test-Path $registryRootsFile) {
   Get-Content $registryRootsFile | ForEach-Object {
     $p = $_.Trim()
-    if ($p) { $roots += $p }
+    if ($p -and -not $p.StartsWith('#')) { $roots += $p }
   }
 }
 $roots = $roots | Sort-Object -Unique

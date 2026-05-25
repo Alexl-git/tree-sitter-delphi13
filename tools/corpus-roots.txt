@@ -1,0 +1,25 @@
+# Corpus roots for tools/build-manifest.ps1
+#
+# Edit this file to point at your own Delphi 13 sources. One path per line.
+# Lines starting with # are comments. Paths that don't exist are skipped
+# with a warning (so you can keep the same file across machines).
+#
+# Suggested starter roots:
+
+# Embarcadero RAD Studio 13 sources (modern Delphi RTL/VCL/FMX)
+C:\Program Files (x86)\Embarcadero\Studio\37.0\source
+
+# Public third-party libraries (Delphi-targeting)
+C:\Projects\spring4d
+C:\Projects\OmniThreadLibrary
+
+# DevExpress VCL components (if installed)
+C:\Program Files (x86)\DevExpress\VCL
+
+# Delphi samples directory
+C:\Users\Public\Documents\Embarcadero\Studio\37.0\Samples
+
+# Add your own application sources below.
+# Examples:
+#   D:\src\MyDelphiApp
+#   C:\Work\Project1
