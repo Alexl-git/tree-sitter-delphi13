@@ -132,6 +132,168 @@ static bool starts_with_structural_keyword(TSLexer *lexer) {
     return false;
 }
 
+// ---- THEN-wins refactor (phase 2) ----
+//
+// The refactor reads THROUGH IFDEFs: directive markers become tokens (in
+// `extras` from the parser's POV — like comments), THEN-branch content flows
+// out as regular tokens, ELSE-branch is consumed as one opaque tail.
+//
+// See DESIGN-ifdef-then-wins.md for the full plan.
+
+// Classify the directive starting at lookahead (which must be at the char
+// just after `{$`). Consumes 0..N chars of lookahead while classifying.
+// Caller MUST be inside a fresh scan() call (any consumed chars are rolled
+// back by tree-sitter if the scan() returns false).
+typedef enum {
+    DIR_OPEN,    // if / ifdef / ifndef / ifopt / ifexists / ifabbrevdef ...
+    DIR_ELSE,    // else / elseif
+    DIR_END,     // endif / ifend
+    DIR_OTHER,   // any other {$X} directive — not an if-block boundary
+} DirectiveKind;
+
+static DirectiveKind classify_directive(TSLexer *lexer) {
+    int32_t c1 = to_lower(lexer->lookahead);
+    if (c1 == 'i') {
+        advance(lexer);
+        if (to_lower(lexer->lookahead) != 'f') return DIR_OTHER;
+        advance(lexer);
+        // `if<X>`: if it's `ife` followed by `nd`, that's `ifend` (DIR_END).
+        // Otherwise it's an `if`-family opener (`if`, `ifdef`, `ifndef`,
+        // `ifopt`, `ifexists`, etc.) — DIR_OPEN.
+        if (to_lower(lexer->lookahead) == 'e') {
+            advance(lexer);
+            if (to_lower(lexer->lookahead) == 'n') {
+                advance(lexer);
+                if (to_lower(lexer->lookahead) == 'd') {
+                    advance(lexer);
+                    return DIR_END;
+                }
+            }
+            return DIR_OTHER;
+        }
+        return DIR_OPEN;
+    }
+    if (c1 == 'e') {
+        advance(lexer);
+        int32_t c2 = to_lower(lexer->lookahead);
+        if (c2 == 'l') {
+            // else / elseif
+            advance(lexer);
+            if (to_lower(lexer->lookahead) == 's') {
+                advance(lexer);
+                if (to_lower(lexer->lookahead) == 'e') {
+                    advance(lexer);
+                    return DIR_ELSE;
+                }
+            }
+            return DIR_OTHER;
+        }
+        if (c2 == 'n') {
+            // end / endif — both close the IFDEF
+            advance(lexer);
+            if (to_lower(lexer->lookahead) == 'd') {
+                advance(lexer);
+                return DIR_END;
+            }
+            return DIR_OTHER;
+        }
+        return DIR_OTHER;
+    }
+    return DIR_OTHER;
+}
+
+// Consume the rest of the current directive up through the closing `}`.
+// Called after classify_directive; lookahead is somewhere inside the
+// directive body.
+static bool consume_directive_to_close(TSLexer *lexer) {
+    while (lexer->lookahead != 0 && lexer->lookahead != '}') {
+        advance(lexer);
+    }
+    if (lexer->lookahead != '}') return false;
+    advance(lexer);
+    return true;
+}
+
+// Look at the upcoming directive WITHOUT advancing past `{$`. Used by
+// pp_else_tail to decide whether to keep consuming (nested IFDEF) or stop
+// (matched {$END*}). Returns DIR_* and ALWAYS advances past the `{$XXX`
+// keyword portion of the directive (regardless of return value) — the
+// caller then calls consume_directive_to_close() to finish.
+static DirectiveKind peek_and_consume_directive_kw(TSLexer *lexer) {
+    if (lexer->lookahead != '{') return DIR_OTHER;
+    advance(lexer);
+    if (lexer->lookahead != '$') return DIR_OTHER;
+    advance(lexer);
+    return classify_directive(lexer);
+}
+
+// ---- THEN-wins unified dispatch ----
+//
+// Single function that classifies the directive at lookahead, then commits
+// to ONE of: PP_OPEN, PP_END_ONLY, PP_ELSE_TAIL (or returns false). Must be
+// called from a fresh scan() — within a single scan() call we cannot roll
+// back consumed lookahead, so the classification + commit must happen
+// linearly.
+//
+// On entry: lookahead = '{', at least one of PP_OPEN / PP_END_ONLY /
+// PP_ELSE_TAIL is in valid_symbols.
+//
+// Returns true and sets result_symbol on success.
+static bool scan_pp_then_wins(TSLexer *lexer, const bool *valid_symbols) {
+    if (lexer->lookahead != '{') return false;
+    advance(lexer);
+    if (lexer->lookahead != '$') return false;
+    advance(lexer);
+
+    DirectiveKind k = classify_directive(lexer);
+
+    if (k == DIR_OPEN && valid_symbols[PP_OPEN]) {
+        if (!consume_directive_to_close(lexer)) return false;
+        lexer->result_symbol = PP_OPEN;
+        lexer->mark_end(lexer);
+        return true;
+    }
+
+    if (k == DIR_END && valid_symbols[PP_END_ONLY]) {
+        if (!consume_directive_to_close(lexer)) return false;
+        lexer->result_symbol = PP_END_ONLY;
+        lexer->mark_end(lexer);
+        return true;
+    }
+
+    if (k == DIR_ELSE && valid_symbols[PP_ELSE_TAIL]) {
+        if (!consume_directive_to_close(lexer)) return false;
+        // Consume opaque ELSE body up to the matching {$END*}, depth-tracking
+        // nested {$IF*}/{$END*} pairs.
+        int depth = 1;
+        int safety = 8 * 1024 * 1024;
+        while (lexer->lookahead != 0 && safety-- > 0) {
+            if (lexer->lookahead != '{') { advance(lexer); continue; }
+            DirectiveKind dk = peek_and_consume_directive_kw(lexer);
+            if (dk == DIR_OPEN) {
+                consume_directive_to_close(lexer);
+                depth++;
+                continue;
+            }
+            if (dk == DIR_END) {
+                consume_directive_to_close(lexer);
+                if (--depth == 0) {
+                    lexer->result_symbol = PP_ELSE_TAIL;
+                    lexer->mark_end(lexer);
+                    return true;
+                }
+                continue;
+            }
+            // DIR_ELSE inside else body or DIR_OTHER — just skip the directive.
+            consume_directive_to_close(lexer);
+        }
+        return false;
+    }
+
+    // Directive doesn't match any requested token type.
+    return false;
+}
+
 // ---- pp_block ----
 //
 // On entry: lookahead = '{'. Try to consume the entire `{$IF*}...{$END*}`
@@ -314,10 +476,29 @@ bool tree_sitter_delphi13_external_scanner_scan(
         skip(lexer);
     }
 
-    // Try pp_block first (more specific shape: starts with {$if).
-    if (valid_symbols[PP_BLOCK] && lexer->lookahead == '{') {
-        if (scan_pp_block(lexer)) return true;
-        // fall through; on false, tree-sitter rolls back
+    // THEN-wins refactor: unified dispatch on `{$...` directives.
+    //
+    // Single classification step then commits to one of PP_OPEN /
+    // PP_END_ONLY / PP_ELSE_TAIL. If none of those are valid (or the
+    // directive shape doesn't match), falls back to legacy PP_BLOCK
+    // — which is itself dead code once the new tokens are in extras,
+    // but kept as belt-and-braces for now.
+    if (lexer->lookahead == '{') {
+        bool new_token_valid = valid_symbols[PP_OPEN]
+                            || valid_symbols[PP_END_ONLY]
+                            || valid_symbols[PP_ELSE_TAIL];
+        if (new_token_valid) {
+            if (scan_pp_then_wins(lexer, valid_symbols)) return true;
+            // If dispatch returned false, the lexer state is undefined
+            // (we may have consumed chars). Tree-sitter rolls back on
+            // false-return, so we cannot then try PP_BLOCK in this call.
+            // That's fine: in the new model PP_BLOCK is never the
+            // expected token when the new ones are valid.
+            return false;
+        }
+        if (valid_symbols[PP_BLOCK]) {
+            if (scan_pp_block(lexer)) return true;
+        }
     }
     if (valid_symbols[CHAR_LITERAL] && lexer->lookahead == '^') {
         if (scan_char_literal(lexer)) return true;

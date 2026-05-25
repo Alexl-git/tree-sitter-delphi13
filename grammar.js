@@ -275,7 +275,17 @@ function statements(trailing) {
 module.exports = grammar({
 	name: "delphi13",
 
-	extras: $ => [$._space, $.comment, $.pp, $.pp_block],
+	extras: $ => [
+		$._space,
+		$.comment,
+		$.pp,
+		$.pp_block,
+		// THEN-wins refactor (phase 2): directive markers as extras so the
+		// THEN-body parses normally and the ELSE-tail is consumed opaquely.
+		$.pp_open,
+		$.pp_else_tail,
+		$.pp_end_only,
+	],
 
 	externals: $ => [
 		// Multi-line `{$IF*} ... {$END*}` block consumed wholesale by the

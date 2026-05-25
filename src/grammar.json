@@ -10785,6 +10785,18 @@
     {
       "type": "SYMBOL",
       "name": "pp_block"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "pp_open"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "pp_else_tail"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "pp_end_only"
     }
   ],
   "conflicts": [

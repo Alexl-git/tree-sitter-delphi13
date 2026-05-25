@@ -10035,6 +10035,18 @@
     "named": true
   },
   {
+    "type": "pp_else_tail",
+    "named": true
+  },
+  {
+    "type": "pp_end_only",
+    "named": true
+  },
+  {
+    "type": "pp_open",
+    "named": true
+  },
+  {
     "type": "trailing_dot_float",
     "named": true
   }
