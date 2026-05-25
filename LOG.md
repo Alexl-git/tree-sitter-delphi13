@@ -866,6 +866,23 @@ Per-root deltas: all gain landed in non-tracked roots (mostly EurekaLog Source/ 
 
 ---
 
+## 2026-05-25 01:25  Iter 39 — REVERTED — pp_block.kDot.X in exprDot
+
+Tried the iter-38 pattern in expression position too: added `prec.left(5, seq(pp_block, kDot, _ref))` as a choice in `exprDot` for the statement-position cluster:
+```pascal
+{$IFDEF USE_NAMESPACES}Winapi.Windows{$ELSE}Windows{$ENDIF}.MessageBox(...);
+```
+
+**Result**: **-3,048 files** (15717 → 12669; 92.09% → 74.23%). Same catastrophe shape as iter 37 (-2977) and iter 30 (-97).
+
+**Confirmed lesson**: pp_block in expression-adjacent positions causes wholesale GLR explosion. The type-position version (iter 38) worked because types have restricted, terminator-friendly grammar (`type` is followed by `;` or `=`). Expression positions cascade through every `_expr`, `assignment`, `arg`, etc. — multiplies GLR forks across the entire parser state.
+
+**Reverted to iter 38 baseline (92.09%)**.
+
+This is the FOURTH revert of pp_block-in-expression (iters 21, 30, 37, 39). Marking the pattern as **structurally BLOCKED for grammar-only fixes**. Would need the full all-positions-at-once refactor with discrete pp tokens (Stage A) to handle expression IFDEFs.
+
+---
+
 
 
 
