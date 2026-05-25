@@ -883,6 +883,22 @@ This is the FOURTH revert of pp_block-in-expression (iters 21, 30, 37, 39). Mark
 
 ---
 
+## 2026-05-25 01:35  Iter 40 — REVERTED — pp_block.kDot.typeref in typerefDot
+
+Tried the iter-38 pattern in typeref position too (for `class({$IFDEF}NS.X{$ELSE}X{$ENDIF}.TBaseClass)` parent-clause cluster — many EurekaLog files).
+
+**Result**: net +1 overall (15717 → 15718; 92.09 → 92.10%), but:
+- EurekaLog +10 (non-tracked roots)
+- **Spring4D -3** (717 → 714)
+- **Embarcadero -2** (4733 → 4731)
+- **DevExpress -4** (4204 → 4200)
+
+Tracked-root regression -9 exceeds the LOOP-PROMPT.md threshold (>5 new failures = revert). The typerefDot alternative interacts badly with existing GLR paths in tracked-root code that doesn't use the namespace-IFDEF pattern.
+
+Reverted. The narrower iter-38 type-rule version stays.
+
+---
+
 
 
 
