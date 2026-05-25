@@ -1580,3 +1580,29 @@ Required `[$.type, $.declFieldNoSemi]` conflict for GLR.
 Cumulative since Phase 3b iter 1: +59 files / 4 reverts. 475 fails remain.
 
 ---
+
+## 2026-05-25 16:20  Phase 3b iter 12 — REVERTED — declProcRef optional `;` before callconv
+
+DevExpress / Embarcadero / Posix have module-level var pattern:
+```
+var Name: function(...): RetType; stdcall = nil;
+```
+
+The `;` between `RetType` and `stdcall` is stylistic — `stdcall` is the procedural type's calling convention, `= nil` is the variable's default value.
+
+Tried: in declProcRef, add `optional(';')` before the trailing callconv keyword.
+
+**Result**: catastrophic cascade -2295 files (16297 -> 14002; 97.17% -> 83.48%). The optional `;` made tree-sitter GLR-fork on EVERY procedural-type declaration's trailing `;`, exploding the state space.
+
+Per-root after:
+- ORM3-CLIENT: 100 -> 98.71% (broke!)
+- Embarcadero: 96.12 -> 78.35%
+- DevExpress: 99.26 -> 81.53%
+
+Reverted. Back at 16297 / 97.17%.
+
+Lesson: optional separators in heavily-reused grammar rules are GLR poison. Even if the rule is "right" semantically, the parser fan-out is too high. Better approach for this pattern would be at declVar level, not declProcRef.
+
+Cumulative since Phase 3b iter 1: +59 files / **5 reverts**. 475 fails remain.
+
+---
