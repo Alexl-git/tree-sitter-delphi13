@@ -310,6 +310,8 @@ module.exports = grammar({
 		// Soft-keyword identifiers (Message, Name, Index, Read, Write, Reference)
 		// allowed as variable names — ambiguous with next-statement starts.
 		[$.declVar],
+		// Qualified-id subrange `TFoo.Bar..TFoo.Baz` vs `_typeref` (typerefDot).
+		[$._typeref, $._subrangeBound],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -897,6 +899,11 @@ module.exports = grammar({
 			seq('-', $._literalInt),
 			seq('+', $._literalInt),
 			$.identifier,
+			// Qualified identifier `TFoo.Bar` (DevExpress enum-class subrange:
+			//   TdxChartActualToolTipMode = TdxChartToolTipMode.None .. TdxChartToolTipMode.Crosshair;
+			// Narrow form: two-level only; full qualified-name uses _ref which
+			// conflicts with typerefDot in this position.)
+			seq($.identifier, '.', $.identifier),
 			seq($.identifier, '(', $.identifier, ')'),
 			// `hid - 1`, `MaxN + 2` — narrow `identifier OP integer` form for
 			// real-corpus patterns like `TNmbrRange = 0 .. hid - 1;`.

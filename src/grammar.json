@@ -6008,6 +6008,23 @@
             },
             {
               "type": "STRING",
+              "value": "."
+            },
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "STRING",
               "value": "("
             },
             {
@@ -10298,6 +10315,10 @@
     ],
     [
       "declVar"
+    ],
+    [
+      "_typeref",
+      "_subrangeBound"
     ],
     [
       "declProcFwd"
