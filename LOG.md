@@ -823,6 +823,31 @@ Embarcadero: 89.25% → **89.29%** (denominator drop from .inc filter).
 
 ---
 
+## 2026-05-25 00:45  Iter 37 — Stage-A.1 IFDEF-as-AST refactor — REVERTED
+
+User approved the refactor (treat IFDEFs as AST branching nodes). Added discrete `pp_open`/`pp_else`/`pp_end` external tokens, scanner emits them when `valid_symbols` signals; grammar `ppExprAlt` rule consumes them in `_expr`.
+
+**Result**: **-2,977 files** (15695 → 12718; 91.96% → 74.52%). Catastrophic. Detailed cliff:
+- DevExpress: 95.76% → 60.23% (-1,552)
+- Embarcadero: 89.29% → 74.63% (-777)
+- Spring4D: 91.34% → 82.55% (-69)
+- ORM3: 99.86% → 98.00% (-13)
+
+**Root cause of regression**: tree-sitter's `valid_symbols` is permissive — expressions are reachable from many positions (statements, declarations, args). When scanner sees `{` it emits PP_OPEN because parser MIGHT want ppExprAlt. But the body inside IS often a statement/declaration, not a single expression — `ppExprAlt` fails, no fallback to pp_block extras absorption (scanner already committed to discrete).
+
+**Lesson**: this refactor needs ppAlt rules at every position simultaneously (`_expr`, `_statement`, `_definition`, type position, arg list, etc.). Cannot be done one-position-at-a-time. The intermediate states are net-negative.
+
+**Tried second approach**: scanner refuses pp_block when body looks expression-shaped, lets regex `pp` tokens expose body for ppExprAlt rule. Ran into rollback impossibility — scanner can't peek body without committing advances, and committed advances + return-false would re-enter the same code in an infinite loop.
+
+**Reverted to iter 36 baseline (91.96%)**. The refactor is doable but requires:
+1. Add ppAlt at ALL positions in grammar
+2. Disable pp_block scanner emission (scanner becomes lexer-only for directives)
+3. Big-bang change, no incremental path
+
+For now, continuing piecemeal. May revisit with a different architecture (e.g. emit discrete pp tokens always but make grammar rules tolerant via `optional(pp_text)` body, or shift to a tree-sitter `seq` with explicit pp_ tokens at every alternation point).
+
+---
+
 
 
 
