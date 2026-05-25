@@ -1226,6 +1226,10 @@
           "named": true
         },
         {
+          "type": "declFieldNoSemi",
+          "named": true
+        },
+        {
           "type": "declProc",
           "named": true
         },
@@ -1944,6 +1948,56 @@
     }
   },
   {
+    "type": "declFieldNoSemi",
+    "named": true,
+    "fields": {
+      "defaultValue": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "defaultValue",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "rttiAttributes",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "declFile",
     "named": true,
     "fields": {},
@@ -2003,6 +2057,10 @@
         },
         {
           "type": "declField",
+          "named": true
+        },
+        {
+          "type": "declFieldNoSemi",
           "named": true
         },
         {
@@ -2191,6 +2249,10 @@
         },
         {
           "type": "declField",
+          "named": true
+        },
+        {
+          "type": "declFieldNoSemi",
           "named": true
         },
         {
@@ -3306,6 +3368,10 @@
         },
         {
           "type": "declField",
+          "named": true
+        },
+        {
+          "type": "declFieldNoSemi",
           "named": true
         },
         {

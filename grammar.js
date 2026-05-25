@@ -357,6 +357,10 @@ module.exports = grammar({
 		// Phase 3b iter 7: declEnum trailing platform/deprecated hint is
 		// ambiguous with the same hint appearing on the enclosing declType.
 		[$.declEnum],
+		// Phase 3b iter 10: _declFields choice of repeat1(declField) vs
+		// trailing declFieldNoSemi — both reach declField from the same state.
+		[$._declFields],
+		[$.declClass],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1222,7 +1226,27 @@ module.exports = grammar({
 			optional($._classDeclarations)
 		),
 
-		_declFields:     $ => repeat1($.declField),
+		// Phase 3b iter 10: allow LAST field to omit trailing `;` before `end`.
+		// Pattern (extremely common in DevExpress and RTL records):
+		//   TFoo = record
+		//     A: TA;
+		//     B: TB        // no `;` here
+		//   end;
+		// Tried in iter 62 with broader scope and reverted. Narrow form here:
+		// repeat of normal declField (each with `;`) optionally followed by ONE
+		// declFieldNoSemi at end. Anchor: declFieldNoSemi only fires before
+		// `end` or kEnd-equivalent, since the parent rule expects that.
+		_declFields:     $ => choice(
+			repeat1($.declField),
+			seq(repeat($.declField), $.declFieldNoSemi),
+		),
+		declFieldNoSemi: $ => seq(
+			...enable_if(rtti, optional($.rttiAttributes)),
+			field('name', delimited1($.identifier)),
+			':',
+			field('type', $.type),
+			field('defaultValue', optional($.defaultValue)),
+		),
 
 		declField:       $ =>  seq(
 			...enable_if(rtti, optional($.rttiAttributes)),

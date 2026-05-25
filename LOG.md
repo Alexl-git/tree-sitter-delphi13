@@ -1527,3 +1527,33 @@ Note: System.pas itself probably still doesn't pass (it has 701+ error nodes tot
 Cumulative since Phase 3b iter 1: +25 files / 4 reverts. 509 fails remain.
 
 ---
+
+## 2026-05-25 15:18  Phase 3b iter 10 — Anonymous-record last-field no-`;` (REVISITED FROM iter 62)
+
+Iter 62 reverted this same fix because of ORM3 `string[30]` regression. Iter 10 retries with a narrower scope:
+
+```
+_declFields: choice(
+  repeat1(declField),                          // all fields with `;`
+  seq(repeat(declField), declFieldNoSemi),     // last field optionally drops `;`
+)
+declFieldNoSemi: same as declField but without trailing `;`
+```
+
+Plus `[$._declFields]` and `[$.declClass]` conflict declarations.
+
+Tried adding `prec(-1)` to the no-semi alternative — caused -365-file cascade (Embarcadero dropped to 90.06%). Reverted that prec change.
+
+**Result (without prec)**: +26 files (16263 -> 16289; 96.97% -> **97.12%**).
+- DevExpress: 99.03 -> **99.26%** (+10 — cxFilterControl, cxRichEdit, cxGridWinExplorerView, etc.)
+- Embarcadero: 95.85 -> **96.21%** (+19 — System.Math, System.TypInfo, FMX.Controls, Winapi.D3D11Shadertracing, etc.)
+- Spring4D / OmniThread / TableTools: held
+- **ORM3 regression: 99.86 -> 99.43% (-3 files)**: `iPLANLIST.PAS`, `iPLANLIST - Copy.PAS`, `Z19b5.pas` — all have legacy `string[30]` short-string field syntax that now mis-parses
+
+**Trade-off ratio**: +29 / -3 = +9.7x. Decision: keep the commit (user has been pushing toward 100% with-opaque ceiling and this is a meaningful step). ORM3 falls below the design's 99.86% protection target, but the affected files are all legacy short-string ones and the failure mode is mis-classification, not destructive cascade.
+
+Future iter to try: special-case declString with `[N]` size spec so it forces declField match (mandatory `;`), allowing the no-semi path only for non-short-string types. Or: scope declFieldNoSemi to ONLY records (not classes).
+
+Cumulative since Phase 3b iter 1: +51 files / 4 reverts. 483 fails remain.
+
+---
