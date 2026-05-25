@@ -75,24 +75,52 @@ static bool try_consume_keyword(TSLexer *lexer, const char *kw) {
     return true;
 }
 
-// Look at the current lookahead and CONDITIONALLY consume a structural
-// Delphi keyword. Returns true if any of unit/program/library/package/
-// interface/implementation was matched at a word boundary.
+// Look at the current lookahead and CONDITIONALLY consume a refused keyword.
+// Returns true if any of these matches at a word boundary:
+//   unit / program / library / package / interface / implementation  (structural)
+//   packed                                                          (type modifier;
+//     refused so `{$IFDEF X}packed{$ENDIF} record` parses as
+//     [pp]packed[pp] record rather than swallowing `packed` into the pp_block.)
+//
+// Hand-coded char-by-char prune: try_consume_keyword can't be cascaded for
+// candidates that share a prefix (e.g. packed vs package both start with `pack`),
+// because it consumes chars on failure without rolling back.
 static bool starts_with_structural_keyword(TSLexer *lexer) {
     int32_t la = to_lower(lexer->lookahead);
     if (la == 'u') return try_consume_keyword(lexer, "unit");
-    if (la == 'p') {
-        // program OR package — try program first (longer prefix doesn't matter,
-        // we just need ANY match)
-        if (try_consume_keyword(lexer, "program")) return true;
-        // can't roll back here; on false the caller (scan) returns false and
-        // tree-sitter rolls back the whole call. So we don't need to be exact.
-        return try_consume_keyword(lexer, "package");
-    }
     if (la == 'l') return try_consume_keyword(lexer, "library");
+    if (la == 'p') {
+        advance(lexer); // consume 'p'
+        int32_t la2 = to_lower(lexer->lookahead);
+        if (la2 == 'r') return try_consume_keyword(lexer, "rogram");
+        if (la2 == 'a') {
+            // package OR packed — both start with 'pack', diverge at 5th char.
+            advance(lexer); if (to_lower(lexer->lookahead) != 'c') return false;
+            advance(lexer); if (to_lower(lexer->lookahead) != 'k') return false;
+            advance(lexer);
+            int32_t la5 = to_lower(lexer->lookahead);
+            if (la5 == 'e') {
+                advance(lexer); if (to_lower(lexer->lookahead) != 'd') return false;
+                advance(lexer);
+                if (is_ident_cont(lexer->lookahead)) return false;
+                return true; // packed
+            }
+            if (la5 == 'a') {
+                advance(lexer); if (to_lower(lexer->lookahead) != 'g') return false;
+                advance(lexer); if (to_lower(lexer->lookahead) != 'e') return false;
+                advance(lexer);
+                if (is_ident_cont(lexer->lookahead)) return false;
+                return true; // package
+            }
+        }
+        return false;
+    }
     if (la == 'i') {
-        if (try_consume_keyword(lexer, "interface")) return true;
-        return try_consume_keyword(lexer, "implementation");
+        advance(lexer); // consume 'i'
+        int32_t la2 = to_lower(lexer->lookahead);
+        if (la2 == 'n') return try_consume_keyword(lexer, "nterface");
+        if (la2 == 'm') return try_consume_keyword(lexer, "mplementation");
+        return false;
     }
     return false;
 }
