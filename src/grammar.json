@@ -4776,15 +4776,6 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "kIndex"
-          },
-          "named": true,
-          "value": "identifier"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
             "name": "kRead"
           },
           "named": true,

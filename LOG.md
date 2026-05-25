@@ -1718,3 +1718,21 @@ asmBody regex was stopping at `@@end:` because it parsed `@@` as two `[^eE]` cha
 Cumulative since Phase 3b iter 1: +127 files / 5 reverts. 407 fails remain.
 
 ---
+
+## 2026-05-25 18:42  Phase 3b iter 19 — kIndex soft-keyword promotion (the big one)
+
+Removed `alias($.kIndex, $.identifier)` from `_typeref`'s soft-keyword list. Theory: kIndex is now ONLY reachable from declProp's `index N` clause and procExternal's `index N` ordinal — both class/external-scope rules unreachable from expression position. With kIndex out of `valid_symbols` at expression states, tree-sitter's word-rule soft-keyword promotion fires automatically: lexer reads "Index", sees kIndex regex matches, sees kIndex is NOT in valid_symbols → falls back to identifier.
+
+The probe `if cTabCount < Index then cTabCount := Index;` now parses cleanly — both `Index` occurrences tokenize as identifier.
+
+**Result**: +24 files (16365 -> 16389; 97.57% -> **97.72%**).
+- Spring4D: 97.56 -> **98.46%** (+7 — Spring.Persistence.SQL.Generators.Ansi.pas `if i < index then Continue` and similar)
+- Embarcadero: 97.08 -> **97.23%** (+8)
+- DevExpress: 99.40 -> **99.54%** (+6 — cxRichEditUtils, dxGanttControlCustomSheet)
+- All other roots held
+
+`var x: Index;` still works — kIndex no longer tokenizes there either, so "Index" lexes as identifier and parses as typeref via the identifier alternative. `property Foo: T index 0 read GetFoo;` still works because at that state kIndex IS in valid_symbols (declProp's index clause is the parent rule).
+
+Cumulative since Phase 3b iter 1: +151 files / 5 reverts. 383 fails remain.
+
+---

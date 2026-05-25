@@ -749,10 +749,18 @@ module.exports = grammar({
 			// the surrounding syntax requires one. These come up most often
 			// in OleServer / Excel / Word automation wrappers where the OLE
 			// IDL was translated mechanically and used clashing names.
+			//
+			// Phase 3b iter 19: kIndex removed from this list so that at
+			// expression positions, kIndex is NOT in valid_symbols (it's
+			// only reachable from declProp's index clause and procExternal's
+			// index ordinal — both class/external scope). With kIndex out of
+			// reach, tree-sitter's word-rule soft-keyword promotion fires
+			// and "Index" tokenizes as identifier in expressions like
+			// `if i < Index then ...`. _typeref still gets "Index" via the
+			// $.identifier path (no functional regression).
 			alias($.kReference, $.identifier),
 			alias($.kMessage,   $.identifier),
 			alias($.kName,      $.identifier),
-			alias($.kIndex,     $.identifier),
 			alias($.kRead,      $.identifier),
 			alias($.kWrite,     $.identifier),
 		),
