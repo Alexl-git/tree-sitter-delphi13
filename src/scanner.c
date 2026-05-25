@@ -34,6 +34,13 @@ enum TokenType {
                          // regex can't disambiguate `100.` (float) from `100..N`
                          // (int + range op). The scanner peeks the char after `.`
                          // and only emits if it isn't `.` or a digit.
+
+    // ---- THEN-wins refactor (DESIGN-ifdef-then-wins.md) ----
+    // Order MUST match grammar.js externals list.
+    // Phase 1: declared only; not yet emitted.
+    PP_OPEN,             // {$IF X} / {$IFDEF X} / {$IFNDEF X} / {$IFOPT ...}
+    PP_ELSE_TAIL,        // {$ELSE} ... opaque ... {$ENDIF | $IFEND}
+    PP_END_ONLY,         // {$ENDIF} / {$IFEND}   (no preceding else branch)
 };
 
 void *tree_sitter_delphi13_external_scanner_create(void) { return NULL; }

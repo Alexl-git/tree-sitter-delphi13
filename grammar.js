@@ -284,6 +284,8 @@ module.exports = grammar({
 		// Scanner refuses blocks whose body starts with a structural keyword
 		// (unit/program/library/package/interface/implementation) so it
 		// doesn't swallow `{$IFNDEF X} unit Y; {$ENDIF}` patterns.
+		// Phase 4 of refactor/ifdef-then-wins will drop this in favor of
+		// the THEN-wins token set below.
 		$.pp_block,
 		// Context-aware `^X` control-char literal — matches `^` followed by
 		// one of @A-Z[\]^_ and NOT followed by an identifier character.
@@ -292,6 +294,19 @@ module.exports = grammar({
 		// Trailing-dot float literal `100.` — disambiguated from `100..N`
 		// (int + range op) by scanner-level lookahead at the char after `.`.
 		$.trailing_dot_float,
+
+		// ---- THEN-wins refactor (DESIGN-ifdef-then-wins.md) ----
+		// These three tokens let the scanner read THROUGH IFDEF directives:
+		// the THEN-branch content flows out as regular tokens, the ELSE
+		// branch is consumed as one opaque tail, and the directive markers
+		// themselves act as whitespace-like extras.
+		//
+		// Phase 1: declared only — scanner emits them only when valid_symbols
+		// asks, and grammar does not put them in extras yet. ABI-shift only;
+		// no behavioral change vs. master.
+		$.pp_open,        // {$IF X} / {$IFDEF X} / {$IFNDEF X} / {$IFOPT ...}
+		$.pp_else_tail,   // {$ELSE} ... opaque ... {$ENDIF | $IFEND}
+		$.pp_end_only,    // {$ENDIF} / {$IFEND}   (no preceding else branch)
 	],
 
 	word: $ => $.identifier,
