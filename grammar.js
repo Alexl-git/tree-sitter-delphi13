@@ -1202,6 +1202,13 @@ module.exports = grammar({
 				field('type', $.typeref),
 			)),
 			field('assign', optional($.defaultValue)),
+			// Inline calling-convention BEFORE the terminating ';' — Embarcadero
+			// BDE imports (`function DbiInitFn(...): DBIResult stdcall;`) use this
+			// form instead of the standard `; stdcall;` shape.
+			optional(choice(
+				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+				$.kRegister, $.kWinapi, $.kInline
+			)),
 			';',
 			repeat($._procAttributeNoExt)
 		),

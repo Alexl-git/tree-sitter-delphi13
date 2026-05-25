@@ -2250,6 +2250,10 @@
       "required": true,
       "types": [
         {
+          "type": "kCdecl",
+          "named": true
+        },
+        {
           "type": "kClass",
           "named": true
         },
@@ -2270,11 +2274,35 @@
           "named": true
         },
         {
+          "type": "kInline",
+          "named": true
+        },
+        {
           "type": "kOperator",
           "named": true
         },
         {
+          "type": "kPascal",
+          "named": true
+        },
+        {
           "type": "kProcedure",
+          "named": true
+        },
+        {
+          "type": "kRegister",
+          "named": true
+        },
+        {
+          "type": "kSafecall",
+          "named": true
+        },
+        {
+          "type": "kStdcall",
+          "named": true
+        },
+        {
+          "type": "kWinapi",
           "named": true
         },
         {
