@@ -8397,6 +8397,10 @@
           "named": true
         },
         {
+          "type": "kDot",
+          "named": true
+        },
+        {
           "type": "pp",
           "named": true
         },

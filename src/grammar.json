@@ -4307,6 +4307,27 @@
                     "type": "SYMBOL",
                     "name": "pp_block"
                   }
+                },
+                {
+                  "type": "PREC",
+                  "value": 1,
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "pp_block"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "kDot"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "typeref"
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -4371,6 +4392,27 @@
                     "type": "SYMBOL",
                     "name": "pp_block"
                   }
+                },
+                {
+                  "type": "PREC",
+                  "value": 1,
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "pp_block"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "kDot"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "typeref"
+                      }
+                    ]
+                  }
                 }
               ]
             },
@@ -4434,6 +4476,27 @@
                         "content": {
                           "type": "SYMBOL",
                           "name": "pp_block"
+                        }
+                      },
+                      {
+                        "type": "PREC",
+                        "value": 1,
+                        "content": {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "pp_block"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "kDot"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "typeref"
+                            }
+                          ]
                         }
                       }
                     ]

@@ -631,6 +631,12 @@ module.exports = grammar({
 			// `TRecInfo = {$IFDEF CPUX86}packed{$ENDIF} record...end;` correctly
 			// (pp_block becomes extras, real type is `packed record...` after).
 			prec(-1, $.pp_block),
+			// Qualified type where IFDEF wraps the namespace prefix:
+			//   Response: {$IFDEF USE_NAMESPACES}Web.HTTPApp{$ELSE}HTTPApp{$ENDIF}.TWebResponse
+			// (EurekaLog / Embarcadero RTL XE2+ unit-scope-name pattern.)
+			// Explicit prec(1) so the pp_block is consumed structurally, not as
+			// extras whitespace that would orphan the trailing `.TFoo`.
+			prec(1, seq($.pp_block, $.kDot, $.typeref)),
 		)),
 
 		typeref:         $ => seq(
