@@ -1018,6 +1018,21 @@ Extended iter 46's `exprDot` keyword-RHS (Not/And/Or/Xor) to typerefDot. **0 fil
 
 ---
 
+## 2026-05-25 03:45  Iter 48 — Investigation only (non-IFDEF cluster mining)
+
+Looked at top non-IFDEF tracked-root clusters:
+- **`LookAndFeel.Refresh; end; function ...`** — cxButtons.pas: IFDEF wraps two-different-shape procedure signatures (`procedure F(M,D,b)` vs `procedure F(M,D)`). The pp_block consumes the whole IFDEF block; parser sees `begin ... end;` orphaned with no preceding `procedure`. Same shape as MStreams asym-open BLOCKED pattern.
+- **`end.` Spring.Hash.pas r583** — whole-file cascade; the file is wrapped in nested IFDEFs ending in `{$IFEND}\nend.\n`. Parser broke far upstream and ERROR spans [0,0]-[583,0].
+- **`CustomFunctionOperator: TdxCustomFunctionOperator` (no `;`)** — invalid Delphi source (missing terminator); parser correctly rejects.
+
+No commit-worthy fix from this investigation. The remaining non-IFDEF cluster is dominated by:
+1. Cascades from upstream IFDEF-in-expression / asymmetric-IFDEF failures (BLOCKED root cause)
+2. Invalid source code (parser correctly rejects)
+
+The "easy wins" cohort is exhausted at 92.44%. Further progress likely needs the IFDEF-as-token-bag refactor (proposed but not yet implemented).
+
+---
+
 
 
 
