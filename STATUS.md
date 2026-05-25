@@ -61,6 +61,7 @@
 |23 | 2026-05-24 18:15 | 91.25% | 15,579 | inline `const NAME=value` in statement body (TableTools → **100%**) |
 |24 | 2026-05-24 18:50 | 91.25% | 15,579 | REVERTED — prec(-1) pp_block+end body still −502; ORM3 ceiling FINAL |
 |25 | 2026-05-24 19:30 | **91.41%** | **15,605** | `const [ref]` arg attr + prec(-1) on pp_block-as-type (Embarcadero **88.21%**) |
+|26 | 2026-05-24 20:10 | 91.41% | 15,605 | scanner: add `packed` to refuse-list (foundation — 0 file delta, fixes IFDEF-packed pattern, DBClient errors 7→5) |
 
 ## Per-root focus snapshot (iter 23)
 

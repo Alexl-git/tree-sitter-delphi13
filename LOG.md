@@ -647,6 +647,22 @@ Lowered pp_block's precedence in the _typeref choice list so the GLR parser pref
 
 ---
 
+## 2026-05-24 20:10  Iter 26 — Scanner: add `packed` to refuse-list
+
+Iter 25's prec(-1) on pp_block-as-type was insufficient — the parser was still consuming `{$IFDEF CPUX86}packed{$ENDIF}` as the entire type. The actual fix needed is at scanner level: refuse to absorb the IFDEF block when its body starts with `packed`, so the parser sees `(pp){$IFDEF}(/pp) packed (pp){$ENDIF}(/pp) record`.
+
+Scanner change: extended refuse-list from `unit/program/library/package/interface/implementation` to add `packed`. Required rewriting `starts_with_structural_keyword()` because `packed` and `package` share the 4-char prefix `pack`, and the old try-then-fallback cascade didn't actually work for shared-prefix keywords (silently broken for `package` too — same first letter as `program`).
+
+New char-by-char prune state machine properly distinguishes:
+- `p` + `r` → program
+- `p` + `a` + `c` + `k` + `e` + `d` → packed
+- `p` + `a` + `c` + `k` + `a` + `g` + `e` → package
+- (everything else with `p` → not refused)
+
+**Result**: 0 file delta (15605 → 15605). DBClient error count dropped 7→5 but file still has 5 other errors → still classified as fail. **Foundation commit** — enables future iters tackling the other Embarcadero clusters that overlap with the same files.
+
+---
+
 
 
 
