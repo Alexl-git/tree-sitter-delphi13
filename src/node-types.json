@@ -3854,6 +3854,10 @@
           "named": true
         },
         {
+          "type": "exprIf",
+          "named": true
+        },
+        {
           "type": "exprParens",
           "named": true
         },
@@ -3886,6 +3890,14 @@
           "named": true
         },
         {
+          "type": "kDeprecated",
+          "named": true
+        },
+        {
+          "type": "kExperimental",
+          "named": true
+        },
+        {
           "type": "kFalse",
           "named": true
         },
@@ -3899,6 +3911,10 @@
         },
         {
           "type": "kPascal",
+          "named": true
+        },
+        {
+          "type": "kPlatform",
           "named": true
         },
         {

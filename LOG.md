@@ -1629,3 +1629,26 @@ Scoped grammar additions don't trip GLR like the deep-rule mod did in iter 12. T
 Cumulative since Phase 3b iter 1: +72 files / 5 reverts. 462 fails remain.
 
 ---
+
+## 2026-05-25 17:15  Phase 3b iter 14 — declVar name kDefault + trailing platform/deprecated hint
+
+Two narrow additions:
+
+1. Added `alias($.kDefault, $.identifier)` to declVar's name choice set. Covers `Default: Boolean;` (FMX.Media.Win, WBComp, System.Classes).
+
+2. Added declaration hint clause between defaultValue and `;`:
+```
+optional(choice(seq(kDeprecated, optional(_expr)), kPlatform, kExperimental))
+```
+Covers:
+- `CmdShow: Integer platform;` (System.pas)
+- `SupportsAnimateWindow: Boolean = False deprecated 'msg';` (Vcl.Controls)
+- `TypeImportsTable: array[0..0] of Pointer platform;` (SysInit)
+
+**Result**: +14 files (16310 -> 16324; 97.25% -> **97.33%**).
+- Embarcadero: 96.25 -> **96.48%** (+12 — Win API and RTL platform-gated globals)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +86 files / 5 reverts. 448 fails remain.
+
+---

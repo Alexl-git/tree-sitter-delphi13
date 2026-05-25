@@ -1057,12 +1057,23 @@ module.exports = grammar({
 				alias($.kRead,      $.identifier),
 				alias($.kWrite,     $.identifier),
 				alias($.kReference, $.identifier),
+				// Phase 3b iter 14: kDefault as var name (FMX.Media.Win,
+				// WBComp, System.Classes use `Default: Boolean;` etc.)
+				alias($.kDefault,   $.identifier),
 			))),
 			':',
 			field('type', $.type),
 			optional(choice(
 				seq($.kAbsolute, $._ref),
 				field('defaultValue', $.defaultValue)
+			)),
+			// Phase 3b iter 14: declaration hints on module-level vars:
+			//   CmdShow: Integer platform;
+			//   SupportsAnimateWindow: Boolean = False deprecated 'msg';
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental
 			)),
 			';',
 			// Phase 3b iter 13: function-typed module-level vars with
