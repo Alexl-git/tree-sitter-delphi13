@@ -1652,3 +1652,23 @@ Covers:
 Cumulative since Phase 3b iter 1: +86 files / 5 reverts. 448 fails remain.
 
 ---
+
+## 2026-05-25 17:32  Phase 3b iter 15 — Bare `[Ref]` / `[in]` attribute on declArg
+
+declArg's bare branch (no `var`/`const`/`out`/`constref` modifier) didn't allow rttiAttributes. Added `optional($.rttiAttributes)` at the front. Targets Win API wrappers:
+```
+procedure VSSetConstantBuffers(
+  StartSlot: UINT;
+  NumBuffers: UINT;
+  [Ref] ppConstantBuffers: ID3D11Buffer);
+```
+
+**Result**: +21 files (16324 -> 16345; 97.33% -> **97.45%**).
+- Embarcadero: 96.48 -> **96.83%** (+18 — Winapi.D3D11_*, System.Variants, etc.)
+- DevExpress: 99.36 -> **99.40%** (+2)
+- Spring4D: 96.92 -> **97.05%** (+1)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +107 files / 5 reverts. 427 fails remain.
+
+---

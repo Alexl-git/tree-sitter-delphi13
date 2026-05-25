@@ -1460,6 +1460,10 @@ module.exports = grammar({
 				))
 			),
 			seq(
+				// Phase 3b iter 15: allow bare `[Ref]` / `[in, ...]` attribute
+				// before arg name without a leading modifier keyword. Win API
+				// D3D11 wrappers use `[Ref] ppConstantBuffers: ID3D11Buffer`.
+				optional($.rttiAttributes),
 				field('name', delimited1($.identifier)), ':',
 				field('type', $.type),
 				field('defaultValue', optional($.defaultValue))
