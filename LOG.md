@@ -1033,6 +1033,34 @@ The "easy wins" cohort is exhausted at 92.44%. Further progress likely needs the
 
 ---
 
+## 2026-05-25 04:00  Iter 49 — Attempted symmetric IFDEF refactor — REVERTED
+
+Discrete PP_OPEN/PP_ELSE/PP_END tokens with body-shape heuristic; `ppExprAlt` in `_expr` where both branches parse as `_expr`. **-85 files** (Spring4D -13, Embarcadero -18, DevExpress -2, OmniThread +3). Heuristic too aggressive for asymmetric IFDEFs that LOOK expression-shaped. Reverted.
+
+---
+
+## 2026-05-25 04:30  Iter 50 — Attempted Option-A — ABANDONED (perf cliff)
+
+Option-A: discrete pp tokens + PP_ELSE_BODY (opaque ELSE branch). Implemented:
+- Scanner emits PP_OPEN only when block has depth-1 `{$ELSE}` (verified two-branch via `peek_has_else_branch`).
+- Grammar `ppExprAlt: pp_open + _expr + pp_else + pp_else_body + pp_end` in `_expr`.
+
+**Result**: PROCESS HUNG. Corpus reached only 50% in 30+ min (vs normal 5 min). Killed.
+
+**Causes**:
+1. `peek_has_else_branch` walks up to 2KB per `{$IF}`. 107k IFDEFs × 2KB = significant.
+2. `scan_pp_else_body` uses mark_end-as-rollback — likely correctness bugs around nested directives.
+3. GLR ambiguity between ppExprAlt and existing pp_block-as-extras absorption.
+
+Reverted to iter 48 baseline (**92.44%**). The refactor is correct in principle but needs:
+- Cheaper scanner (no big peek)
+- Cleaner ELSE-body consumption
+- Fewer simultaneous grammar positions OR pp_block removed from extras
+
+User's Option-B+ (`else: choice(_expr, pp_else_body)`) is GLR-natural and the right next attempt — but requires the underlying scanner perf issue to be solved first. Holding iter 51 pending design.
+
+---
+
 
 
 
