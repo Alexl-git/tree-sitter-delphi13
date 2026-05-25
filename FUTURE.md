@@ -17,10 +17,17 @@ Some downstream tools (refactoring, semantic analysis, completion) want both bra
 1. Walk the tree, find every `pp_else_tail` node.
 2. Read the raw ELSE-branch text from the node's source range.
 3. Identify the parent grammar rule of the `pp_open` boundary that opened this IFDEF — that tells us what context the ELSE was in (callconv vs identifier vs expression vs statement, etc.).
-4. Re-parse the ELSE text *in that context*. Tree-sitter doesn't expose a "start at rule X" entry point natively, so the implementation must either:
-   - Wrap the ELSE fragment in a synthetic stub that creates the context (e.g. `program X; var Y: T = <ELSE>;` for an expression-position IFDEF), parse the whole stub, extract the relevant subtree; **or**
-   - Build a small second tree-sitter grammar whose top-level rule IS the target context, parse fragments with it; **or**
-   - Use `ts_parser_set_included_ranges` to re-parse only specific byte ranges of the original source — this carries surrounding context for free and is the simplest prototype path.
+4. Re-parse the ELSE text *in that context*. Tree-sitter doesn't expose a "start at rule X" entry point natively, so the implementation chooses from three patterns. **Approach 3 is the recommended starting point** — it leverages tree-sitter's own range-based reparse machinery instead of fighting it:
+
+   **Approach 3 (recommended) — `ts_parser_set_included_ranges`:** tree-sitter's C API lets the parser see only specific byte ranges of an input. To re-parse symmetrically:
+   - Build a *virtual* source view of the original file with the THEN-range bytes replaced by the ELSE-range bytes at the same position.
+   - Or: feed the parser two ranges — everything *before* the IFDEF + the ELSE text + everything *after* the `{$ENDIF}`.
+   - The parser sees the same surrounding tokens the THEN-side had, just with the IFDEF position filled by ELSE bytes. Same parser, same grammar, no synthetic stubs, no second compiled grammar.
+   - Node bindings: `tree-sitter` npm package exposes this as `parser.parse(input, oldTree, { includedRanges: [...] })`. The Python and Rust bindings have equivalents.
+
+   **Approach 1 — wrap-and-extract:** prepend a synthetic stub that creates the context (e.g. `program X; var Y: T = <ELSE>;` for an expression-position IFDEF), parse the whole thing, take the relevant subtree. Simple but requires per-context stub templates.
+
+   **Approach 2 — second mini-grammar:** a separate compiled tree-sitter grammar whose top rule IS the target context (e.g. an "expression-only" grammar). Pure but doubles maintenance.
 5. If the ELSE parses cleanly and has the same shape as the parsed THEN sibling → "symmetric IFDEF detected" → attach to the augmented tree as an alternative branch.
 6. If it doesn't → leave as opaque (no change).
 
