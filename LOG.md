@@ -601,6 +601,24 @@ constInline: $ => seq(
 
 ---
 
+## 2026-05-24 18:50  Iter 24 — REVERTED — defProc body=`prec(-1, pp_block+end)`
+
+Re-attempted iter-21's MStreams asm-vs-pascal fix with `prec(-1)` guard, hoping negative precedence would prevent GLR over-consumption.
+
+**Result**: -502 files (15579 → 15077; 91.25% → 88.31%). Same regression magnitude as iter 21 — `prec(-1)` does NOT meaningfully reduce GLR ambiguity here.
+
+**Root cause confirmed**: pp_block is in `extras` (consumed everywhere as whitespace). When `defProc.body` also accepts pp_block, the GLR parser opens too many alternate paths for every IFDEF in every procedure body. tree-sitter precedence biases parse-tree selection AFTER a successful parse — it doesn't prune the search.
+
+**MStreams ORM3 fail is FINAL BLOCKED**. Requires either:
+- A preprocessor pass (companion library — out of scope for this grammar)
+- Scanner-level classifier that distinguishes "IFDEF wraps body internals" from "IFDEF wraps locals" before emitting the token
+
+Marking the ORM3 ceiling at **99.86% (698/699)** as the practical maximum for the pure-grammar approach.
+
+Reverted to iter 23 state.
+
+---
+
 
 
 
