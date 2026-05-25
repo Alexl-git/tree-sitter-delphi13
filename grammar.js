@@ -1065,6 +1065,21 @@ module.exports = grammar({
 				field('defaultValue', $.defaultValue)
 			)),
 			';',
+			// Phase 3b iter 13: function-typed module-level vars with
+			// callconv + default value:
+			//   var Name: function(...): T; stdcall = nil;
+			// Without this, the `;` before stdcall closes declVar and
+			// `stdcall = nil ;` is orphaned. Match at declVar scope only
+			// (not declProcRef) to avoid the iter-12 GLR cascade.
+			optional(seq(
+				choice(
+					$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+					$.kRegister, $.kWinapi, $.kInline
+				),
+				'=',
+				field('defaultValueAfterCC', $._expr),
+				';',
+			)),
 			repeat(choice($._procAttribute, $.procExternal))
 		),
 

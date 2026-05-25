@@ -1606,3 +1606,26 @@ Lesson: optional separators in heavily-reused grammar rules are GLR poison. Even
 Cumulative since Phase 3b iter 1: +59 files / **5 reverts**. 475 fails remain.
 
 ---
+
+## 2026-05-25 16:55  Phase 3b iter 13 — declVar trailing `<callconv> = expr ;`
+
+After iter 12's cascade lesson (modifying declProcRef = poison), scoped the fix to declVar only. Added optional trailing clause AFTER declVar's main `;`:
+```
+optional(seq(callconv, '=', _expr, ';'))
+```
+
+Targets module-level function-typed var pattern:
+```
+var SetWindowCompositionAttribute: function(...): BOOL; stdcall = nil;
+```
+
+**Result**: +13 files (16297 -> 16310; 97.17% -> **97.25%**).
+- DevExpress: 99.26 -> **99.36%** (+4 — cxAccessibility, dxAcrylicEffect, etc.)
+- Embarcadero: 96.12 -> **96.25%** (+7 — System.RegularExpressionsAPI, Posix.Signal, etc.)
+- All other roots held
+
+Scoped grammar additions don't trip GLR like the deep-rule mod did in iter 12. The trailing-clause approach can be reused.
+
+Cumulative since Phase 3b iter 1: +72 files / 5 reverts. 462 fails remain.
+
+---
