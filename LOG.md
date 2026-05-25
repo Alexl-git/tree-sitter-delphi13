@@ -1197,6 +1197,27 @@ The single Bde.pas file unlocked accounted for 205 MISSING tokens. The grammar f
 
 ---
 
+## 2026-05-25 07:50  Iter 57 — Inline calling-conv on lambdas (WebView2 pattern)
+
+Vcl.Edge.pas (WebView2 wrapper) uses anonymous methods with `stdcall` for COM callbacks:
+```pascal
+var handler :=
+  function(AResult: HResult): HResult stdcall
+  begin
+    Result := S_OK;
+  end;
+```
+
+Grammar's `lambda` rule allowed `procedure|function args [: type] body` but not the inline calling-convention between type and body. Added the same `optional(choice(stdcall|cdecl|...))` clause as iter 56's _declProc.
+
+**Result**: +7 files (15842 → 15849; 92.82% → **92.86%**).
+- Embarcadero: 90.78% → **90.85%** (+4: Vcl.Edge.pas, FMX.Forms, WebView wrappers)
+- Spring4D / DevExpress / others: held
+
+Same pattern as iter 56 applied to a different rule. The WebView2 / COM-callback idiom is mostly contained but worth covering.
+
+---
+
 
 
 

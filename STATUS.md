@@ -86,6 +86,7 @@
 |54 | 2026-05-25 06:30 | **92.73%** | **15,827** | Trailing `;` in record initializer (Embarcadero **90.51%**, DevExpress **96.40%**, +28 files) |
 |55 | 2026-05-25 07:00 | 92.73% | 15,827 | REVERTED — cheap-peek IFDEF-in-expr -2891 (7th IFDEF refactor confirms architectural ceiling) |
 |56 | 2026-05-25 07:30 | **92.82%** | **15,842** | Inline calling-conv before `;` in _declProc (Embarcadero **90.78%**, +15 Bde RTL imports) |
+|57 | 2026-05-25 07:50 | **92.86%** | **15,849** | Inline calling-conv on lambdas (Vcl.Edge WebView2 anon-method callbacks, +7) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -94,7 +95,7 @@
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  720 |   65 | **91.72%** |
-| **Embarcadero**    | 4812 |  489 | **90.78%** |
+| **Embarcadero**    | 4816 |  485 | **90.85%** |
 | DevExpress         | 4232 |  158 | 96.40% |
 | OmniThread         |  247 |   20 | 92.51% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |
