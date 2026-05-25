@@ -748,6 +748,16 @@ Same alias set can probably be extended to declField and declArg names in a futu
 
 ---
 
+## 2026-05-24 22:50  Iter 32 — Tried 2 extensions, both 0 file delta — reverted
+
+Two attempts:
+1. Extended soft-keyword aliases to declField + declArg names. Generated cleanly with conflict declarations but **0 file delta** — patterns must not appear in our corpus.
+2. Added `kOperator` alias to declVar (for `var Operator: WideString;` in Data.Win.ADODB.pas). Single file went from 11+ errors to 1 error, but didn't promote to OK because of another remaining issue. **0 file delta**.
+
+Both reverted to avoid grammar bloat without functional gain. Aliases-everywhere isn't worth the parse-table cost unless it actually flips files. Will revisit when other constraints in those same files are also fixed.
+
+---
+
 
 
 
