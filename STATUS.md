@@ -71,6 +71,8 @@
 |34 | 2026-05-24 23:30 | **91.93%** | **15,695** | qualified-id subrange `TFoo.Bar..TFoo.Baz` (DevExpress **95.76%**) |
 |35 | 2026-05-24 23:50 | 91.93% | 15,695 | REVERTED — declEnumValue Default+Operator aliases 0 delta |
 |36 | 2026-05-25 00:15 | **91.96%** | **15,695** | .inc fragment skip filter + IFDEF stats tool (real-Pascal denominator 17072→17067) |
+|37 | 2026-05-25 00:45 | 91.96% | 15,695 | REVERTED — Stage-A.1 IFDEF-as-AST refactor -2977 (all-positions-needed) |
+|38 | 2026-05-25 01:10 | **92.09%** | **15,717** | `pp_block.kDot.typeref` qualified-type prefix (EurekaLog/RTL XE2+ +22) |
 
 ## Per-root focus snapshot (iter 23)
 

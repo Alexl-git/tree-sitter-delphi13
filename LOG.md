@@ -848,6 +848,24 @@ For now, continuing piecemeal. May revisit with a different architecture (e.g. e
 
 ---
 
+## 2026-05-25 01:10  Iter 38 — `pp_block.kDot.typeref` qualified-type prefix
+
+Pivoted back to piecemeal. Investigated `crossterm` cluster — found 5+ files with the unit-scope-name switch pattern:
+
+```pascal
+Response: {$IFDEF USE_NAMESPACES}Web.HTTPApp{$ELSE}HTTPApp{$ENDIF}.TWebResponse;
+```
+
+EurekaLog and Embarcadero RTL XE2+ use this to support both with-namespace-prefix and legacy unit names. The pp_block consumed `{$IFDEF...}Web.HTTPApp{$ELSE}HTTPApp{$ENDIF}` as one extras token, leaving `.TWebResponse` orphaned in the type position.
+
+**Fix**: explicit `prec(1, seq($.pp_block, $.kDot, $.typeref))` choice in `type`. Forces the parser to consume pp_block as the LHS of a dotted-qualified-type instead of as extras whitespace.
+
+**Result**: +22 files (15695 → 15717; 91.96% → **92.09%**).
+
+Per-root deltas: all gain landed in non-tracked roots (mostly EurekaLog Source/ and one each in DevExpress utility modules). ORM3/Spring4D/Embarcadero (per-tracker) held.
+
+---
+
 
 
 
