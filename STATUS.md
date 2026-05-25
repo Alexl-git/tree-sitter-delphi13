@@ -90,6 +90,7 @@
 |58 | 2026-05-25 08:10 | **93.31%** | **15,926** | exprTpl args narrowed to typeref — fixes `<` ambiguity (DevExpress **97.68%**, OmniThread **93.26%**, +77 files) |
 |59 | 2026-05-25 08:30 | **93.38%** | **15,938** | Empty `()` in arrInitializer (Spring4D **92.10%**, Embarcadero **91.13%**, +12 files) |
 |60 | 2026-05-25 08:50 | **93.44%** | **15,948** | Extended inline procAttr (overload/virtual/etc.) in _declProc (Spring4D **92.36%**, +10 files) |
+|61 | 2026-05-25 09:00 | **93.46%** | **15,950** | declField allows deprecated/platform/experimental hint (Embarcadero **91.28%**, +2 files) |
 
 ## Per-root focus snapshot (iter 23)
 
@@ -98,7 +99,7 @@
 | **ORM3**           |  698 |    1 | **99.86%** |
 | **TableTools**     |   13 |    0 | **100.00%** |
 | **Spring4D**       |  725 |   60 | **92.36%** |
-| **Embarcadero**    | 4837 |  464 | **91.25%** |
+| **Embarcadero**    | 4839 |  462 | **91.28%** |
 | DevExpress         | 4290 |  100 | 97.72% |
 | OmniThread         |  249 |   18 | 93.26% |
 | **ORM3-SERVER**    |  147 |    0 | **100.00%** |

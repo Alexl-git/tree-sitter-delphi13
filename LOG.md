@@ -1265,6 +1265,18 @@ AzureAPI uses lenient `procedure F(args) overload;` (no `;` between `)` and `ove
 
 ---
 
+## 2026-05-25 09:00  Iter 61 — declField allows declaration hint
+
+Embarcadero ISAPI/RTL has fields like `FMin: Integer deprecated;`. declConst, _declClass, and typeref already supported the deprecated/platform/experimental hint clause; declField was the odd one out. Added the same clause + conflict declarations for typeref/_declClass ambiguity.
+
+**Result**: +2 files (15948 → 15950; 93.44% → **93.46%**).
+- Embarcadero: 91.25% → **91.28%** (+2)
+- Others held
+
+Minor but pattern-correct fix.
+
+---
+
 
 
 
