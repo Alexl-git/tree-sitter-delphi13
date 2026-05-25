@@ -6593,6 +6593,15 @@
                                 },
                                 "named": true,
                                 "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kOperator"
+                                },
+                                "named": true,
+                                "value": "identifier"
                               }
                             ]
                           },
@@ -6675,6 +6684,15 @@
                     "content": {
                       "type": "SYMBOL",
                       "name": "kDefault"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kOperator"
                     },
                     "named": true,
                     "value": "identifier"

@@ -1060,6 +1060,9 @@ module.exports = grammar({
 				// Phase 3b iter 14: kDefault as var name (FMX.Media.Win,
 				// WBComp, System.Classes use `Default: Boolean;` etc.)
 				alias($.kDefault,   $.identifier),
+				// Phase 3b iter 16: kOperator as var name (Data.Win.ADODB,
+				// Data.DBCommon use `Operator: TCANOperator;` etc.)
+				alias($.kOperator,  $.identifier),
 			))),
 			':',
 			field('type', $.type),

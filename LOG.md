@@ -1672,3 +1672,17 @@ procedure VSSetConstantBuffers(
 Cumulative since Phase 3b iter 1: +107 files / 5 reverts. 427 fails remain.
 
 ---
+
+## 2026-05-25 17:50  Phase 3b iter 16 — kOperator as declVar name
+
+Added `alias($.kOperator, $.identifier)` to declVar's name choice set. Covers `Operator: TCANOperator;` in Data.Win.ADODB.pas and Data.DBCommon.pas.
+
+**Result**: +5 files (16345 -> 16350; 97.45% -> **97.48%**).
+- Embarcadero: 96.83 -> **96.92%** (+5)
+- All other roots held
+
+Also discovered during investigation: iter 15's bare `[Ref]/[in]` fix actually unlocked cxStyles.pas and cxContainer.pas declSection failures too — the declSection cluster shrank from 11 to ~5 without explicit work. Iter 16 declSection cluster now is mostly Nevrona Rave11 with `override; {$IFDEF LEVEL6}deprecated; library;{$ENDIF}` — too niche to fix.
+
+Cumulative since Phase 3b iter 1: +112 files / 5 reverts. 422 fails remain.
+
+---
