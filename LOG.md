@@ -1363,3 +1363,22 @@ Excluded `kDeprecated` etc. — the `'msg'` form (`deprecated 'msg'`) conflicts 
 Diminishing-returns regime — these are 1-2 file wins per iter — but the pattern-correct fixes still apply and no regressions.
 
 ---
+
+## 2026-05-25 12:30  Phase 3b iter 1 — REVERTED — soft-keyword aliases in _ref
+
+DevExpress cxRichEditUtils.pas r805: `if cTabCount < Index then ...` fails because `Index` is lexed as `kIndex` (property-accessor keyword) and `_ref` doesn't alias it as identifier.
+
+Tried: add `alias(kReference|kMessage|kName|kIndex|kRead|kWrite, identifier)` to `_ref` (mirroring the existing aliases in `_typeref`). Required two conflict declarations to resolve: `[_ref, procExternal]` (external+kIndex in DLL ordinals) and `[_ref, procAttribute]` (message+expr in WM_PAINT-style handlers).
+
+**Result**: -64 files net (16238 -> 16174). The GLR forking caused state explosion in unrelated code paths.
+
+- Spring4D: 96.92 -> 97.69% (+6 files genuinely fixed)
+- DevExpress: 98.99 -> 98.48% (-22 cascade)
+- Embarcadero: 95.50 -> 95.04% (-24 cascade)
+- ORM3-CLIENT: 100 -> 99.57% (-1)
+
+Reverted. Future: narrow the alias to specific positions (e.g. only as exprBinary RHS) rather than blanket `_ref` aliasing. Tree-sitter has no built-in "context-sensitive identifier" mechanism so this needs surgical grammar work.
+
+The real underlying issue: soft keywords in Delphi context-sensitively flip between keyword and identifier. The grammar's only mechanism is global aliasing, which over-fires.
+
+---
