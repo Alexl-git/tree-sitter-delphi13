@@ -718,6 +718,21 @@ Reverted. The Apache HTTPD files have many other parse issues; a single-pattern 
 
 ---
 
+## 2026-05-24 21:25  Iter 30 — REVERTED — pp_block as range bound
+
+Tried allowing `range = (_expr | pp_block) '..' (_expr | pp_block)` to handle:
+```pascal
+array[0..{$IFDEF CPU64BITS}4{$ELSE}2{$ENDIF}] of Integer
+```
+
+**Result**: **-97 files** (15674 → 15577; 91.81% → 91.24%). Embarcadero -72, DevExpress -8, Spring4D -2.
+
+pp_block in expression-adjacent positions opens the GLR parser to wholesale path-explosion (same lesson as iters 21/24). The change correctly fixed System.pas's array-bound IFDEF but broke 97 other files where pp_block became an attractive misinterpretation in normal range contexts.
+
+**Pattern marked BLOCKED**. IFDEF-as-value-in-expression-position is the long-standing structural cluster that needs a different approach (preprocessor pass or scanner-aware classifier).
+
+---
+
 
 
 
