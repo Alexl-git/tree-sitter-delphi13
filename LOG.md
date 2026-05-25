@@ -1477,3 +1477,23 @@ Pattern coverage:
 Cumulative since iter 1 of Phase 3b: +15 files (4 reverts intermixed). 96.91% holds; 519 fails remain.
 
 ---
+
+## 2026-05-25 14:20  Phase 3b iter 7 — Trailing platform hint on enum body
+
+Added optional `deprecated 'msg'` / `platform` / `experimental` clause after declEnum's closing `)`:
+```
+TFPUPrecisionMode = (pmSingle, pmReserved, pmDouble, pmExtended) platform;
+```
+(System.Math FPU precision mode + similar deprecated-platform enums.)
+
+Required `[$.declEnum]` conflict declaration — the hint inside declEnum is GLR-ambiguous with the same hint clause that already exists at declType / typeref level.
+
+**Result**: +4 files (16253 -> 16257; 96.91% -> **96.93%**).
+- Embarcadero: 95.69 -> **95.77%** (+4)
+- All other roots held
+
+Did not attempt `type _AnsiString(N)` parameterized type this iter — time pressure. Defer to iter 8.
+
+Cumulative since Phase 3b iter 1: +19 files / 4 reverts intermixed. 515 fails remain.
+
+---

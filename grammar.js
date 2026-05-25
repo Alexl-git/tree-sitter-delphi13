@@ -354,6 +354,9 @@ module.exports = grammar({
 		// _declOperator (class operators can also be inlined).
 		[$._declProc],
 		[$._declOperator],
+		// Phase 3b iter 7: declEnum trailing platform/deprecated hint is
+		// ambiguous with the same hint appearing on the enclosing declType.
+		[$.declEnum],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1092,7 +1095,17 @@ module.exports = grammar({
 
 		// Type declarations
 
-		declEnum:        $ => seq('(', delimited1($.declEnumValue), ')'),
+		declEnum:        $ => seq(
+			'(', delimited1($.declEnumValue), ')',
+			// Trailing platform/deprecated hint on the enum body itself:
+			//   TFPUPrecisionMode = (pmSingle, pmReserved, ...) platform;
+			// (System.Math pattern.)
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
+			)),
+		),
 		declEnumValue:   $ => seq(field('name', $.identifier), field('value', optional($.defaultValue))),
 		// `set of T` where T is a type OR a subrange (`set of 1..100;`).
 		declSet:         $ => seq($.kSet, $.kOf, choice($.type, $.subrangeType)),
