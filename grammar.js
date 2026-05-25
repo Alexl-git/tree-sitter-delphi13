@@ -235,6 +235,9 @@ function statements(trailing) {
 		[rn('raise'),       $ => seq(
 			$.kRaise,
 			field('exception', optional($._expr)),
+			// Optional `at <addr-expr>` — Delphi exception re-raise with a
+			// specific call-site address: `raise EFoo.Create(msg) at ReturnAddress`.
+			optional(seq($.kAtWord, field('address', $._expr))),
 			...semicolon
 		)],
 
@@ -1397,6 +1400,10 @@ module.exports = grammar({
 		kMul:              $ => '*',
 		kFdiv:             $ => '/',
 		kAt:               $ => '@',
+		// `at` keyword (raise with address): `raise E at ReturnAddress`.
+		// Distinct from `@` operator (kAt). Soft keyword — must not clash
+		// with normal identifiers.
+		kAtWord:           $ => /at/i,
 		kHat:              $ => '^',
 		kAssign:           $ => ':=',
 		kAssignAdd:        $ => '+=', // Freepascal
