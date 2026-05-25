@@ -1061,6 +1061,36 @@ User's Option-B+ (`else: choice(_expr, pp_else_body)`) is GLR-natural and the ri
 
 ---
 
+## 2026-05-25 04:50  Iter 51 — Minimal probe (Option-B+) — REVERTED
+
+Stripped-down probe: scanner emits PP_OPEN/PP_ELSE/PP_END unconditionally when `valid_symbols` asks (no body peek, cheap). Grammar `ppExprAlt` in `_expr` only, both branches as `_expr`.
+
+**Result**: **-3,031 files** (15777 → 12746; 92.44% → 74.68%). Same catastrophe as iters 37/49/50.
+
+**Root cause finalized**: scanner emits PP_OPEN in ANY position where `_expr` is reachable from current parser state (which is most of the corpus — expressions are reachable from statements, declarations, args, etc.). EVERY `{$IF}` then tries to match `ppExprAlt`. For:
+- 70% single-branch IFDEFs (no `{$ELSE}`): fail because grammar requires `{$ELSE}`
+- 20% asymmetric IFDEFs: fail because branches aren't valid `_expr`s
+- ~10% truly symmetric expression IFDEFs: succeed
+
+tree-sitter error recovery cascades, dropping 3,000+ files.
+
+**Final architectural conclusion**: structural IFDEF support requires a big-bang refactor:
+1. Remove pp_block from extras
+2. Add ppAlt rules at EVERY position where IFDEFs can appear (~10 positions: `_expr`, `_statement`, `_definition`, type, args, fields, ...)
+3. Make ELSE branch a token-bag for asymmetric cases (any-keyword/any-literal/any-operator)
+4. Single commit covering all positions — incremental introduction is fundamentally impossible
+5. Likely 5-10 iters of debugging the new grammar before re-stabilizing
+
+This is multi-day grammar engineering work, beyond what the autonomous iter loop can do safely.
+
+**Practical ceiling at 92.44% — accepted.** Further progress would require either:
+- A preprocessor pass that expands IFDEFs before tree-sitter (out of scope for this grammar)
+- The full grammar rewrite above (worthwhile project but needs a sustained design session)
+
+Reverted to iter 48 baseline.
+
+---
+
 
 
 
