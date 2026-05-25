@@ -523,7 +523,22 @@ module.exports = grammar({
 
 		inherited:       $ => prec.right(seq($.kInherited, optional($.identifier))),
 
-		exprDot:         $ => op.infix(5, $._ref, $.kDot, $._ref),
+		exprDot:         $ => choice(
+			op.infix(5, $._ref, $.kDot, $._ref),
+			// Keyword-as-identifier on RHS of dot: `TdxUnaryOp.Not`, `T.And`,
+			// `T.Or`, `T.Xor` — common in DevExpress enum-class patterns where
+			// the enum members are named after logical operators.
+			prec.left(5, seq(
+				field('lhs', $._ref),
+				field('operator', $.kDot),
+				field('rhs', choice(
+					alias($.kNot, $.identifier),
+					alias($.kAnd, $.identifier),
+					alias($.kOr,  $.identifier),
+					alias($.kXor, $.identifier),
+				))
+			)),
+		),
 		exprDeref:       $ => op.postfix(4, $._expr, $.kHat),
 
 		exprAs:          $ => op.infix(3, $._expr, $.kAs,  $._expr),
