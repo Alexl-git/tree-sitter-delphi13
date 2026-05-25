@@ -167,6 +167,17 @@ for (const file of files) {
     else if (/^\s*<\?xml|^\s*<Project\s+xmlns=/.test(head)) {
       skip = 'xml_not_pascal';
     }
+    // .inc fragments meant to be `{$I}`-included into an existing const/var
+    // block (no module header, body opens with bare `IDENT = value;` decls).
+    // The Delphi compiler only accepts these via include — standalone parse
+    // is impossible.
+    else if (
+      /\.inc$/i.test(file) &&
+      !/\b(unit|program|library|package|interface|implementation)\b/i.test(head) &&
+      /^\s*(?:\/\/[^\n]*\n|\{[^}]*\}|\(\*[^*]*\*+\)|\s)*[A-Za-z_]\w*\s*=\s*/i.test(head)
+    ) {
+      skip = 'inc_fragment';
+    }
     if (skip) {
       skipCount++;
       fs.writeSync(out, JSON.stringify({ file, error: skip, bytes }) + '\n');
