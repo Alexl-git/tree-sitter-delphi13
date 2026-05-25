@@ -955,6 +955,28 @@ Narrower attempt — only `_literalInt`:
 
 ---
 
+## 2026-05-25 02:45  Iter 44 — `raise X at addr` (BIG WIN)
+
+Found via cluster scan of single-error files: `raise X at addr` — Delphi exception re-raise pattern with explicit call-site address. Used by DUnit test infrastructure, exception loggers, RTL, and JCL stack-trace tools.
+
+Examples:
+```pascal
+raise EFoo.Create('msg') at ReturnAddress;
+raise Error at errorAddrs[0];
+raise oEx at ReturnAddress;
+```
+
+Grammar's `raise` rule was: `kRaise [exception] ;`. Extended with optional `at <addr>` clause. Required new `kAtWord` token (regex `/at/i`) — distinct from existing `kAt` which is `@` operator.
+
+**Result**: **+43 files** (15719 → 15762; 92.10% → **92.35%**).
+- Embarcadero: 89.32% → **89.91%** (+31) — DUnit + RTL + JCL
+- Spring4D: 91.34% → **91.46%** (+1)
+- DevExpress: 95.76% → **95.81%** (+2)
+
+Biggest single-iter win since iter 28 (uses-clause pp_block, +69 files). The pattern is heavily used in Delphi test frameworks and stack-trace utility libraries.
+
+---
+
 
 
 
