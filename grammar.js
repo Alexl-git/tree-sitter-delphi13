@@ -1238,7 +1238,19 @@ module.exports = grammar({
 				$.kPlatform,
 				$.kExperimental
 			)),
-			';'
+			';',
+			// Phase 3b iter 9: trailing `<callconv>;` clause for procedural-type
+			// fields that import procDecl's `; cdecl;` convention. Pattern:
+			//   DispInvoke: procedure(Dest: PVarData; ...); cdecl;
+			//   VarArrayGet: function(...): Variant; cdecl;
+			// (System.pas TVarManager + similar Win API records.)
+			optional(seq(
+				choice(
+					$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+					$.kRegister, $.kWinapi, $.kInline,
+				),
+				';',
+			)),
 		),
 
 		declProp:        $ => seq(

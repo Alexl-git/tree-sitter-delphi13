@@ -1507,3 +1507,23 @@ Added to declType the alternative `seq($.kType, $.identifier, '(', $._literalInt
 Kept the change in spite of 0 delta — it's a correct narrow grammar pattern that will unlock System.pas combined with the next fix.
 
 ---
+
+## 2026-05-25 15:00  Phase 3b iter 9 — Trailing `cdecl;` on declField
+
+Added optional `<callconv>;` clause after declField's terminator `;`. Pattern:
+```
+DispInvoke: procedure(Dest: PVarData; ...); cdecl;
+VarArrayGet: function(...): Variant; cdecl;
+```
+(System.pas TVarManager + similar Win API records.)
+
+**Result**: +6 files (16257 -> 16263; 96.93% -> **96.97%**).
+- Embarcadero: 95.77 -> **95.85%** (+4)
+- All other roots held
+- 2 files in non-tracked roots
+
+Note: System.pas itself probably still doesn't pass (it has 701+ error nodes total — too many issues), but other files with the same TVarManager-style pattern now do.
+
+Cumulative since Phase 3b iter 1: +25 files / 4 reverts. 509 fails remain.
+
+---

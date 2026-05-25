@@ -1873,6 +1873,10 @@
           "named": true
         },
         {
+          "type": "kCdecl",
+          "named": true
+        },
+        {
           "type": "kDeprecated",
           "named": true
         },
@@ -1885,7 +1889,15 @@
           "named": true
         },
         {
+          "type": "kInline",
+          "named": true
+        },
+        {
           "type": "kNil",
+          "named": true
+        },
+        {
+          "type": "kPascal",
           "named": true
         },
         {
@@ -1893,7 +1905,23 @@
           "named": true
         },
         {
+          "type": "kRegister",
+          "named": true
+        },
+        {
+          "type": "kSafecall",
+          "named": true
+        },
+        {
+          "type": "kStdcall",
+          "named": true
+        },
+        {
           "type": "kTrue",
+          "named": true
+        },
+        {
+          "type": "kWinapi",
           "named": true
         },
         {
