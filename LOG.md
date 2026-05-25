@@ -1277,6 +1277,20 @@ Minor but pattern-correct fix.
 
 ---
 
+## 2026-05-25 09:15  Iter 62 — REVERTED — anonymous-record last-field `;` optional
+
+DevExpress dxFontIconsImageLoader has `array of record A: string; B: string end = ...` — last field omits `;`. Tried two approaches:
+
+1. **Make `;` always optional on declField**: net +12 but ORM3 -3 (iPLANLIST, COMMON files). ORM3 cherished — reverted.
+
+2. **Narrow: declField OR declFieldNoTerm at last position**: required multiple conflict declarations. Still broke iPLANLIST.PAS with 2 ERRORs at `string[30]` (the short-string-size syntax conflicts with declFieldNoTerm interpretation).
+
+Reverted both. The anonymous-record-no-terminator pattern requires more careful precedence work than fits in a 10-min iter. Documented for future review.
+
+Plateau holding at **93.46%** (iter 61).
+
+---
+
 
 
 
