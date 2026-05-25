@@ -1394,3 +1394,27 @@ Examined two candidate clusters:
 No commit. Iter 3 will implement the scanner-level unbalanced-IFDEF heuristic: peek `begin`/`end` balance in the THEN body before committing to PP_OPEN, fall back to PP_BLOCK opaque emission when the balance is negative. This is the proper Phase 3b mechanism — addresses ~17 implementation-cluster failures (Datasnap, Indy, FireDAC asymmetric patterns).
 
 ---
+
+## 2026-05-25 13:00  Phase 3b iter 3 — Surgical exprBinary alias also didn't take effect
+
+Tried adding context-narrow alternatives to exprBinary `<` rule:
+```
+op.infix(1, $._expr, $.kLt, alias($.kIndex, $.identifier)),
+op.infix(1, $._expr, $.kLt, alias($.kRead,  $.identifier)),
+...
+```
+
+Generated cleanly with no conflicts. Probe still failed — parse tree shows `if cTabCount < Index then cTabCount := Index;` parsed as exprBinary with `Index then` absorbed as ERROR inside, second cTabCount as rhs, kIndex at the end. Error recovery is greedy: parser commits to exprBinary before trying my alias alternatives.
+
+Root cause: tree-sitter's lexer ALWAYS tokenizes "Index" as kIndex (from the regex `/index/i`). The grammar-level alternative `< alias(kIndex, identifier)` should make the parser accept the kIndex token at that position, but apparently the action table doesn't include shift-kIndex at the `< ?` state — possibly because the existing `< _expr` interpretation dominates.
+
+The proper fix requires either:
+- Tree-sitter's "soft keyword" idiom (token precedence on kIndex below identifier)
+- Removing kIndex/kRead/kWrite/kMessage/kName/kReference from the `word` rule
+- A separate post-lex disambiguation pass
+
+None of these fit in a 10-min iter. Reverted.
+
+Next iter: try the scanner-level unbalanced-IFDEF heuristic instead (different angle — attacks the structural-IFDEF cluster rather than the soft-keyword cluster).
+
+---
