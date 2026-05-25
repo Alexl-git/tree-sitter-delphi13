@@ -800,6 +800,29 @@ Recent iter cadence: 32 reverted, 33 0-delta, 34 +8, 35 0-delta. Approaching but
 
 ---
 
+## 2026-05-25 00:15  Iter 36 — IFDEF stats + .inc fragment skip
+
+User asked for statistics on IFDEF patterns to justify whether a "treat IFDEF as AST branches" refactor is worth doing. Built `tools/ifdef-stats.js`, scanned the full corpus (17,081 files, 107,675 IFDEFs).
+
+**Categorization (mutually exclusive):**
+
+| Shape           | Count   | %      | Modelable as AST branches? |
+|-----------------|---------|--------|-----------------------------|
+| `single` (no ELSE) | 75,428 | 70.05% | Trivial — already handled |
+| `crossterm` (`;`/`,`/`.` inside) | 10,699 | 9.94% | Yes — per-rule fixes (uses-clause done in iter 28) |
+| `other` (mixed bodies) | 10,468 | 9.72% | Mostly yes — needs `ppAlt(_expr)`/`ppAlt(_stmt)` rules |
+| `nested` | 9,883 | 9.18% | Yes — recursive `ppAlt` |
+| `asym_open` (different opener kw) | 1,128 | **1.05%** | **No** — requires preprocessor |
+| `sym_lit` (literal vs literal) | 69 | 0.06% | Trivial — `ppAlt(_expr)` |
+
+**Bottom line for the refactor decision**: only 1.05% (~1,100 instances) are truly unfixable without preprocessor expansion. The other 99% can be parsed as branching AST nodes.
+
+Also added a `.inc` fragment skip filter in `parse-corpus.js`: Indy-style include files with bare const-block contents (no module header, body opens with `IDENT = value;`). 5 files filtered; real-Pascal denominator 17072 → 17067 → **91.96%**.
+
+Embarcadero: 89.25% → **89.29%** (denominator drop from .inc filter).
+
+---
+
 
 
 

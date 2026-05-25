@@ -69,6 +69,8 @@
 |31 | 2026-05-24 22:30 | **91.89%** | **15,687** | soft-keyword names in declVar (Embarcadero **89.21%**) |
 |32-33| 2026-05-24 22:50 | 91.89% | 15,687 | 0-delta investigations (declField/Arg + Operator + enum Default; reverted) |
 |34 | 2026-05-24 23:30 | **91.93%** | **15,695** | qualified-id subrange `TFoo.Bar..TFoo.Baz` (DevExpress **95.76%**) |
+|35 | 2026-05-24 23:50 | 91.93% | 15,695 | REVERTED — declEnumValue Default+Operator aliases 0 delta |
+|36 | 2026-05-25 00:15 | **91.96%** | **15,695** | .inc fragment skip filter + IFDEF stats tool (real-Pascal denominator 17072→17067) |
 
 ## Per-root focus snapshot (iter 23)
 
