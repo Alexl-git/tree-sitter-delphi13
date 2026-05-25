@@ -1091,6 +1091,22 @@ Reverted to iter 48 baseline.
 
 ---
 
+## 2026-05-25 05:00  Iter 52 — Investigation only (no new wins)
+
+Re-scanned single-error tracked-root files for any unexploited piecemeal patterns. Found:
+- DevExpress `function FOO; overload` (no trailing `;`) — invalid Delphi source
+- OmniThread `FDriver.Read(howmuch?, whattodo?)` — pseudo-code TODO marker with `?` placeholders
+- DevExpress `function (args): T; stdcall = nil` — same iter-29 BLOCKED pattern (cdecl-after-`;`)
+- DevExpress `function ... ; stdcall` (no `;` after stdcall) — invalid syntax
+
+All remaining patterns are either:
+1. Invalid Delphi source (parser correctly rejects)
+2. Same blocked-pattern shapes already attempted in earlier iters
+
+**No piecemeal wins available.** Iter loop genuinely at architectural ceiling. The path forward is the multi-day structural rewrite OR a separate preprocessor pass.
+
+---
+
 
 
 
