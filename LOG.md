@@ -1382,3 +1382,15 @@ Reverted. Future: narrow the alias to specific positions (e.g. only as exprBinar
 The real underlying issue: soft keywords in Delphi context-sensitively flip between keyword and identifier. The grammar's only mechanism is global aliasing, which over-fires.
 
 ---
+
+## 2026-05-25 12:45  Phase 3b iter 2 — Investigation only
+
+Examined two candidate clusters:
+
+1. **Datasnap.DataBkr.pas r347** (`begin end;` floating between `{$IFDEF POSIX}` and `{$ENDIF}` at unit level after a prior procedure header at lines 322-343): this is conditional-compile body completion — the POSIX branch ADDS a stub body to a forward declaration. Without preprocessor expansion, the THEN-wins refactor sees floating `begin end;` with no procedure header. Hard preprocessor-only case.
+
+2. **cxRichEdit.pas r653 declField** (anonymous record with last field missing `;`): the exact pattern iter 62 already tried (`record A: T; B: T end =` form). Iter 62's narrow attempt broke ORM3 on `string[30]` short-string syntax. Skipping.
+
+No commit. Iter 3 will implement the scanner-level unbalanced-IFDEF heuristic: peek `begin`/`end` balance in the THEN body before committing to PP_OPEN, fall back to PP_BLOCK opaque emission when the balance is negative. This is the proper Phase 3b mechanism — addresses ~17 implementation-cluster failures (Datasnap, Indy, FireDAC asymmetric patterns).
+
+---
