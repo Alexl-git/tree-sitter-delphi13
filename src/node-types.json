@@ -2980,6 +2980,10 @@
           "named": true
         },
         {
+          "type": "kWriteonly",
+          "named": true
+        },
+        {
           "type": "rttiAttributes",
           "named": true
         }
@@ -9874,6 +9878,10 @@
   },
   {
     "type": "kWrite",
+    "named": true
+  },
+  {
+    "type": "kWriteonly",
     "named": true
   },
   {

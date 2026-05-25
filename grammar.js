@@ -1153,6 +1153,7 @@ module.exports = grammar({
 				seq($.kStored, field('stored', $._expr)),
 				$.kNodefault,
 				$.kReadonly,  // OLE dispinterface property: readonly dispid 0
+				$.kWriteonly, // OLE dispinterface property: writeonly dispid N
 			)),
 			';',
 			repeat($._procAttribute)
@@ -1493,6 +1494,7 @@ module.exports = grammar({
 		kSealed:           $ => /sealed/i,
 		kFinal:            $ => /final/i,
 		kReadonly:         $ => /readonly/i,
+		kWriteonly:        $ => /writeonly/i,
 		kDynamic:          $ => /dynamic/i,
 		kOverride:         $ => /override/i,
 		kOverload:         $ => /overload/i,

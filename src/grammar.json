@@ -8168,6 +8168,10 @@
               {
                 "type": "SYMBOL",
                 "name": "kReadonly"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kWriteonly"
               }
             ]
           }
@@ -10247,6 +10251,11 @@
     "kReadonly": {
       "type": "PATTERN",
       "value": "readonly",
+      "flags": "i"
+    },
+    "kWriteonly": {
+      "type": "PATTERN",
+      "value": "writeonly",
       "flags": "i"
     },
     "kDynamic": {
