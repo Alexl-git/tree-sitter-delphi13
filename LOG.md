@@ -1155,6 +1155,27 @@ The fix unlocked dxCore and similar DevExpress data-table files plus Embarcadero
 
 ---
 
+## 2026-05-25 07:00  Iter 55 — Cheap-peek IFDEF-in-expression — REVERTED
+
+User authorized 7th attempt at structural IFDEF, this time with a CHEAP O(20-char) body-shape peek instead of iter 50's expensive 2KB peek. Plan: scanner emits PP_OPEN only when body's first non-whitespace char looks expression-shaped (digit, paren, unary op, string lit, identifier NOT a statement keyword).
+
+Implemented: scanner with `body_looks_expression_shaped()` keyword-table check; ppExprAlt rule in `_expr` with both branches as `_expr`; in-line PP_BLOCK fallback when peek says non-expression.
+
+**Result**: **-2,891 files** (15827 → 12936; 92.73% → 75.80%). Same cliff as iters 37/49/51.
+
+**Conclusion (definitive)**: 7 attempts have all failed at the same cliff. The GLR ambiguity between extras pp_block absorption and ppExprAlt CANNOT be resolved by:
+- Heuristic body-shape detection (iters 37, 49, 50, 55)
+- Refined precedence (iters 21, 24)
+- Different rule placement (iters 30, 39, 40, 51)
+
+The structural-IFDEF feature in tree-sitter REQUIRES a full architecture rewrite where pp_block is removed from extras and ppAlt rules cover EVERY position simultaneously. No incremental path exists.
+
+**Definitively pausing IFDEF-in-expression work.** Plateau at 92.73% (post iter-54 wins) is the practical ceiling for this architecture.
+
+Reverted to iter 54 baseline.
+
+---
+
 
 
 
