@@ -307,6 +307,9 @@ module.exports = grammar({
 		// (both reach `_statement` before `end`). GLR resolves at parse time.
 		[$.exceptionElse, $.exceptionElseTr],
 		[$.exceptionElse],
+		// Soft-keyword identifiers (Message, Name, Index, Read, Write, Reference)
+		// allowed as variable names — ambiguous with next-statement starts.
+		[$.declVar],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -913,7 +916,18 @@ module.exports = grammar({
 
 		declVar:         $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			field('name', delimited1($.identifier)),
+			// Allow soft-keyword names as variable identifiers. Same set as
+			// `_typeref`'s alias list — `Message: TFoo;`, `Name: string;`,
+			// `Index: integer;` etc. show up frequently in legacy code.
+			field('name', delimited1(choice(
+				$.identifier,
+				alias($.kMessage,   $.identifier),
+				alias($.kName,      $.identifier),
+				alias($.kIndex,     $.identifier),
+				alias($.kRead,      $.identifier),
+				alias($.kWrite,     $.identifier),
+				alias($.kReference, $.identifier),
+			))),
 			':',
 			field('type', $.type),
 			optional(choice(
