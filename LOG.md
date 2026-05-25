@@ -1442,3 +1442,18 @@ Net session result: 96.82% is likely close to the practical ceiling without the 
 - Accepting 96.82% as the shipped baseline and merging refactor branch (already merged)
 
 ---
+
+## 2026-05-25 13:50  Phase 3b iter 5 — Subrange bounds: -Identifier and SizeOf-binary
+
+Two new alternatives in `_subrangeBound`:
+1. `seq('-', $.identifier)` and `seq('+', $.identifier)` — covers `THelpContext = -MaxInt..MaxInt;` (System.Classes).
+2. `seq($.identifier, '(', $.identifier, ')', choice('*','/'), $._literalInt, choice('-','+'), $._literalInt)` — narrow form for `TcxContainerStyleValue = 0..SizeOf(Integer) * 8 - 1;` (DevExpress cxContainer/cxOI pattern).
+
+**Result**: +3 files (16238 -> 16241; 96.82% -> **96.83%**).
+- DevExpress 98.99 -> **99.03%** (+2: cxContainer, cxOI)
+- Spring4D / Embarcadero / OmniThread / ORM3 held
+- Third file in an ungrouped path (probably System.Classes for the -MaxInt pattern)
+
+First commit-worthy win after 4 reverts. Subrange narrow-grammar additions don't conflict with the GLR machinery because they're specific shape-matches with no alternative paths.
+
+---

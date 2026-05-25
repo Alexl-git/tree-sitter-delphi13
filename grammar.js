@@ -996,6 +996,10 @@ module.exports = grammar({
 			$._literalFloat,
 			seq('-', $._literalInt),
 			seq('+', $._literalInt),
+			// Phase 3b iter 5: `-Identifier` / `+Identifier` form for
+			// `THelpContext = -MaxInt..MaxInt` (System.Classes pattern).
+			seq('-', $.identifier),
+			seq('+', $.identifier),
 			$.identifier,
 			// Qualified identifier `TFoo.Bar` (DevExpress enum-class subrange:
 			//   TdxChartActualToolTipMode = TdxChartToolTipMode.None .. TdxChartToolTipMode.Crosshair;
@@ -1008,6 +1012,12 @@ module.exports = grammar({
 			// Kept narrow (no full _expr) to avoid the conflict cascade hit
 			// when wider _expr was tried earlier.
 			seq($.identifier, choice('-', '+'), $._literalInt),
+			// `SizeOf(Integer) * 8 - 1`-style binary chain — narrow
+			// `ident(ident) OP int OP int` form for the DevExpress pattern
+			// `TcxContainerStyleValue = 0..SizeOf(Integer) * 8 - 1;`.
+			seq($.identifier, '(', $.identifier, ')',
+				choice('*', '/'), $._literalInt,
+				choice('-', '+'), $._literalInt),
 			// `#NN` numeric char-literal bound: `TCodeLetter = #64..#82;`.
 			// (Excluding `^X` external char_literal — narrower keeps Spring4D
 			// safe from the earlier regression.)

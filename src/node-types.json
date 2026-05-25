@@ -6850,6 +6850,16 @@
     "fields": {}
   },
   {
+    "type": "kFdiv",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "kMul",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "kSub",
     "named": true,
     "fields": {}
@@ -9439,6 +9449,10 @@
     "named": false
   },
   {
+    "type": "*",
+    "named": false
+  },
+  {
     "type": "+",
     "named": false
   },
@@ -9456,6 +9470,10 @@
   },
   {
     "type": "..",
+    "named": false
+  },
+  {
+    "type": "/",
     "named": false
   },
   {
@@ -9643,10 +9661,6 @@
     "named": true
   },
   {
-    "type": "kFdiv",
-    "named": true
-  },
-  {
     "type": "kFile",
     "named": true
   },
@@ -9764,10 +9778,6 @@
   },
   {
     "type": "kMod",
-    "named": true
-  },
-  {
-    "type": "kMul",
     "named": true
   },
   {
