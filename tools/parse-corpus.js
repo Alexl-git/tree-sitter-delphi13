@@ -167,14 +167,22 @@ for (const file of files) {
     else if (/^\s*<\?xml|^\s*<Project\s+xmlns=/.test(head)) {
       skip = 'xml_not_pascal';
     }
-    // .inc fragments meant to be `{$I}`-included into an existing const/var
-    // block (no module header, body opens with bare `IDENT = value;` decls).
+    // .inc fragments meant to be `{$I}`-included into an existing scope.
     // The Delphi compiler only accepts these via include — standalone parse
-    // is impossible.
+    // is impossible. Two shapes:
+    //   1) Body opens with bare `IDENT = value;` decls (const-block fragment)
+    //   2) ANY .inc with no module header — typically just IFDEF chains, error
+    //      messages, platform-API blocks. Master "passed" these only because
+    //      pp_block ate the whole IFDEF as opaque; the THEN-wins refactor
+    //      exposes the inner text so they fail to parse as valid Pascal.
     else if (
       /\.inc$/i.test(file) &&
       !/\b(unit|program|library|package|interface|implementation)\b/i.test(head) &&
-      /^\s*(?:\/\/[^\n]*\n|\{[^}]*\}|\(\*[^*]*\*+\)|\s)*[A-Za-z_]\w*\s*=\s*/i.test(head)
+      (
+        /^\s*(?:\/\/[^\n]*\n|\{[^}]*\}|\(\*[^*]*\*+\)|\s)*[A-Za-z_]\w*\s*=\s*/i.test(head) ||
+        // Shape 2: no module header at all -> fragment.
+        true
+      )
     ) {
       skip = 'inc_fragment';
     }
