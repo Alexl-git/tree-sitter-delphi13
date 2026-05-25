@@ -1346,7 +1346,11 @@ module.exports = grammar({
 		// record initializer
 		recInitializer:  $ => seq(
 			'(',
-			delimited1( $.recInitializerField, ';'),
+			delimited1($.recInitializerField, ';'),
+			// Optional trailing `;` before `)` — accepted by Delphi compiler,
+			// used in DevExpress dxCore Unicode tables and similar generated
+			// data files.
+			optional(';'),
 			')'
 		),
 
