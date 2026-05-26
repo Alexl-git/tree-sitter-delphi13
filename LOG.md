@@ -1848,3 +1848,17 @@ Two narrow grammar adds:
 Cumulative since Phase 3b iter 1: +179 / 6 reverts. 343 fails remain.
 
 ---
+
+## 2026-05-25 21:13  Phase 3b iter 26 — Chained procAttribute sharing one `;`
+
+`_procAttribute` and `_procAttributeNoExt` were `seq(attr, ';')` — each attribute needed its own `;`. FireDAC.Phys.SQLiteCli has `; cdecl varargs;` form where two attrs share ONE trailing `;`.
+
+Changed to `seq(repeat1(attr), ';')` — both single-attr and chained forms now match.
+
+**Result**: +8 files (16307 -> 16315; 97.94% -> **97.99%**).
+- **Embarcadero: 97.40 -> 97.56%** (+8 — FireDAC.Phys.SQLiteCli, FireDAC.Phys.SQLiteWrapper, and similar)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +187 / 6 reverts. 335 fails remain. **Within striking distance of 98%.**
+
+---

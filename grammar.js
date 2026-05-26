@@ -1524,7 +1524,10 @@ module.exports = grammar({
 		// Attributes & declaration hints
 
 		_procAttribute:  $ => /*pp($,*/choice(
-			seq(field('attribute', $.procAttribute), ';'),
+			// Phase 3b iter 26: allow CHAINED proc attributes sharing one `;`,
+			// for FireDAC.Phys.SQLiteCli pattern `; cdecl varargs;` on
+			// procedural-type declarations. Single-attr form still matches.
+			seq(repeat1(field('attribute', $.procAttribute)), ';'),
 			// FPC-specific syntax, e.g. procedure myproc; [public; alias:'bla'; cdecl];
 			...enable_if(fpc, seq(
 				'[',
@@ -1533,7 +1536,7 @@ module.exports = grammar({
 			))
 		)/*)*/,
 		_procAttributeNoExt: $ => /*pp($,*/ choice(
-			seq(field('attribute', $.procAttribute), ';'),
+			seq(repeat1(field('attribute', $.procAttribute)), ';'),
 			// FPC-specific syntax, e.g. procedure myproc; [public; alias:'bla'; cdecl];
 			...enable_if(fpc, seq('[', delimited(field('attribute', choice($.procAttribute)), ';'), ']', ';'))
 		)/*)*/,

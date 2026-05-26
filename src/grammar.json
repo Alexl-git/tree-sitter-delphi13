@@ -10020,11 +10020,14 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "FIELD",
-              "name": "attribute",
+              "type": "REPEAT1",
               "content": {
-                "type": "SYMBOL",
-                "name": "procAttribute"
+                "type": "FIELD",
+                "name": "attribute",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "procAttribute"
+                }
               }
             },
             {
@@ -10042,11 +10045,14 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "FIELD",
-              "name": "attribute",
+              "type": "REPEAT1",
               "content": {
-                "type": "SYMBOL",
-                "name": "procAttribute"
+                "type": "FIELD",
+                "name": "attribute",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "procAttribute"
+                }
               }
             },
             {
