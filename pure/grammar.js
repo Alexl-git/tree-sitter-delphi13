@@ -930,7 +930,10 @@ module.exports = grammar({
 		_declarations:   $ => repeat1(choice(
 			$.declTypes, $.declVars, $.declConsts, $.declProc, $.declProp,
 			alias($.declProcFwd, $.declProc),
-			$.declUses, $.declLabels, $.declExports
+			$.declUses, $.declLabels, $.declExports,
+			// Phase 3 (pure): CIL/.NET [assembly: ...] attributes inside
+			// interface body (Indy .NET Lib units: IdAboutDotNET etc).
+			$.declAssemblyAttribute,
 		)),
 		_classDeclarations: $ => repeat1(choice(
 			$.declTypes, $.declVars, $.declConsts, $.declProc, $.declProp

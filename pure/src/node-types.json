@@ -7239,6 +7239,10 @@
       "required": true,
       "types": [
         {
+          "type": "declAssemblyAttribute",
+          "named": true
+        },
+        {
           "type": "declConsts",
           "named": true
         },

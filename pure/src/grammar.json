@@ -5877,6 +5877,10 @@
           {
             "type": "SYMBOL",
             "name": "declExports"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "declAssemblyAttribute"
           }
         ]
       }
