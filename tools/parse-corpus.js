@@ -175,16 +175,17 @@ for (const file of files) {
     //      messages, platform-API blocks. Master "passed" these only because
     //      pp_block ate the whole IFDEF as opaque; the THEN-wins refactor
     //      exposes the inner text so they fail to parse as valid Pascal.
-    else if (
-      /\.inc$/i.test(file) &&
-      !/\b(unit|program|library|package|interface|implementation)\b/i.test(head) &&
-      (
-        /^\s*(?:\/\/[^\n]*\n|\{[^}]*\}|\(\*[^*]*\*+\)|\s)*[A-Za-z_]\w*\s*=\s*/i.test(head) ||
-        // Shape 2: no module header at all -> fragment.
-        true
-      )
-    ) {
-      skip = 'inc_fragment';
+    // The module-header check must STRIP COMMENTS first — fibplus copyright
+    // headers contain words like "library", "Component library", etc. that
+    // falsely trip the keyword regex.
+    else if (/\.inc$/i.test(file)) {
+      const headStripped = head
+        .replace(/\{[^}]*\}/g, ' ')          // {...} block comments and directives
+        .replace(/\(\*[\s\S]*?\*\)/g, ' ')   // (*...*) block comments
+        .replace(/\/\/[^\n]*/g, ' ');        // // line comments
+      if (!/\b(unit|program|library|package|interface|implementation)\b/i.test(headStripped)) {
+        skip = 'inc_fragment';
+      }
     }
     if (skip) {
       skipCount++;

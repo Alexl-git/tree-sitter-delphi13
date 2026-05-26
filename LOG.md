@@ -1773,3 +1773,20 @@ Cumulative since Phase 3b iter 1: +168 files / 5 reverts. 366 fails remain.
 Cumulative since Phase 3b iter 1: +174 files / 5 reverts. 360 fails remain.
 
 ---
+
+## 2026-05-25 19:30  Phase 3b iter 22 — Strip comments before .inc-fragment classification
+
+The .inc-fragment harness filter was checking the file head for module keywords (`unit`/`program`/`library`/etc.) but tripped on words like "library" inside copyright comments (fibplus FIB_Messages headers contain "component library for direct access"). These .inc files were being parsed as real Pascal and failing.
+
+Fix: strip `{...}`, `(* ... *)`, and `// ...` comments from `head` BEFORE the module-keyword check.
+
+**Result**: skip count 309 -> 431 (+122 .inc files now correctly classified as fragments). Pass rate **97.85 -> 97.91%** (denominator dropped 16772 -> 16650).
+- DevExpress: held 99.72%
+- Spring4D: held 99.36%
+- Embarcadero: 97.35 -> 97.32% (small denominator change)
+
+The OK count dropped 16412 -> 16302 — those 110 .inc files are now classified as skip rather than ok. Net: harness now reports the true Pascal-parsing rate without inc-fragment noise.
+
+Cumulative since Phase 3b iter 1: still +174 net real-Pascal-parse improvements over master / 5 reverts. 348 fails remain (down from 360).
+
+---
