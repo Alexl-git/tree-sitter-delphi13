@@ -107,6 +107,8 @@ for (const file of files) {
       'HAS_UNIT_GENERICS_COLLECTIONS', 'HAS_UNIT_GENERICS_DEFAULTS',
       'HAS_UNIT_RTTI', 'HAS_UNIT_DATEUTILS', 'HAS_UNIT_STRUTILS',
       'SUPPORTS_COMPILETIME_MESSAGES', 'Windows',
+      // EurekaLog version-gate defines — Delphi 13 maps to COMPILER37.
+      'COMPILER37',
     ]},
     { re: /AsyncPro|Orpheus|SysTools/i, defs: [
       'PRNDRV', 'DYNAMIC_LINK',
