@@ -7940,6 +7940,10 @@
           "named": true
         },
         {
+          "type": "kLibrary",
+          "named": true
+        },
+        {
           "type": "kLocal",
           "named": true
         },

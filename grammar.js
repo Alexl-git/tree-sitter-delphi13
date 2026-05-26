@@ -1581,6 +1581,9 @@ module.exports = grammar({
 			$.kVarargs,  // variadic-arg modifier on cdecl functions
 			$.kWinapi,   // calling convention (alias for stdcall on Win32)
 			$.kInterrupt,
+			// Phase 3b iter 39: legacy `library` hint on proc decls
+			// (Rave11 RpCanvas/RpFiler etc. `override; deprecated; library;`).
+			$.kLibrary,
 			// NOTE: kForward intentionally NOT here — it conflicts with the
 			// declProcFwd rule which has its own `; forward;` handling.
 

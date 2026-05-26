@@ -10343,6 +10343,10 @@
           "name": "kInterrupt"
         },
         {
+          "type": "SYMBOL",
+          "name": "kLibrary"
+        },
+        {
           "type": "SEQ",
           "members": [
             {

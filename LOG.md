@@ -2038,3 +2038,20 @@ Most remaining wins are now sub-iter and architecturally constrained. Master hol
 Cumulative since Phase 3b iter 1: +212 / 8 reverts. 308 fails remain.
 
 ---
+
+## 2026-05-26 01:43  Phase 3b iter 39 — `kLibrary` as procAttribute hint
+
+Rave11 RpCanvas/RpFiler/RpHTFilr/RpRTFilr/RpTXFilr use legacy `library` as a proc-decl hint:
+```
+procedure Foo(...); override; {$IFDEF LEVEL6}deprecated; library;{$ENDIF} abstract;
+```
+
+Added `kLibrary` to the `procAttribute` choice. (kLibrary was already accepted as a const-decl hint in iter 28; now also on proc decls.)
+
+**Result**: +6 files (16342 -> 16348; 98.15% -> **98.19%**).
+- All 5 Rave11 files unblocked + 1 more in other root
+- All tracked roots held
+
+Cumulative since Phase 3b iter 1: +218 / 8 reverts. 302 fails remain.
+
+---
