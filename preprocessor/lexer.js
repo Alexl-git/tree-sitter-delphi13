@@ -51,11 +51,21 @@ function lex(input) {
     }
   }
 
+  // Precomputed sorted array of newline positions. lineAt() does a
+  // binary search — O(log N) per call instead of the O(N) per-call scan
+  // that produced O(N^2) total time on files with many directives
+  // (e.g. Indy IdVCLPosixSupplemental at 265 KB).
+  const newlines = [];
+  for (let k = 0; k < n; k++) {
+    if (input.charCodeAt(k) === 10) newlines.push(k);
+  }
   function lineAt(pos) {
-    // 0-indexed line number
-    let line = 0;
-    for (let k = 0; k < pos; k++) if (input.charCodeAt(k) === 10) line++;
-    return line;
+    let lo = 0, hi = newlines.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (newlines[mid] < pos) lo = mid + 1; else hi = mid;
+    }
+    return lo;
   }
 
   while (i < n) {
@@ -113,14 +123,16 @@ function lex(input) {
           chunks.push({
             kind: 'directive', dir: kw, args, srcStart: start, srcEnd: i, line: lineAt(start),
           });
-          textStart = i;
         } else {
-          // Unknown / passthrough directive — keep as text so downstream
-          // parser sees it as a regular `pp` token.
-          // Do NOT flush; leave textStart where it was so the directive's
-          // bytes are part of the upcoming text chunk.
-          // (We already advanced past `}`.)
+          // Unknown / passthrough directive — emit as a text chunk so the
+          // downstream parser still sees the directive bytes as a regular
+          // `pp` token. Either way, advance textStart so the NEXT flushText
+          // doesn't re-emit the directive bytes (O(N^2) bug).
+          chunks.push({
+            kind: 'text', value: input.slice(start, i), srcStart: start, srcEnd: i,
+          });
         }
+        textStart = i;
         continue;
       }
       // Brace comment — passthrough

@@ -31,7 +31,9 @@ function preprocess(input, options = {}) {
   //   anyOuterFalse: is some ancestor IF false (which makes whole subtree inactive)?
   const stack = [{ active: true, takenBranch: true, anyOuterFalse: false }];
 
-  let out = '';
+  // Buffer pieces in an array and join at the end. Direct `out += text`
+  // is O(N^2) in V8 for large accumulations — kills perf on 200 KB+ files.
+  const outBuf = [];
   let depth = options._depth || 0;
 
   function top() { return stack[stack.length - 1]; }
@@ -39,18 +41,16 @@ function preprocess(input, options = {}) {
 
   function blankifyOrEmit(text) {
     if (effectivelyActive()) {
-      out += text;
+      outBuf.push(text);
     } else {
       // Replace non-newline chars with spaces so line numbers stay aligned.
-      for (let k = 0; k < text.length; k++) {
-        out += text.charCodeAt(k) === 10 ? '\n' : ' ';
-      }
+      // Use regex replace (single allocation) instead of per-char concat.
+      outBuf.push(text.replace(/[^\n]/g, ' '));
     }
   }
 
   function blankifyDirective(srcLen) {
-    // Replace the directive's text with spaces of same length.
-    out += ' '.repeat(srcLen);
+    outBuf.push(' '.repeat(srcLen));
   }
 
   function resolveInclude(name) {
@@ -140,7 +140,7 @@ function preprocess(input, options = {}) {
           baseDir: path.dirname(resolved),
           _depth: depth + 1,
         });
-        out += subOut.text;
+        outBuf.push(subOut.text);
       } else {
         // Unresolved include — leave as whitespace so line count stays.
         blankifyDirective(srcLen);
@@ -153,7 +153,7 @@ function preprocess(input, options = {}) {
     blankifyDirective(srcLen);
   }
 
-  return { text: out, defines: Array.from(defines) };
+  return { text: outBuf.join(''), defines: Array.from(defines) };
 }
 
 module.exports = { preprocess };
