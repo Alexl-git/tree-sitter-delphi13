@@ -1362,6 +1362,8 @@ module.exports = grammar({
 				// without re-introducing the iPLANLIST `string[30]` regression
 				// (declField with `;` is preferred when `[N]` follows).
 				alias($.kString, $.typeref),
+				// (Tried adding $.declArray for Win API records — broke ORM3
+				// Z19b5.pas `Array[0..4] of String[1]` pattern. Skipped.)
 			)),
 			field('defaultValue', optional($.defaultValue)),
 		),
