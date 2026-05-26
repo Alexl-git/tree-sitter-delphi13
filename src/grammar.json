@@ -3272,6 +3272,24 @@
                       },
                       "named": true,
                       "value": "identifier"
+                    },
+                    {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "kFunction"
+                      },
+                      "named": true,
+                      "value": "identifier"
+                    },
+                    {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "kProcedure"
+                      },
+                      "named": true,
+                      "value": "identifier"
                     }
                   ]
                 }
@@ -7291,6 +7309,48 @@
             {
               "type": "SYMBOL",
               "name": "subrangeType"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "kDeprecated"
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "_expr"
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kPlatform"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kExperimental"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
             }
           ]
         }
@@ -11464,6 +11524,9 @@
     ],
     [
       "declEnum"
+    ],
+    [
+      "declSet"
     ],
     [
       "_declFields"

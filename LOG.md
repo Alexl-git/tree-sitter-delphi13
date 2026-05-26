@@ -1758,3 +1758,18 @@ ASM-branch-swap (user's Q1) is still needed for the MStreams.pas r1061 case (3-w
 Cumulative since Phase 3b iter 1: +168 files / 5 reverts. 366 fails remain.
 
 ---
+
+## 2026-05-25 19:13  Phase 3b iter 21 — Two narrow grammar adds
+
+1. `kFunction`/`kProcedure` aliased to identifier on RHS of `exprDot`. Pattern `TdxToken.FUNCTION` (DevExpress dxEMF criteria parser — enum-class member named after the function keyword).
+
+2. `set of T platform;` trailing platform/deprecated hint on declSet. Required `[$.declSet]` conflict declaration. Pattern `TFileAttributes = set of TFileAttribute platform;` (System.IOUtils).
+
+**Result**: +6 files (16406 -> 16412; 97.82% -> **97.85%**).
+- **DevExpress: 99.59 -> 99.72%** (+6 — dxEMF, possibly others)
+- Embarcadero counts unchanged (System.IOUtils probably has other blockers downstream)
+- Spring4D / ORM3 / OmniThread held
+
+Cumulative since Phase 3b iter 1: +174 files / 5 reverts. 360 fails remain.
+
+---

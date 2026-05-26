@@ -357,6 +357,8 @@ module.exports = grammar({
 		// Phase 3b iter 7: declEnum trailing platform/deprecated hint is
 		// ambiguous with the same hint appearing on the enclosing declType.
 		[$.declEnum],
+		// Phase 3b iter 21: declSet has same trailing-hint ambiguity.
+		[$.declSet],
 		// Phase 3b iter 10: _declFields choice of repeat1(declField) vs
 		// trailing declFieldNoSemi — both reach declField from the same state.
 		[$._declFields],
@@ -590,14 +592,18 @@ module.exports = grammar({
 			// Keyword-as-identifier on RHS of dot: `TdxUnaryOp.Not`, `T.And`,
 			// `T.Or`, `T.Xor` — common in DevExpress enum-class patterns where
 			// the enum members are named after logical operators.
+			// Phase 3b iter 21: add kFunction/kProcedure for `TdxToken.FUNCTION`
+			// (DevExpress dxEMF criteria parser enum-class).
 			prec.left(5, seq(
 				field('lhs', $._ref),
 				field('operator', $.kDot),
 				field('rhs', choice(
-					alias($.kNot, $.identifier),
-					alias($.kAnd, $.identifier),
-					alias($.kOr,  $.identifier),
-					alias($.kXor, $.identifier),
+					alias($.kNot,       $.identifier),
+					alias($.kAnd,       $.identifier),
+					alias($.kOr,        $.identifier),
+					alias($.kXor,       $.identifier),
+					alias($.kFunction,  $.identifier),
+					alias($.kProcedure, $.identifier),
 				))
 			)),
 		),
@@ -1164,7 +1170,17 @@ module.exports = grammar({
 		),
 		declEnumValue:   $ => seq(field('name', $.identifier), field('value', optional($.defaultValue))),
 		// `set of T` where T is a type OR a subrange (`set of 1..100;`).
-		declSet:         $ => seq($.kSet, $.kOf, choice($.type, $.subrangeType)),
+		declSet:         $ => seq(
+			$.kSet, $.kOf, choice($.type, $.subrangeType),
+			// Phase 3b iter 21: trailing platform/deprecated hint on set-type
+			// declaration. `TFileAttributes = set of TFileAttribute platform;`
+			// (System.IOUtils pattern.)
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
+			)),
+		),
 		declArray:       $ => seq(
 			optional($.kPacked),
 			$.kArray,
