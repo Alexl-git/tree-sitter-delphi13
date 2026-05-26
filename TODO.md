@@ -4,17 +4,35 @@ Living list of follow-up work. Items move from here to commits or to FUTURE.md a
 
 ## Current focus
 
-- [ ] **Phase 3b: refuse-read-through heuristic.** When the scanner detects an IFDEF whose THEN body would unbalance the parse (mismatched begin/end, stray top-level `;`, or non-Pascal free text), fall back to legacy `pp_block` opaque-token behavior for that one IFDEF. Estimated +200-400 files toward the 99% with-opaque ceiling.
+- [ ] **Push orchestrator past 99% on full corpus.** Currently at 98.43% (master: 98.22%). 65 master-pass-but-orch-fail regressions remain — mostly Indy .NET .dpk patterns, EurekaLog defaultValue IFDEF chains, Embarcadero RTL files with specific defines needs. Each defines-tuning iter recovers 10-30 files.
 
-- [ ] **Phase 4: drop legacy `pp_block` token.** Once Phase 3b's fallback path is the only consumer of pp_block, decide whether to keep it as belt-and-braces or remove the code entirely. Probably keep — it's small and the safety net is cheap.
+- [ ] **Tighten declared() resolution.** Currently returns false (no symbol table). Files using `{$IF declared(SymName)}` get the wrong branch. Lightweight symbol pre-scan (TYPE/CONST/VAR/FUNCTION/PROCEDURE declarations in the same unit) would close most cases.
 
-## Near term
+- [ ] **Include-file resolution beyond same directory.** Some `{$I X.inc}` references live in sibling directories; need a search-path option per project.
 
-- [ ] **Reach 99% on the curated corpus.** Target: every file produces a tree with zero ERROR nodes (some IFDEFs opaque, all else parsed). True 100% requires the preprocessor package.
+## Near term — finish the orchestrator
 
-## Companion packages (not yet started)
+- [ ] **Reach 99%+ on full corpus.** Realistic ceiling once defines are tuned: ~99.5% (the last ~50 files are intentional broken-test cases, vendor source typos, files with `{$IF declared(...)}` that need full symbol awareness, and a handful of pathologically large auto-generated TypeLib units).
 
-- [ ] **delphi13-ifdef-resolver** — post-pass that re-parses opaque `pp_else_tail` text *in-context* to recover symmetric IFDEF branches. Full design in [FUTURE.md](FUTURE.md).
-  - Implementation order: prototype **Approach 3** first (`ts_parser_set_included_ranges`) — same parser, same grammar, range-substitution gives the ELSE-side the same surrounding tokens the THEN-side had. Fall back to Approach 1 (wrap-and-extract) only if range-based reparse can't handle some context.
+- [ ] **What does NOT count toward 100%:**
+  - Inline `asm` blocks (treated as opaque text — by design, this isn't tree-sitter-asm).
+  - Files with actual Delphi-compiler syntax errors (DUnitX has intentionally broken test cases; DevExpress has a couple of vendor `;` typos).
+  - C-language code mistakenly placed in `.pas` files (fibplus TREES.PAS has literal `#if defined(...)` C preprocessor lines).
 
-- [ ] **delphi13-preprocessor** — expands `{$I X.inc}` includes and evaluates `{$DEFINE}` / `{$IF defined(X)}` chains, producing a virtual buffer + source map. Unblocks the last ~1-2% of the corpus the THEN-wins refactor structurally cannot handle.
+## Publishing plan (once we hit ~99%)
+
+- [ ] **Publish `tree-sitter-delphi13` to npm.** The master grammar (98.22% self-contained THEN-wins parser).
+
+- [ ] **Publish `tree-sitter-delphi13-pure` to npm.** The simpler sub-grammar that drops `pp_*` tokens — paired with the preprocessor.
+
+- [ ] **Publish `delphi13-preprocessor` to npm.** Standalone text-transformation tool with the directive resolver. Can be consumed by other tools (formatters, refactoring tools, language servers).
+
+- [ ] **Publish `tree-sitter-dfm` to npm.** Companion DFM/FMX form-file grammar (already 100% on real text-DFM).
+
+- [ ] **Reach out to [Isopod / tree-sitter-pascal](https://github.com/Isopod/tree-sitter-pascal)** about the architectural pattern. The preprocessor + pure-grammar split is portable to their grammar — would let them break past their current pp_block-driven ceiling. Offer either a PR upstreaming our pattern OR coordinate a shared `pascal-preprocessor` package both projects consume.
+
+## Optional companion packages (deferred)
+
+- [ ] **delphi13-ifdef-resolver** — post-pass that recovers ELSE-branch parses for tools that need both. See [FUTURE.md](FUTURE.md) for the design (Approach 3 = `ts_parser_set_included_ranges`).
+
+- [ ] **tree-sitter-delphi-plus-fp** — FreePascal-aware variant sharing the preprocessor and pure-grammar core. Separate repo so FP-specific extensions never leak into the Delphi-first quality of this one.

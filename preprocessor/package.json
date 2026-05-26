@@ -1,0 +1,34 @@
+{
+  "name": "delphi13-preprocessor",
+  "version": "1.0.0",
+  "description": "Standalone Delphi 13 preprocessor — resolves {$IFDEF}/{$IF}/{$ELSE}/{$ENDIF} chains, {$DEFINE}/{$UNDEF}, {$I X.inc} includes, and numeric directives. Produces preprocessor-resolved text suitable for tree-sitter-delphi13-pure or any other consumer that prefers a flat source.",
+  "main": "preprocess.js",
+  "bin": {
+    "delphi13-preprocessor": "cli.js"
+  },
+  "files": [
+    "preprocess.js",
+    "lexer.js",
+    "evalExpr.js",
+    "cli.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alexl-git/tree-sitter-delphi13.git",
+    "directory": "preprocessor"
+  },
+  "homepage": "https://github.com/Alexl-git/tree-sitter-delphi13/tree/master/preprocessor",
+  "bugs": {
+    "url": "https://github.com/Alexl-git/tree-sitter-delphi13/issues"
+  },
+  "keywords": [
+    "delphi",
+    "delphi13",
+    "pascal",
+    "preprocessor",
+    "ifdef",
+    "conditional-compilation"
+  ],
+  "author": "Alexander Liberov",
+  "license": "MIT"
+}

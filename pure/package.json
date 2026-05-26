@@ -1,24 +1,26 @@
 {
-  "name": "tree-sitter-delphi13",
+  "name": "tree-sitter-delphi13-pure",
   "version": "1.0.0",
-  "description": "Tree-sitter grammar focused on Delphi 13 (RAD Studio 37.0)",
+  "description": "Pure Delphi 13 tree-sitter sub-grammar — drops {$IFDEF}/pp_* tokens entirely and expects preprocessor-resolved source as input. Pairs with delphi13-preprocessor to reach 99%+ pass on real Delphi 13 corpora.",
   "main": "bindings/node",
   "types": "bindings/node",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Alexl-git/tree-sitter-delphi13.git"
+    "url": "git+https://github.com/Alexl-git/tree-sitter-delphi13.git",
+    "directory": "pure"
+  },
+  "homepage": "https://github.com/Alexl-git/tree-sitter-delphi13/tree/master/pure",
+  "bugs": {
+    "url": "https://github.com/Alexl-git/tree-sitter-delphi13/issues"
   },
   "keywords": [
     "parser",
     "tree-sitter",
     "delphi",
     "delphi13",
-    "pascal"
+    "pascal",
+    "pure-grammar"
   ],
-  "homepage": "https://github.com/Alexl-git/tree-sitter-delphi13",
-  "bugs": {
-    "url": "https://github.com/Alexl-git/tree-sitter-delphi13/issues"
-  },
   "author": "Alexander Liberov",
   "license": "MIT",
   "devDependencies": {
@@ -27,7 +29,6 @@
   },
   "scripts": {
     "build": "tree-sitter generate && node-gyp build",
-    "test": "tree-sitter test && tree-sitter parse examples/* --quiet --time",
     "install": "node-gyp-build",
     "prebuildify": "prebuildify --napi --strip"
   },
@@ -36,7 +37,6 @@
     "binding.gyp",
     "prebuilds/**",
     "bindings/node/*",
-    "queries/*",
     "src/**"
   ],
   "dependencies": {

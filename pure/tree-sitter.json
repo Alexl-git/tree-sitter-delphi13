@@ -1,0 +1,22 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "delphi13_pure",
+      "camelcase": "Delphi13Pure",
+      "title": "Delphi 13 (pure, no preprocessor)",
+      "scope": "source.delphi-pure",
+      "file-types": [],
+      "class-name": "TreeSitterDelphi13Pure"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Pure Delphi 13 sub-tree-sitter — knows no IFDEFs"
+  },
+  "bindings": {
+    "c": true,
+    "node": true
+  }
+}
