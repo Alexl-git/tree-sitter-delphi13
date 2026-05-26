@@ -1,0 +1,24 @@
+{
+  "name": "tree-sitter-delphi13-pure",
+  "version": "0.1.0",
+  "description": "Pure Delphi 13 sub-tree-sitter — knows no IFDEFs, consumes preprocessor output",
+  "main": "bindings/node",
+  "license": "MIT",
+  "devDependencies": {
+    "tree-sitter-cli": "^0.24.5"
+  },
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp build"
+  },
+  "dependencies": {
+    "node-gyp-build": "^4.8.4"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.22.0"
+  },
+  "peerDependenciesMeta": {
+    "tree_sitter": {
+      "optional": true
+    }
+  }
+}

@@ -273,7 +273,7 @@ function statements(trailing) {
 }
 
 module.exports = grammar({
-	name: "delphi13",
+	name: "delphi13_pure",
 
 	// PURE GRAMMAR: knows NO IFDEFs. Designed to parse the virtual text
 	// emitted by delphi13-preprocessor (which has resolved all directives
