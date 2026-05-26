@@ -6333,6 +6333,45 @@
           "type": "SEQ",
           "members": [
             {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "-"
+                },
+                {
+                  "type": "STRING",
+                  "value": "+"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_literalInt"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "-"
+                },
+                {
+                  "type": "STRING",
+                  "value": "+"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_literalInt"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
               "type": "STRING",
               "value": "-"
             },
@@ -7668,45 +7707,44 @@
             ]
           },
           {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "kStdcall"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "kCdecl"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "kSafecall"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "kPascal"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "kRegister"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "kWinapi"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "kInline"
-                  }
-                ]
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
+            "type": "REPEAT",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kStdcall"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kCdecl"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kSafecall"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kPascal"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kRegister"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kWinapi"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kInline"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kVarargs"
+                }
+              ]
+            }
           }
         ]
       }

@@ -1037,6 +1037,9 @@ module.exports = grammar({
 			$._literalFloat,
 			seq('-', $._literalInt),
 			seq('+', $._literalInt),
+			// Phase 3b iter 25: `-$7FFFFFFF-1..$7FFFFFFF` (System.UITypes TColor)
+			// signed-hex with explicit binary correction: `-$N-K` / `+$N+K`.
+			seq(choice('-','+'), $._literalInt, choice('-','+'), $._literalInt),
 			// Phase 3b iter 5: `-Identifier` / `+Identifier` form for
 			// `THelpContext = -MaxInt..MaxInt` (System.Classes pattern).
 			seq('-', $.identifier),
@@ -1212,9 +1215,11 @@ module.exports = grammar({
 			// Trailing calling convention. Restricted to a narrow keyword list
 			// (NOT the full procAttribute, which causes typeref ambiguity)
 			// to keep the grammar deterministic.
-			optional(choice(
+			// Phase 3b iter 25: `repeat` allows chained callconvs like
+			// `cdecl varargs` (FireDAC.Phys.SQLiteCli Tsqlite3_config pattern).
+			repeat(choice(
 				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
-				$.kRegister, $.kWinapi, $.kInline
+				$.kRegister, $.kWinapi, $.kInline, $.kVarargs
 			))
 		)),
 

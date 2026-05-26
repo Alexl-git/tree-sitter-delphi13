@@ -2716,6 +2716,10 @@
           "named": true
         },
         {
+          "type": "kVarargs",
+          "named": true
+        },
+        {
           "type": "kWinapi",
           "named": true
         }

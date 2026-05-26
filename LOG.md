@@ -1831,3 +1831,20 @@ Both are standard Delphi number-literal forms that were missing.
 Cumulative since Phase 3b iter 1: +176 / 6 reverts. 346 fails remain.
 
 ---
+
+## 2026-05-25 20:50  Phase 3b iter 25 — declProcRef chained callconv + signed-hex subrange
+
+Two narrow grammar adds:
+
+1. `declProcRef` trailing callconv changed `optional` -> `repeat` so `cdecl varargs` chain works on procedural types. Also added `kVarargs` to the keyword set. Pattern from FireDAC/System.Curl: `procedure (option: Integer); cdecl varargs`.
+
+2. `_subrangeBound` new alt: `seq(choice('-','+'), $._literalInt, choice('-','+'), $._literalInt)` — covers `TColor = -$7FFFFFFF-1..$7FFFFFFF` (System.UITypes signed-hex with explicit `-1`).
+
+**Result**: +3 net files (16304 -> 16307; 97.92% -> **97.94%**).
+- Spring4D: 99.36 -> **99.49%** (+1 — System.Curl or similar varargs)
+- Embarcadero: 97.36 -> **97.40%** (+2 — System.UITypes + 1)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +179 / 6 reverts. 343 fails remain.
+
+---
