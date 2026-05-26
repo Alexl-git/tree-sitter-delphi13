@@ -1,15 +1,44 @@
 {
   "name": "tree-sitter-delphi13-pure",
-  "version": "0.1.0",
-  "description": "Pure Delphi 13 sub-tree-sitter — knows no IFDEFs, consumes preprocessor output",
+  "version": "1.0.0",
+  "description": "Pure Delphi 13 tree-sitter sub-grammar — drops {$IFDEF}/pp_* tokens entirely and expects preprocessor-resolved source as input. Pairs with delphi13-preprocessor to reach 99%+ pass on real Delphi 13 corpora.",
   "main": "bindings/node",
+  "types": "bindings/node",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alexl-git/tree-sitter-delphi13.git",
+    "directory": "pure"
+  },
+  "homepage": "https://github.com/Alexl-git/tree-sitter-delphi13/tree/master/pure",
+  "bugs": {
+    "url": "https://github.com/Alexl-git/tree-sitter-delphi13/issues"
+  },
+  "keywords": [
+    "parser",
+    "tree-sitter",
+    "delphi",
+    "delphi13",
+    "pascal",
+    "pure-grammar"
+  ],
+  "author": "Alexander Liberov",
   "license": "MIT",
   "devDependencies": {
+    "prebuildify": "^6.0.1",
     "tree-sitter-cli": "^0.24.5"
   },
   "scripts": {
-    "build": "tree-sitter generate && node-gyp build"
+    "build": "tree-sitter generate && node-gyp build",
+    "install": "node-gyp-build",
+    "prebuildify": "prebuildify --napi --strip"
   },
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "src/**"
+  ],
   "dependencies": {
     "node-gyp-build": "^4.8.4"
   },
