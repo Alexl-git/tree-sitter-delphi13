@@ -2018,3 +2018,23 @@ The declFieldNoSemi rule (iter 10) constrains the field-name set tightly. Any ex
 Cumulative since Phase 3b iter 1: +212 / 8 reverts.
 
 ---
+
+## 2026-05-26 00:50  Phase 3b iter 38 — Investigation only
+
+Confirmed tree-sitter's word-rule promotion isn't firing for `kRegister` at declField name positions even though the parser state doesn't reach kRegister there. Probe `Register: UINT;` lexes as kRegister and fails. Soft-keyword promotion (iter 19's mechanism for kIndex) requires the keyword token to NOT be in valid_symbols AT THE STATE; for kRegister there might be a chain through some rule that includes it. Architectural.
+
+Also investigated SHDocVw.pas (6853-line auto-generated TypeLib unit) — ERROR wraps entire file body. Hundreds of `LIBID_X: TGUID = '{GUID-string}';` typed consts; likely a GLR state-stack-depth issue on the huge file. Not a 10-min fix.
+
+The remaining ~308 fails are dominated by:
+- Asymmetric IFDEFs (preprocessor territory, ~157 files)
+- declField name/type GLR-fragility from declFieldNoSemi (kRegister, etc.)
+- Free-text inside IFDEFs in .pas files that escape the .inc-fragment filter
+- Source typos in DevExpress/Indy
+- Pathological large files (SHDocVw 6853 lines)
+- Niche legacy patterns (Orpheus, Rave, AsyncPro)
+
+Most remaining wins are now sub-iter and architecturally constrained. Master holds at 98.15%. Real next-level progress needs Phase 2 of the preprocessor work.
+
+Cumulative since Phase 3b iter 1: +212 / 8 reverts. 308 fails remain.
+
+---
