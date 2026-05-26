@@ -1147,12 +1147,12 @@ module.exports = grammar({
 			//   const X = 'foo' deprecated 'use Y instead';
 			//   const Y = 1 platform;
 			//   const Z = 'bar' experimental;
-			optional(seq(
-				choice(
-					seq($.kDeprecated, optional($._expr)),
-					$.kPlatform,
-					$.kExperimental,
-				)
+			// Phase 3b iter 27: chained hints `platform deprecated;`
+			// (System.SysUtils faVolumeID = $00000008 platform deprecated).
+			repeat(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
 			)),
 			';',
 			repeat($._procAttribute)

@@ -1862,3 +1862,19 @@ Changed to `seq(repeat1(attr), ';')` — both single-attr and chained forms now 
 Cumulative since Phase 3b iter 1: +187 / 6 reverts. 335 fails remain. **Within striking distance of 98%.**
 
 ---
+
+## 2026-05-25 21:30  Phase 3b iter 27 — Chained const declaration hints
+
+`declConst` allowed only one trailing hint (`platform`/`deprecated`/`experimental`). Changed `optional` -> `repeat` for the chain form:
+```
+faVolumeID = $00000008 platform deprecated;
+```
+(System.SysUtils file-attribute constants.)
+
+**Result**: 0 net file delta — System.SysUtils still fails downstream on asymmetric IFDEFs at r1959+ (already-known cluster). The grammar fix is correct in isolation (verified by probe); will benefit when downstream blockers are fixed.
+
+Committing as scaffold.
+
+Cumulative since Phase 3b iter 1: +187 / 6 reverts. 335 fails unchanged.
+
+---
