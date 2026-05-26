@@ -8728,6 +8728,15 @@
               {
                 "type": "SYMBOL",
                 "name": "declClass"
+              },
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "kString"
+                },
+                "named": true,
+                "value": "typeref"
               }
             ]
           }
@@ -11858,6 +11867,10 @@
     ],
     [
       "type",
+      "declFieldNoSemi"
+    ],
+    [
+      "declString",
       "declFieldNoSemi"
     ],
     [

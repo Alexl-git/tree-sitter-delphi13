@@ -352,6 +352,7 @@ module.exports = grammar({
 		// Phase 3b iter 11: declFieldNoSemi uses a narrower type set; conflicts
 		// with the full `type` rule's choices.
 		[$.type, $.declFieldNoSemi],
+		[$.declString, $.declFieldNoSemi],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1356,6 +1357,11 @@ module.exports = grammar({
 				$.declFile,
 				$.declProcRef,
 				$.declClass,
+				// Narrow `kString` only (no `[N]` size spec) — covers
+				// `ColorValue: string` last-field-no-`;` (dxFontIconsImageLoader)
+				// without re-introducing the iPLANLIST `string[30]` regression
+				// (declField with `;` is preferred when `[N]` follows).
+				alias($.kString, $.typeref),
 			)),
 			field('defaultValue', optional($.defaultValue)),
 		),
