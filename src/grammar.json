@@ -5296,6 +5296,20 @@
             "type": "PATTERN",
             "value": "\\$[a-fA-F0-9](_?[a-fA-F0-9])*"
           }
+        },
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "&[0-7](_?[0-7])*"
+          }
+        },
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "%[01](_?[01])*"
+          }
         }
       ]
     },

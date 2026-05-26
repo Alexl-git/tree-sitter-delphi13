@@ -854,7 +854,12 @@ module.exports = grammar({
 		// or `$FFFF_FFFF`. Underscore is between digits, never leading/trailing.
 		_literalInt:     $ => choice(
 			token.immediate(/[-+]?[0-9](_?[0-9])*/),
-			token.immediate(/\$[a-fA-F0-9](_?[a-fA-F0-9])*/)
+			token.immediate(/\$[a-fA-F0-9](_?[a-fA-F0-9])*/),
+			// Phase 3b iter 24: Delphi octal literal `&NNN` (System.Beacon
+			// uses `&1`, `&0`; RTL Linux/Posix code uses `&777` perm masks).
+			token.immediate(/&[0-7](_?[0-7])*/),
+			// Delphi binary literal `%NNN` — used in lower-level RTL code.
+			token.immediate(/%[01](_?[01])*/),
 		),
 		// Float: optional sign, digits with optional decimal portion, optional
 		// scientific exponent. Exponent letter is `e` OR `E` (case-insensitive).

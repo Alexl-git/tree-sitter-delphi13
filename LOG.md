@@ -1815,3 +1815,19 @@ Deferred — bdemts.pas alone isn't worth the surgery. Will tackle when there's 
 Cumulative since Phase 3b iter 1: +174 / 6 reverts. 348 fails remain.
 
 ---
+
+## 2026-05-25 20:30  Phase 3b iter 24 — Octal `&NNN` and binary `%NNN` literals
+
+Added two new alternatives to `_literalInt`:
+- `&[0-7]+` octal literal (System.Beacon uses `&1`, `&0`; RTL Linux/Posix `&777` perm masks)
+- `%[01]+` binary literal (lower-level RTL code)
+
+Both are standard Delphi number-literal forms that were missing.
+
+**Result**: +2 files (16302 -> 16304; 97.91% -> **97.92%**).
+- Embarcadero: 97.32 -> **97.36%** (+2 — System.Beacon and 1 other)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +176 / 6 reverts. 346 fails remain.
+
+---
