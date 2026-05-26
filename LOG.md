@@ -2069,3 +2069,16 @@ Note: YADF umlauts.pas itself still fails — that file is Latin-1 encoded (Ü =
 Cumulative since Phase 3b iter 1: +222 / 8 reverts. 298 fails remain.
 
 ---
+
+## 2026-05-26 03:01  Phase 3b iter 41 — Parenthesized binary subrange bound
+
+Added narrow form `(IDENT op IDENT_OR_CALL) op LITERAL_OR_CALL` to `_subrangeBound`. Covers:
+- `0..(MaxInt div SizeOf(JOCTET))-1` (Vcl.Imaging.jpeg `jTOctet`)
+- `0..(High(Integer) - $F) div SizeOf(DWORD)` (EurekaLog EBorDebug `TArrayIndex`)
+
+**Result**: +2 files (16352 -> 16354; 98.21% -> **98.22%**).
+- Embarcadero: 97.83 -> **97.87%** (+2)
+
+Cumulative since Phase 3b iter 1: +224 / 8 reverts. 296 fails remain.
+
+---

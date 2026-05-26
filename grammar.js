@@ -1078,6 +1078,19 @@ module.exports = grammar({
 			// (Excluding `^X` external char_literal — narrower keeps Spring4D
 			// safe from the earlier regression.)
 			seq('#', $._literalInt),
+			// Phase 3b iter 41: parenthesized binary then trailing op + arg
+			// for `(MaxInt div SizeOf(JOCTET))-1` (Vcl.Imaging.jpeg) and
+			// `(High(Integer) - $F) div SizeOf(DWORD)` (EBorDebug). Narrow
+			// shape: paren-wrap a 3-term binary then one more op + literal-or-call.
+			seq(
+				'(',
+				choice($.identifier, seq($.identifier, '(', $.identifier, ')')),
+				choice('-', '+', '*', '/', $.kDiv, $.kMod),
+				choice($.identifier, $._literalInt, seq($.identifier, '(', $.identifier, ')')),
+				')',
+				choice('-', '+', '*', '/', $.kDiv, $.kMod),
+				choice($._literalInt, seq($.identifier, '(', $.identifier, ')')),
+			),
 		),
 
 		declProc:        $ => seq(

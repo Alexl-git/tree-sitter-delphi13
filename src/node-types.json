@@ -8992,6 +8992,14 @@
         {
           "type": "identifier",
           "named": true
+        },
+        {
+          "type": "kDiv",
+          "named": true
+        },
+        {
+          "type": "kMod",
+          "named": true
         }
       ]
     }
