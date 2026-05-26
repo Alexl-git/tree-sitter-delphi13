@@ -2006,3 +2006,15 @@ Two narrow additions:
 Cumulative since Phase 3b iter 1: +212 / 7 reverts. 308 fails remain.
 
 ---
+
+## 2026-05-26 00:30  Phase 3b iter 37 — REVERTED — declField name aliases trigger declFieldNoSemi conflict
+
+Tried adding `alias($.kRegister, $.identifier)` to declField's name list to support `Register: UINT;` field (Winapi.D3D10). Even with subrange-type addition reverted, the single alias triggered an unresolved `declField_repeat1 / declFieldNoSemi vs declField` conflict — adding to the GLR state ambiguity introduced by iter 10's declFieldNoSemi.
+
+The declFieldNoSemi rule (iter 10) constrains the field-name set tightly. Any expansion of declField's name set forks the GLR state space at every field declaration. Adding the conflict declaration `[$.declField, $.declFieldNoSemi]` didn't suffice — tree-sitter cascaded into yet another conflict.
+
+**Reverted. Baseline 98.15% holds.** kRegister-as-field-name (Winapi.D3D10) won't be fixed without either restructuring declFieldNoSemi or moving to a soft-keyword approach where kRegister is dropped from valid_symbols at field-decl positions (similar to iter 19's kIndex treatment). Too invasive for a 10-min iter.
+
+Cumulative since Phase 3b iter 1: +212 / 8 reverts.
+
+---
