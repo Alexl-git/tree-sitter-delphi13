@@ -1949,3 +1949,17 @@ Cumulative since Phase 3b iter 1: +198 / 6 reverts. 324 fails remain.
 Per user direction (priority is Delphi 100%), refocused away from FPC lazutils patterns. Current Delphi-only rate: 98.07%. Non-IFDEF Delphi rate: 99.01% (162 non-IFDEF Delphi fails remain, mostly in Embarcadero RTL and "Other" buckets).
 
 ---
+
+## 2026-05-25 23:10  Phase 3b iter 32 — RTTI attribute on variant-record field
+
+`declVariantField` is the field rule inside variant-record `case X of 1:(...)` clauses. It didn't accept `optional(rttiAttributes)` like regular declField does. YADF VariantRecordFieldAttributes test:
+```
+case byte of
+  1:( Value: Double;
+      [Example]
+      ValueWithAttribute: Integer; );
+```
+
+**Result**: +2 files (16326 -> 16328; 98.05% holds at higher precision).
+
+---

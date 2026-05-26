@@ -1435,6 +1435,9 @@ module.exports = grammar({
 		),
 
 		declVariantField: $ => seq(
+			// Phase 3b iter 32: allow RTTI attribute on variant-record field.
+			// Pattern: `case byte of 1:( [Example] V: Integer; );` (YADF test).
+			optional($.rttiAttributes),
 			field('name', delimited1($.identifier)),
 			':',
 			field('type', $.type),
