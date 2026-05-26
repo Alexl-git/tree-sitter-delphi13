@@ -9689,6 +9689,18 @@
               "members": [
                 {
                   "type": "SYMBOL",
+                  "name": "rttiAttributes"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
                   "name": "kVar"
                 },
                 {

@@ -1466,6 +1466,13 @@ module.exports = grammar({
 
 		declArg:         $ => choice(
 			seq(
+				// Phase 3b iter 20: allow rttiAttributes BEFORE the modifier
+				// keyword, for IFDEF-wrapped attribute patterns:
+				//   class operator Equal({$IFDEF X}[ref]{$ENDIF}const left: T)
+				// THEN-wins exposes `[ref] const left: T`, so the bracketed
+				// attribute precedes `const`. Original between-modifier-and-name
+				// placement is still supported via the second optional below.
+				optional($.rttiAttributes),
 				choice($.kVar, $.kConst, $.kOut, $.kConstref),
 				// Inline attribute between modifier and name:
 				//   `const [ref] X: T` — pass-by-reference const (Delphi 10+).

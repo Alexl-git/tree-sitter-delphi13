@@ -1736,3 +1736,25 @@ The probe `if cTabCount < Index then cTabCount := Index;` now parses cleanly —
 Cumulative since Phase 3b iter 1: +151 files / 5 reverts. 383 fails remain.
 
 ---
+
+## 2026-05-25 18:55  Phase 3b iter 20 — declArg rttiAttributes BEFORE modifier (the Spring4D unlock)
+
+Investigation of Spring.pas r2202 revealed the IFDEF-wrapped attribute case isn't an ASM-branch-swap problem at all:
+```
+class operator Equal({$IFDEF SUPPORTS_CONSTREF}[ref]{$ENDIF}const left: Weak<T>; ...)
+```
+THEN-wins exposes `[ref] const left: Weak<T>`. declArg already allowed `const [ref] left` (rttiAttributes BETWEEN modifier and name) but not `[ref] const left` (rttiAttributes BEFORE modifier).
+
+Simple fix: add `optional($.rttiAttributes)` to the front of declArg's modifier branch, in addition to the existing between-modifier-and-name slot. Both placements now coexist.
+
+**Result**: +17 files (16389 -> 16406; 97.72% -> **97.82%**).
+- **Spring4D: 98.46 -> 99.36%** (+7 — Spring.pas Weak<T> operators, Spring.HazardEra, etc.)
+- Embarcadero: 97.23 -> **97.35%** (+6)
+- DevExpress: 99.54 -> **99.59%** (+2)
+- All other roots held
+
+ASM-branch-swap (user's Q1) is still needed for the MStreams.pas r1061 case (3-way nested IFDEF: x86-asm / x64-asm / Pascal). Deferred to a future iter — that one's a more substantial scanner refactor.
+
+Cumulative since Phase 3b iter 1: +168 files / 5 reverts. 366 fails remain.
+
+---
