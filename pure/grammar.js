@@ -304,6 +304,10 @@ module.exports = grammar({
 	word: $ => $.identifier,
 
 	conflicts: $ => [
+		// Phase 3 (pure): `package ... contains <units>; <defs> end.` has
+		// optional _definitions before AND after declContains. GLR forks
+		// on which slot absorbs a given definition.
+		[$.package],
 		// Anonymous record/class types in type position conflict with the
 		// type-declaration form (`type Foo = record ... end;`). Both reach
 		// declClass but at different parser states.
@@ -423,6 +427,10 @@ module.exports = grammar({
 			optional($._definitions),
 			optional($.declRequires),
 			optional($.declContains),
+			// Phase 3 iter (pure): Indy .NET dpk packages have a tail
+			// `{$I X.inc}` after `contains` that expands to CIL assembly
+			// attributes. Allow definitions AFTER contains too.
+			optional($._definitions),
 			$.kEnd, $.kEndDot
 		),
 

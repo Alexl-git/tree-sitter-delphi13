@@ -271,6 +271,18 @@
           ]
         },
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_definitions"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "SYMBOL",
           "name": "kEnd"
         },
@@ -11771,6 +11783,9 @@
     }
   ],
   "conflicts": [
+    [
+      "package"
+    ],
     [
       "type",
       "declType"
