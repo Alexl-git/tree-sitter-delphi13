@@ -3739,6 +3739,10 @@
           "named": true
         },
         {
+          "type": "kGeneric",
+          "named": true
+        },
+        {
           "type": "rttiAttributes",
           "named": true
         }
@@ -10166,6 +10170,10 @@
   },
   {
     "type": "kFunction",
+    "named": true
+  },
+  {
+    "type": "kGeneric",
     "named": true
   },
   {

@@ -1915,3 +1915,19 @@ Removed the `enable_if(fpc)` guard.
 Cumulative since Phase 3b iter 1: +194 / 6 reverts. 328 fails remain.
 
 ---
+
+## 2026-05-25 22:20  Phase 3b iter 30 — FPC `generic` keyword + C-style `<<`/`>>`
+
+Two FPC-permissive grammar additions:
+
+1. Removed `enable_if(fpc)` gate from declType's `kGeneric` keyword. lazutils heavy use: `generic TLazThreadedQueue<T> = class`. Harmless in Delphi mode since `generic` is contextual (it's a soft keyword everywhere except this position).
+
+2. Added C-style shift operators `<<` and `>>` as aliases for `kShl`/`kShr` in exprBinary. FPC and lazutils use them; Delphi only has the keyword forms.
+
+**Result**: +3 files (16322 -> 16325; 98.03% -> **98.05%**).
+- All tracked roots held
+- 3 files in non-tracked FPC/lazutils paths
+
+Cumulative since Phase 3b iter 1: +197 / 6 reverts. 325 fails remain.
+
+---

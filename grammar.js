@@ -694,6 +694,10 @@ module.exports = grammar({
 			op.infix(3, $._expr, $.kAnd, $._expr),
 			op.infix(3, $._expr, $.kShl, $._expr),
 			op.infix(3, $._expr, $.kShr, $._expr),
+			// Phase 3b iter 30: C-style shift `<<` and `>>` — FPC supports
+			// these as alias for `shl`/`shr`. lazutils uses them heavily.
+			op.infix(3, $._expr, alias(token('<<'), $.kShl), $._expr),
+			op.infix(3, $._expr, alias(token('>>'), $.kShr), $._expr),
 		),
 
 		exprUnary:       $ => choice(
@@ -1003,7 +1007,10 @@ module.exports = grammar({
 
 		declType:        $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			...enable_if(fpc, optional($.kGeneric)),
+			// Phase 3b iter 30: `generic TFoo<T> = class` keyword form — was
+			// FPC-only; lazutils uses it heavily. Accepting in Delphi mode is
+			// harmless because real Delphi code never uses `generic` here.
+			optional($.kGeneric),
 			field('name', $._genericName), $.kEq,
 			field('type',
 				choice(
