@@ -20,6 +20,10 @@ const { evalExpr } = require('./evalExpr');
 
 function preprocess(input, options = {}) {
   const defines = new Set((options.defines || []).map(d => d.toLowerCase()));
+  // Numeric defines for `{\$IF X < N}` form: name->number map.
+  const numericDefines = new Map(
+    Object.entries(options.numericDefines || {}).map(([k, v]) => [k.toLowerCase(), v])
+  );
   const includePaths = options.includePaths || [];
   const baseDir = options.baseDir || '.';
   const maxIncludeDepth = options.maxIncludeDepth || 64;
@@ -85,7 +89,7 @@ function preprocess(input, options = {}) {
       let cond;
       if (dir === 'ifdef') cond = defines.has(ch.args.toLowerCase());
       else if (dir === 'ifndef') cond = !defines.has(ch.args.toLowerCase());
-      else if (dir === 'if') cond = evalExpr(ch.args, defines);
+      else if (dir === 'if') cond = evalExpr(ch.args, defines, numericDefines);
       else cond = false; // {$IFOPT switch} — conservative
       const outerInactive = !effectivelyActive();
       stack.push({
@@ -113,7 +117,7 @@ function preprocess(input, options = {}) {
         if (s.takenBranch) {
           s.active = false;
         } else {
-          const cond = evalExpr(ch.args, defines);
+          const cond = evalExpr(ch.args, defines, numericDefines);
           s.active = cond && !s.anyOuterFalse;
           if (cond) s.takenBranch = true;
         }

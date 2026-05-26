@@ -20,9 +20,10 @@
 'use strict';
 
 class Parser {
-  constructor(src, defines) {
+  constructor(src, defines, numericDefines) {
     this.src = src;
     this.defines = defines;
+    this.numericDefines = numericDefines;
     this.i = 0;
   }
   skip() { while (this.i < this.src.length && /\s/.test(this.src[this.i])) this.i++; }
@@ -116,9 +117,13 @@ class Parser {
       return false;
     }
     if (/[0-9$]/.test(this.src[this.i] || '')) return this.readInt();
-    // Bare identifier — treat as defined-test for the symbol.
+    // Bare identifier. If it maps to a numeric value (via a key like
+    // CompilerVersion=37 in the defines map), return that number. Else
+    // treat as defined-test for the symbol.
     const id = this.readIdent();
     if (!id) return false;
+    const numericValue = this.numericDefines && this.numericDefines.get(id.toLowerCase());
+    if (typeof numericValue === 'number') return numericValue;
     return this.defines.has(id.toLowerCase());
   }
   peekKW(kw) {
@@ -131,9 +136,9 @@ class Parser {
   skipKW(kw) { this.skip(); this.i += kw.length; }
 }
 
-function evalExpr(src, defines) {
+function evalExpr(src, defines, numericDefines) {
   try {
-    const p = new Parser(src, defines);
+    const p = new Parser(src, defines, numericDefines);
     const v = p.expr();
     return typeof v === 'boolean' ? v : v !== 0;
   } catch (_e) {

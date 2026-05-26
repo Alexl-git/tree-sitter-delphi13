@@ -37,7 +37,17 @@ const DEFAULT_DEFINES = [
   'MSWINDOWS', 'WIN64', 'CPU64BITS', 'CPUX86_64',
   'CONDITIONALEXPRESSIONS', 'UNICODE',
   'COMPILER_VERSION_37', 'VER370',
+  // RTL feature flags that legacy code commonly checks; defaults reflect
+  // Delphi 13 reality.
+  'SUPPORTS_GENERICS', 'SUPPORTS_INLINE', 'SUPPORTS_CLASSVARS',
+  'SUPPORTS_STRICT', 'SUPPORTS_ENHANCED_RECORDS',
+  'SUPPORTS_FOR_IN', 'SUPPORTS_REGION',
 ];
+const DEFAULT_NUMERIC = {
+  // Delphi 13 Florence is internal version 37.0; CompilerVersion is 37.0 too.
+  CompilerVersion: 37,
+  RTLVersion: 37,
+};
 let defines = DEFAULT_DEFINES;
 if (process.env.DEFINES_JSON) {
   defines = JSON.parse(fs.readFileSync(process.env.DEFINES_JSON, 'utf8')).defines || DEFAULT_DEFINES;
@@ -88,7 +98,9 @@ for (const file of files) {
   // Preprocess
   let preprocessed;
   try {
-    preprocessed = preprocess(source, { defines, baseDir: path.dirname(file) }).text;
+    preprocessed = preprocess(source, {
+      defines, numericDefines: DEFAULT_NUMERIC, baseDir: path.dirname(file),
+    }).text;
   } catch (e) {
     skipCount++;
     fs.writeSync(out, JSON.stringify({ file, error: 'preprocess_threw', message: String(e) }) + '\n');
