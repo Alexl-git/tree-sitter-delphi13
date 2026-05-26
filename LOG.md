@@ -1901,3 +1901,17 @@ Remaining ~333 fails are dominated by:
 - Specific syntax niches (Orpheus case-label-as-statement, FPC `is nested`, RTTI inside variant-record)
 
 ---
+
+## 2026-05-25 22:03  Phase 3b iter 29 — Compound assignment operators in Delphi mode
+
+`+=`/`-=`/`*=`/`/=` (kAssignAdd/Sub/Mul/Div) were FPC-only behind `enable_if(fpc, ...)`. Delphi has supported these since Delphi 2005 (with `{$EXTENDEDCOMPATIBILITY}`). FPC-corpus files (lazutils suite, dxutils) use them heavily.
+
+Removed the `enable_if(fpc)` guard.
+
+**Result**: +5 files (16317 -> 16322; 98.00% -> **98.03%**).
+- All tracked roots held
+- 5 files in non-tracked roots (jcf-pascal-format/lazutils chain)
+
+Cumulative since Phase 3b iter 1: +194 / 6 reverts. 328 fails remain.
+
+---

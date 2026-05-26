@@ -2529,6 +2529,22 @@
                 {
                   "type": "SYMBOL",
                   "name": "kAssign"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kAssignAdd"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kAssignSub"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kAssignMul"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kAssignDiv"
                 }
               ]
             }

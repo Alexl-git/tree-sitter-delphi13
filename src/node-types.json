@@ -198,6 +198,22 @@
           {
             "type": "kAssign",
             "named": true
+          },
+          {
+            "type": "kAssignAdd",
+            "named": true
+          },
+          {
+            "type": "kAssignDiv",
+            "named": true
+          },
+          {
+            "type": "kAssignMul",
+            "named": true
+          },
+          {
+            "type": "kAssignSub",
+            "named": true
           }
         ]
       },
@@ -9986,6 +10002,22 @@
   },
   {
     "type": "kAssign",
+    "named": true
+  },
+  {
+    "type": "kAssignAdd",
+    "named": true
+  },
+  {
+    "type": "kAssignDiv",
+    "named": true
+  },
+  {
+    "type": "kAssignMul",
+    "named": true
+  },
+  {
+    "type": "kAssignSub",
     "named": true
   },
   {

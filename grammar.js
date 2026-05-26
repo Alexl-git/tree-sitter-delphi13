@@ -457,9 +457,11 @@ module.exports = grammar({
 			choice($._expr, $.varAssignDef),
 			choice(
 				$.kAssign,
-				...enable_if(fpc,
-					$.kAssignAdd, $.kAssignSub, $.kAssignMul, $.kAssignDiv
-				)
+				// Phase 3b iter 29: compound assignment `+=`/`-=`/`*=`/`/=`.
+				// FPC has always supported these; Delphi accepts them when
+				// `{$EXTENDEDCOMPATIBILITY}` directive is on (since 2005).
+				// FPC-corpus files (lazutils) use them heavily.
+				$.kAssignAdd, $.kAssignSub, $.kAssignMul, $.kAssignDiv,
 			),
 			$._expr
 		),
