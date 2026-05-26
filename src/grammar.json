@@ -6794,6 +6794,15 @@
                                 },
                                 "named": true,
                                 "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kFinal"
+                                },
+                                "named": true,
+                                "value": "identifier"
                               }
                             ]
                           },
@@ -6888,6 +6897,15 @@
                     },
                     "named": true,
                     "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kFinal"
+                    },
+                    "named": true,
+                    "value": "identifier"
                   }
                 ]
               }
@@ -6902,8 +6920,17 @@
           "type": "FIELD",
           "name": "type",
           "content": {
-            "type": "SYMBOL",
-            "name": "type"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "type"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subrangeType"
+              }
+            ]
           }
         },
         {

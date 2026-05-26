@@ -1992,3 +1992,17 @@ Widened to `choice($._literalString, $.identifier)`.
 Cumulative since Phase 3b iter 1: +208 / 7 reverts. 312 fails remain.
 
 ---
+
+## 2026-05-25 23:30  Phase 3b iter 36 — declVar kFinal name + subrange type
+
+Two narrow additions:
+1. `alias($.kFinal, $.identifier)` to declVar's name choice. Rave RvCsRpt: `Final: boolean;` (local var).
+2. declVar type field accepts `subrangeType` (same fix iter 31 did for declConst). Raize CodeSiteLogging: `Element: 0..MaxSet;`.
+
+**Result**: +4 files (16338 -> 16342; 98.13% -> **98.15%**).
+- Embarcadero: 97.75 -> **97.79%** (+2)
+- 2 files in other roots
+
+Cumulative since Phase 3b iter 1: +212 / 7 reverts. 308 fails remain.
+
+---

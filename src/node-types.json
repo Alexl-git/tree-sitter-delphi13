@@ -3939,6 +3939,10 @@
         "required": true,
         "types": [
           {
+            "type": "subrangeType",
+            "named": true
+          },
+          {
             "type": "type",
             "named": true
           }

@@ -1104,9 +1104,15 @@ module.exports = grammar({
 				// Phase 3b iter 16: kOperator as var name (Data.Win.ADODB,
 				// Data.DBCommon use `Operator: TCANOperator;` etc.)
 				alias($.kOperator,  $.identifier),
+				// Phase 3b iter 36: kFinal as var name (Rave RvCsRpt
+				// `Final: boolean;` — local var named Final).
+				alias($.kFinal,     $.identifier),
 			))),
 			':',
-			field('type', $.type),
+			// Phase 3b iter 36: declVar type may be a subrange:
+			//   Element: 0..MaxSet absolute Value;
+			// (Raize CodeSiteLogging.)
+			field('type', choice($.type, $.subrangeType)),
 			optional(choice(
 				seq($.kAbsolute, $._ref),
 				field('defaultValue', $.defaultValue)
