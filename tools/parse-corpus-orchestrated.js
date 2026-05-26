@@ -129,6 +129,12 @@ for (const file of files) {
     ]},
     { re: /Indy10|\\Indy\\|fibplus/i, defs: [
       'USE_INLINE', 'HAS_GENERICS_TList', 'USE_NAMESPACES',
+      // fibplus version gates D_XE2..D_RX (Delphi 13)
+      'WINDOWS',
+      'D_XE2', 'D_XE3', 'D_XE4', 'D_XE5', 'D_XE6', 'D_XE7', 'D_XE8',
+      'D_X10', 'D_X10_1', 'D_X10_2', 'D_X10_3', 'D_X10_4',
+      'D_X11', 'D_X11_1', 'D_X11_2', 'D_X11_3',
+      'D_X12', 'D_X13',
     ]},
   ];
   const fileDefines = [...defines];
