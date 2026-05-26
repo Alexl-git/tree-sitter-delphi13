@@ -9462,11 +9462,19 @@
           "named": true
         },
         {
+          "type": "kExperimental",
+          "named": true
+        },
+        {
           "type": "kFalse",
           "named": true
         },
         {
           "type": "kNil",
+          "named": true
+        },
+        {
+          "type": "kPlatform",
           "named": true
         },
         {

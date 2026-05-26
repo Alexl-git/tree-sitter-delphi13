@@ -405,7 +405,13 @@ module.exports = grammar({
 			$.kUnit, $.moduleName,
 			// `unit Spring.Foo deprecated 'Use Spring.Bar instead';` — unit-level
 			// deprecation hint (Spring4D pattern in retired units).
-			optional(seq($.kDeprecated, optional($._expr))),
+			// `unit Posix.NetinetIcmp6 platform;` — unit-level platform hint
+			// (Embarcadero RTL Posix units).
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
+			)),
 			';',
 			repeat(choice(
 				$.interface,
