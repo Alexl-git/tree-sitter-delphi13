@@ -34,7 +34,7 @@ const parser = new Parser();
 parser.setLanguage(PureLang);
 
 const DEFAULT_DEFINES = [
-  'MSWINDOWS', 'WIN64', 'CPU64BITS', 'CPUX86_64',
+  'MSWINDOWS', 'WIN64', 'CPU64BITS', 'CPUX86_64', 'CPUX64',
   'CONDITIONALEXPRESSIONS', 'UNICODE',
   'COMPILER_VERSION_37', 'VER370',
   // RTL feature flags that legacy code commonly checks; defaults reflect
@@ -42,6 +42,8 @@ const DEFAULT_DEFINES = [
   'SUPPORTS_GENERICS', 'SUPPORTS_INLINE', 'SUPPORTS_CLASSVARS',
   'SUPPORTS_STRICT', 'SUPPORTS_ENHANCED_RECORDS',
   'SUPPORTS_FOR_IN', 'SUPPORTS_REGION',
+  // Delphi 13 Florence ASSEMBLER define (RTL inline-asm gating)
+  'ASSEMBLER',
 ];
 const DEFAULT_NUMERIC = {
   // Delphi 13 Florence is internal version 37.0; CompilerVersion is 37.0 too.
