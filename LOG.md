@@ -2006,3 +2006,79 @@ Two narrow additions:
 Cumulative since Phase 3b iter 1: +212 / 7 reverts. 308 fails remain.
 
 ---
+
+## 2026-05-26 00:30  Phase 3b iter 37 — REVERTED — declField name aliases trigger declFieldNoSemi conflict
+
+Tried adding `alias($.kRegister, $.identifier)` to declField's name list to support `Register: UINT;` field (Winapi.D3D10). Even with subrange-type addition reverted, the single alias triggered an unresolved `declField_repeat1 / declFieldNoSemi vs declField` conflict — adding to the GLR state ambiguity introduced by iter 10's declFieldNoSemi.
+
+The declFieldNoSemi rule (iter 10) constrains the field-name set tightly. Any expansion of declField's name set forks the GLR state space at every field declaration. Adding the conflict declaration `[$.declField, $.declFieldNoSemi]` didn't suffice — tree-sitter cascaded into yet another conflict.
+
+**Reverted. Baseline 98.15% holds.** kRegister-as-field-name (Winapi.D3D10) won't be fixed without either restructuring declFieldNoSemi or moving to a soft-keyword approach where kRegister is dropped from valid_symbols at field-decl positions (similar to iter 19's kIndex treatment). Too invasive for a 10-min iter.
+
+Cumulative since Phase 3b iter 1: +212 / 8 reverts.
+
+---
+
+## 2026-05-26 00:50  Phase 3b iter 38 — Investigation only
+
+Confirmed tree-sitter's word-rule promotion isn't firing for `kRegister` at declField name positions even though the parser state doesn't reach kRegister there. Probe `Register: UINT;` lexes as kRegister and fails. Soft-keyword promotion (iter 19's mechanism for kIndex) requires the keyword token to NOT be in valid_symbols AT THE STATE; for kRegister there might be a chain through some rule that includes it. Architectural.
+
+Also investigated SHDocVw.pas (6853-line auto-generated TypeLib unit) — ERROR wraps entire file body. Hundreds of `LIBID_X: TGUID = '{GUID-string}';` typed consts; likely a GLR state-stack-depth issue on the huge file. Not a 10-min fix.
+
+The remaining ~308 fails are dominated by:
+- Asymmetric IFDEFs (preprocessor territory, ~157 files)
+- declField name/type GLR-fragility from declFieldNoSemi (kRegister, etc.)
+- Free-text inside IFDEFs in .pas files that escape the .inc-fragment filter
+- Source typos in DevExpress/Indy
+- Pathological large files (SHDocVw 6853 lines)
+- Niche legacy patterns (Orpheus, Rave, AsyncPro)
+
+Most remaining wins are now sub-iter and architecturally constrained. Master holds at 98.15%. Real next-level progress needs Phase 2 of the preprocessor work.
+
+Cumulative since Phase 3b iter 1: +212 / 8 reverts. 308 fails remain.
+
+---
+
+## 2026-05-26 01:43  Phase 3b iter 39 — `kLibrary` as procAttribute hint
+
+Rave11 RpCanvas/RpFiler/RpHTFilr/RpRTFilr/RpTXFilr use legacy `library` as a proc-decl hint:
+```
+procedure Foo(...); override; {$IFDEF LEVEL6}deprecated; library;{$ENDIF} abstract;
+```
+
+Added `kLibrary` to the `procAttribute` choice. (kLibrary was already accepted as a const-decl hint in iter 28; now also on proc decls.)
+
+**Result**: +6 files (16342 -> 16348; 98.15% -> **98.19%**).
+- All 5 Rave11 files unblocked + 1 more in other root
+- All tracked roots held
+
+Cumulative since Phase 3b iter 1: +218 / 8 reverts. 302 fails remain.
+
+---
+
+## 2026-05-26 02:20  Phase 3b iter 40 — Unicode identifiers
+
+Extended `identifier` regex from `[a-zA-Z_]+[0-9a-zA-Z_]*` to accept the Unicode range U+0080-U+FFFF. Delphi allows non-ASCII identifiers (umlauts, accented letters, Cyrillic).
+
+**Result**: +4 files (16348 -> 16352; 98.19% -> **98.21%**).
+- Embarcadero: 97.79 -> **97.83%** (+2)
+- 2 files in other roots
+
+Note: YADF umlauts.pas itself still fails — that file is Latin-1 encoded (Ü = single byte \xDC, not UTF-8 \xC3\x9C). Tree-sitter is UTF-8 only at byte level. Fixing that needs a re-encode upstream or a byte-aware identifier rule. Skipping.
+
+Cumulative since Phase 3b iter 1: +222 / 8 reverts. 298 fails remain.
+
+---
+
+## 2026-05-26 03:01  Phase 3b iter 41 — Parenthesized binary subrange bound
+
+Added narrow form `(IDENT op IDENT_OR_CALL) op LITERAL_OR_CALL` to `_subrangeBound`. Covers:
+- `0..(MaxInt div SizeOf(JOCTET))-1` (Vcl.Imaging.jpeg `jTOctet`)
+- `0..(High(Integer) - $F) div SizeOf(DWORD)` (EurekaLog EBorDebug `TArrayIndex`)
+
+**Result**: +2 files (16352 -> 16354; 98.21% -> **98.22%**).
+- Embarcadero: 97.83 -> **97.87%** (+2)
+
+Cumulative since Phase 3b iter 1: +224 / 8 reverts. 296 fails remain.
+
+---

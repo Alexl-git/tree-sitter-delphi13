@@ -1078,6 +1078,19 @@ module.exports = grammar({
 			// (Excluding `^X` external char_literal — narrower keeps Spring4D
 			// safe from the earlier regression.)
 			seq('#', $._literalInt),
+			// Phase 3b iter 41: parenthesized binary then trailing op + arg
+			// for `(MaxInt div SizeOf(JOCTET))-1` (Vcl.Imaging.jpeg) and
+			// `(High(Integer) - $F) div SizeOf(DWORD)` (EBorDebug). Narrow
+			// shape: paren-wrap a 3-term binary then one more op + literal-or-call.
+			seq(
+				'(',
+				choice($.identifier, seq($.identifier, '(', $.identifier, ')')),
+				choice('-', '+', '*', '/', $.kDiv, $.kMod),
+				choice($.identifier, $._literalInt, seq($.identifier, '(', $.identifier, ')')),
+				')',
+				choice('-', '+', '*', '/', $.kDiv, $.kMod),
+				choice($._literalInt, seq($.identifier, '(', $.identifier, ')')),
+			),
 		),
 
 		declProc:        $ => seq(
@@ -1581,6 +1594,9 @@ module.exports = grammar({
 			$.kVarargs,  // variadic-arg modifier on cdecl functions
 			$.kWinapi,   // calling convention (alias for stdcall on Win32)
 			$.kInterrupt,
+			// Phase 3b iter 39: legacy `library` hint on proc decls
+			// (Rave11 RpCanvas/RpFiler etc. `override; deprecated; library;`).
+			$.kLibrary,
 			// NOTE: kForward intentionally NOT here — it conflicts with the
 			// declProcFwd rule which has its own `; forward;` handling.
 
@@ -1862,7 +1878,13 @@ module.exports = grammar({
 		// `&&` prefix is the Delphi.NET operator-name convention
 		// (`&&op_Equality`, `&&op_Implicit`, etc.) still used in Spring4D's
 		// generic operator overloads.
-		identifier:        $ => /&{0,2}[a-zA-Z_]+[0-9_a-zA-Z]*/,
+		// Phase 3b iter 40: identifier accepts Unicode letters too.
+		// Delphi allows non-ASCII identifiers (umlauts, accented letters,
+		// Cyrillic, etc.). Pattern: ASCII letter/underscore start, then
+		// any letter/digit/underscore including the Unicode-letter range
+		// U+0080+ (Latin-1 Supplement onwards). Excludes ASCII punctuation
+		// so structural tokens stay intact.
+		identifier:        $ => /&{0,2}[a-zA-Z_-￿][0-9_a-zA-Z-￿]*/,
 
 	  	_space:            $ => /[\s\r\n\t]+/,
 		// Single preprocessor directive. The external scanner (src/scanner.c)

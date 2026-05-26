@@ -7940,6 +7940,10 @@
           "named": true
         },
         {
+          "type": "kLibrary",
+          "named": true
+        },
+        {
           "type": "kLocal",
           "named": true
         },
@@ -8987,6 +8991,14 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kDiv",
+          "named": true
+        },
+        {
+          "type": "kMod",
           "named": true
         }
       ]
