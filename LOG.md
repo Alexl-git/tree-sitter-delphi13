@@ -1790,3 +1790,28 @@ The OK count dropped 16412 -> 16302 — those 110 .inc files are now classified 
 Cumulative since Phase 3b iter 1: still +174 net real-Pascal-parse improvements over master / 5 reverts. 348 fails remain (down from 360).
 
 ---
+
+## 2026-05-25 19:50  Phase 3b iter 23 — REVERTED — legacy unit-init `begin ... end.`
+
+Investigated bdemts.pas r10 — turned out to be a LEGACY UNIT INITIALIZATION pattern. Pre-Delphi-2 / Turbo Pascal units could have `begin ... end.` at the end (no `initialization` keyword) and the RTL still has this in bde mts wrapper:
+```
+unit bdemts;
+{$H+,X+}
+interface
+implementation
+uses ...
+function GetObjectContext: ...;
+begin
+  if not Assigned(...) then ...
+end.
+```
+
+Tried adding `legacyInitBlock` as a new section choice in the unit rule. Required conflict declarations for implementation/initialization/finalization — each one needs to fork on `begin`. Adding the implementation conflict didn't suffice; initialization wanted one next.
+
+Reverted. The conflict chain spirals because `begin` at section-boundary is ambiguous against EVERY existing section that ends with statements. Would need a different mechanism — perhaps `kBegin` as a hard anchor with token precedence, or merging legacyInitBlock with initialization at the AST level.
+
+Deferred — bdemts.pas alone isn't worth the surgery. Will tackle when there's a cleaner approach (maybe wrap the bare `begin ... end.` in an `initialization` synthetic node via precedence shaping).
+
+Cumulative since Phase 3b iter 1: +174 / 6 reverts. 348 fails remain.
+
+---
