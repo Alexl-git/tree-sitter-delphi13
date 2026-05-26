@@ -97,11 +97,32 @@ for (const file of files) {
   }
   if (skip) { skipCount++; fs.writeSync(out, JSON.stringify({ file, error: skip }) + '\n'); continue; }
 
+  // Path-based per-project defines tuning. Each entry adds defines when
+  // the file path matches. Designed for the common case where a project
+  // assumes its own gate define is on.
+  const PATH_DEFINES = [
+    { re: /EurekaLog/i, defs: [
+      'EUREKALOG', 'USE_NAMESPACES',
+      'HAS_UNIT_TYPES', 'HAS_UNIT_CONTNRS', 'HAS_UNIT_GENERICS',
+      'HAS_UNIT_GENERICS_COLLECTIONS', 'HAS_UNIT_GENERICS_DEFAULTS',
+      'HAS_UNIT_RTTI', 'HAS_UNIT_DATEUTILS', 'HAS_UNIT_STRUTILS',
+      'SUPPORTS_COMPILETIME_MESSAGES', 'Windows',
+    ]},
+    { re: /AsyncPro|Orpheus|SysTools/i, defs: [
+      'PRNDRV', 'DYNAMIC_LINK',
+    ]},
+    { re: /Indy10|\\Indy\\|fibplus/i, defs: [
+      'USE_INLINE', 'HAS_GENERICS_TList', 'USE_NAMESPACES',
+    ]},
+  ];
+  const fileDefines = [...defines];
+  for (const p of PATH_DEFINES) if (p.re.test(file)) fileDefines.push(...p.defs);
+
   // Preprocess
   let preprocessed;
   try {
     preprocessed = preprocess(source, {
-      defines, numericDefines: DEFAULT_NUMERIC, baseDir: path.dirname(file),
+      defines: fileDefines, numericDefines: DEFAULT_NUMERIC, baseDir: path.dirname(file),
     }).text;
   } catch (e) {
     skipCount++;
