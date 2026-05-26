@@ -109,6 +109,14 @@ for (const file of files) {
       'SUPPORTS_COMPILETIME_MESSAGES', 'Windows',
       // EurekaLog version-gate defines — Delphi 13 maps to COMPILER37.
       'COMPILER37',
+      // EurekaLog also uses Compiler<N>_up / _down range gates.
+      'Compiler11_up', 'Compiler12_up', 'Compiler14_up', 'Compiler15_up',
+      'Compiler16_up', 'Compiler17_up', 'Compiler18_up', 'Compiler19_up',
+      'Compiler20_up', 'Compiler21_up', 'Compiler22_up', 'Compiler23_up',
+      'Compiler24_up', 'Compiler25_up', 'Compiler26_up', 'Compiler27_up',
+      'Compiler28_up', 'Compiler29_up', 'Compiler30_up', 'Compiler31_up',
+      'Compiler32_up', 'Compiler33_up', 'Compiler34_up', 'Compiler35_up',
+      'Compiler36_up', 'Compiler37_up',
       // Prefer pure-Pascal bodies over asm so functions get full impls.
       // (NOT LEGACYSTRLEN — that's IFNDEF-gated; defining it skips the body.)
       'PUREPASCAL', 'HAS_ANSI_STRINGS',
