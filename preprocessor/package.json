@@ -10,7 +10,8 @@
     "preprocess.js",
     "lexer.js",
     "evalExpr.js",
-    "cli.js"
+    "cli.js",
+    "README.md"
   ],
   "repository": {
     "type": "git",
