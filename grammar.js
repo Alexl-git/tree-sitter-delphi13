@@ -1150,7 +1150,11 @@ module.exports = grammar({
 				alias($.kWrite,     $.identifier),
 				alias($.kReference, $.identifier),
 			)),
-			optional(seq(':', field('type', $.type))),
+			// Phase 3b iter 31: declConst type may be a subrange:
+			//   const allocatedCount : 0..MaxAllocEntries = 0;
+			//   const Element : 0..MaxSet absolute Value;
+			// (fibplus Zutil, Raize CodeSiteLogging patterns.)
+			optional(seq(':', field('type', choice($.type, $.subrangeType)))),
 			field('defaultValue', $.defaultValue),
 			// Declaration hints before the terminating ';':
 			//   const X = 'foo' deprecated 'use Y instead';

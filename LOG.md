@@ -1931,3 +1931,21 @@ Two FPC-permissive grammar additions:
 Cumulative since Phase 3b iter 1: +197 / 6 reverts. 325 fails remain.
 
 ---
+
+## 2026-05-25 22:55  Phase 3b iter 31 — declConst type may be a subrange
+
+`declConst`'s type field accepted `$.type` (which doesn't include subranges). Pattern:
+```
+const allocatedCount : 0..MaxAllocEntries = 0;
+```
+(fibplus Zutil, Raize CodeSiteLogging.)
+
+Changed to `choice($.type, $.subrangeType)`.
+
+**Result**: +1 file (16325 -> 16326; 98.05% baseline holds). Marginal but pattern-correct.
+
+Cumulative since Phase 3b iter 1: +198 / 6 reverts. 324 fails remain.
+
+Per user direction (priority is Delphi 100%), refocused away from FPC lazutils patterns. Current Delphi-only rate: 98.07%. Non-IFDEF Delphi rate: 99.01% (162 non-IFDEF Delphi fails remain, mostly in Embarcadero RTL and "Other" buckets).
+
+---

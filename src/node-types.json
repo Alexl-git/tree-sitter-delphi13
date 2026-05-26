@@ -1423,6 +1423,10 @@
         "required": false,
         "types": [
           {
+            "type": "subrangeType",
+            "named": true
+          },
+          {
             "type": "type",
             "named": true
           }
