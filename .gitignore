@@ -10,11 +10,11 @@ scanner.obj
 tree-sitter.exe
 *.exe
 
-# work artifacts
-work/runs/
-work/results-*.jsonl
-work/SUMMARY-*.md
-work/manifest-*.txt
-work/smoke-*.txt
-work/probe-*
-work/dump.txt
+# work artifacts (root and any subdir, e.g. pure/work/)
+**/work/runs/
+**/work/results-*.jsonl
+**/work/SUMMARY-*.md
+**/work/manifest-*.txt
+**/work/smoke-*.txt
+**/work/probe-*
+**/work/dump.txt

@@ -1380,7 +1380,8 @@ module.exports = grammar({
 			// Declaration hints on record/class fields (Embarcadero RTL):
 			//   FMin: Integer deprecated;
 			//   FOldField: T platform;
-			optional(choice(
+			//   Time: Integer platform deprecated;  (chained — System.SysUtils)
+			repeat(choice(
 				seq($.kDeprecated, optional($._expr)),
 				$.kPlatform,
 				$.kExperimental
