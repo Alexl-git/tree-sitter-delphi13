@@ -127,6 +127,9 @@ for (const file of files) {
       // emit compile-time fatal-message text.
       'APAX', 'Ver130', 'Ver140', 'Ver150',
     ]},
+    { re: /FireDAC/i, defs: [
+      'FireDAC_64', 'FireDAC_SQLITE_EXTERNAL',
+    ]},
     { re: /Indy10|\\Indy\\|fibplus/i, defs: [
       'USE_INLINE', 'HAS_GENERICS_TList', 'USE_NAMESPACES',
       // fibplus version gates D_XE2..D_RX (Delphi 13)
