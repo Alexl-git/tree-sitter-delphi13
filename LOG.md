@@ -1974,3 +1974,21 @@ iter 34 (CIL attribute on program entry `[STAThread]` for Delphi.NET .dpr files)
 Cumulative since Phase 3b iter 1: +200 / 7 reverts. 320 fails remain.
 
 ---
+
+## 2026-05-25 23:25  Phase 3b iter 35 — `dependency` accepts identifiers
+
+Iter 17 only accepted string-literals in the procExternal `dependency` clause. FireDAC.Phys.IBCli uses identifier constants:
+```
+external C_FD_IBLib
+dependency LibCPP{$IF DECLARED(LibCPP_ABI)}, LibCPP_ABI{$ENDIF};
+```
+
+Widened to `choice($._literalString, $.identifier)`.
+
+**Result**: +8 files (16330 -> 16338; 98.06% -> **98.13%**).
+- **Embarcadero: 97.56 -> 97.75%** (+10)
+- All other roots held
+
+Cumulative since Phase 3b iter 1: +208 / 7 reverts. 312 fails remain.
+
+---

@@ -10541,8 +10541,17 @@
                               "type": "SEQ",
                               "members": [
                                 {
-                                  "type": "SYMBOL",
-                                  "name": "_literalString"
+                                  "type": "CHOICE",
+                                  "members": [
+                                    {
+                                      "type": "SYMBOL",
+                                      "name": "_literalString"
+                                    },
+                                    {
+                                      "type": "SYMBOL",
+                                      "name": "identifier"
+                                    }
+                                  ]
                                 },
                                 {
                                   "type": "STRING",
@@ -10558,8 +10567,17 @@
                       ]
                     },
                     {
-                      "type": "SYMBOL",
-                      "name": "_literalString"
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "_literalString"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "identifier"
+                        }
+                      ]
                     }
                   ]
                 }

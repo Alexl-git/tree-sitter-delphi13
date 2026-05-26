@@ -1620,9 +1620,11 @@ module.exports = grammar({
 			// Phase 3b iter 17: native library dependency hint
 			//   function f; cdecl; external LIB name 'foo' dependency 'c++_static','c++abi';
 			// (Embarcadero FlatBox2D Android/iOS linker pattern.)
+			// Phase 3b iter 35: `dependency` clause may use identifier-name
+			// constants too: `dependency LibCPP, LibCPP_ABI` (FireDAC.Phys.IBCli).
 			optional(seq(
 				$.kDependency,
-				delimited1($._literalString),
+				delimited1(choice($._literalString, $.identifier)),
 			)),
 			';'
 		),
