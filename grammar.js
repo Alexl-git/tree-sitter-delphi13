@@ -401,6 +401,9 @@ module.exports = grammar({
 		program:            $ => seq(
 			$.kProgram, $.moduleName, ';',
 			optional($._definitions),
+			// Phase 3b iter 34: CIL/.NET attribute on program entry (`[STAThread]`).
+			// (UnitTests4Net.dpr Delphi.NET pattern.)
+			optional($.rttiAttributes),
 			tr($,'block'),
 			$.kEndDot
 		),

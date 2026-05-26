@@ -1963,3 +1963,14 @@ case byte of
 **Result**: +2 files (16326 -> 16328; 98.05% holds at higher precision).
 
 ---
+
+## 2026-05-25 23:20  Phase 3b iter 33-34 — Two attempts
+
+iter 33 (varDef type widened to $.type) — CATASTROPHIC -160 cascade, broke ORM3-SERVER 100->9.52%. **Reverted immediately.** Lesson: varDef appears in many statement contexts; widening from typeref to type explodes the GLR state.
+
+iter 34 (CIL attribute on program entry `[STAThread]` for Delphi.NET .dpr files) — +2 files (16328 -> 16330; 98.05% -> **98.06%**).
+- UnitTests4Net.dpr DUnit .NET tests unblocked
+
+Cumulative since Phase 3b iter 1: +200 / 7 reverts. 320 fails remain.
+
+---

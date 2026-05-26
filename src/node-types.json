@@ -8196,6 +8196,10 @@
         {
           "type": "moduleName",
           "named": true
+        },
+        {
+          "type": "rttiAttributes",
+          "named": true
         }
       ]
     }
