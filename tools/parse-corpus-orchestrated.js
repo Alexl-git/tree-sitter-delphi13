@@ -123,6 +123,9 @@ for (const file of files) {
     ]},
     { re: /AsyncPro|Orpheus|SysTools/i, defs: [
       'PRNDRV', 'DYNAMIC_LINK',
+      // AsyncPro Apax / version gates — files require these defined or
+      // emit compile-time fatal-message text.
+      'APAX', 'Ver130', 'Ver140', 'Ver150',
     ]},
     { re: /Indy10|\\Indy\\|fibplus/i, defs: [
       'USE_INLINE', 'HAS_GENERICS_TList', 'USE_NAMESPACES',
