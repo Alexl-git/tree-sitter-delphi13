@@ -2055,3 +2055,17 @@ Added `kLibrary` to the `procAttribute` choice. (kLibrary was already accepted a
 Cumulative since Phase 3b iter 1: +218 / 8 reverts. 302 fails remain.
 
 ---
+
+## 2026-05-26 02:20  Phase 3b iter 40 — Unicode identifiers
+
+Extended `identifier` regex from `[a-zA-Z_]+[0-9a-zA-Z_]*` to accept the Unicode range U+0080-U+FFFF. Delphi allows non-ASCII identifiers (umlauts, accented letters, Cyrillic).
+
+**Result**: +4 files (16348 -> 16352; 98.19% -> **98.21%**).
+- Embarcadero: 97.79 -> **97.83%** (+2)
+- 2 files in other roots
+
+Note: YADF umlauts.pas itself still fails — that file is Latin-1 encoded (Ü = single byte \xDC, not UTF-8 \xC3\x9C). Tree-sitter is UTF-8 only at byte level. Fixing that needs a re-encode upstream or a byte-aware identifier rule. Skipping.
+
+Cumulative since Phase 3b iter 1: +222 / 8 reverts. 298 fails remain.
+
+---

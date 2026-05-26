@@ -11641,7 +11641,7 @@
     },
     "identifier": {
       "type": "PATTERN",
-      "value": "&{0,2}[a-zA-Z_]+[0-9_a-zA-Z]*"
+      "value": "&{0,2}[a-zA-Z_-￿][0-9_a-zA-Z-￿]*"
     },
     "_space": {
       "type": "PATTERN",

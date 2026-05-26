@@ -1865,7 +1865,13 @@ module.exports = grammar({
 		// `&&` prefix is the Delphi.NET operator-name convention
 		// (`&&op_Equality`, `&&op_Implicit`, etc.) still used in Spring4D's
 		// generic operator overloads.
-		identifier:        $ => /&{0,2}[a-zA-Z_]+[0-9_a-zA-Z]*/,
+		// Phase 3b iter 40: identifier accepts Unicode letters too.
+		// Delphi allows non-ASCII identifiers (umlauts, accented letters,
+		// Cyrillic, etc.). Pattern: ASCII letter/underscore start, then
+		// any letter/digit/underscore including the Unicode-letter range
+		// U+0080+ (Latin-1 Supplement onwards). Excludes ASCII punctuation
+		// so structural tokens stay intact.
+		identifier:        $ => /&{0,2}[a-zA-Z_-￿][0-9_a-zA-Z-￿]*/,
 
 	  	_space:            $ => /[\s\r\n\t]+/,
 		// Single preprocessor directive. The external scanner (src/scanner.c)
