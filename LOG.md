@@ -1878,3 +1878,26 @@ Committing as scaffold.
 Cumulative since Phase 3b iter 1: +187 / 6 reverts. 335 fails unchanged.
 
 ---
+
+## 2026-05-25 21:46  Phase 3b iter 28 — `library` declaration hint — 98% MILESTONE
+
+Added `kLibrary` to the trailing-hint choice of `declConst`. Pattern:
+```
+MyConst3 = 'test4' library;
+```
+(YADF DeprecatedOnConst tests — legacy hint syntax.)
+
+**Result**: +2 files (16315 -> 16317; 97.99% -> **98.00%**).
+- ORM3 99.86% / TableTools 100% / Spring4D 99.49% / Embarcadero 97.56% / DevExpress 99.72% / OmniThread 99.25%
+
+**98% milestone reached.** From master 93.48% baseline (after refactor merge): +4.52pp / +362 real-Pascal-parse improvements.
+
+Cumulative since Phase 3b iter 1: +189 / 6 reverts. 333 fails remain.
+
+Remaining ~333 fails are dominated by:
+- Asymmetric IFDEFs needing preprocessor (Datasnap, System.AnsiStrings, EurekaLog defaultValue chains)
+- Free-text-in-IFDEF (.inc fragments that escaped the filter)
+- 3-way nested IFDEF (MStreams asm/asm/pascal)
+- Specific syntax niches (Orpheus case-label-as-statement, FPC `is nested`, RTTI inside variant-record)
+
+---

@@ -1149,10 +1149,13 @@ module.exports = grammar({
 			//   const Z = 'bar' experimental;
 			// Phase 3b iter 27: chained hints `platform deprecated;`
 			// (System.SysUtils faVolumeID = $00000008 platform deprecated).
+			// Phase 3b iter 28: `library` as legacy declaration hint
+			// (YADF DeprecatedOnConst MyConst3 = 'test4' library).
 			repeat(choice(
 				seq($.kDeprecated, optional($._expr)),
 				$.kPlatform,
 				$.kExperimental,
+				$.kLibrary,
 			)),
 			';',
 			repeat($._procAttribute)

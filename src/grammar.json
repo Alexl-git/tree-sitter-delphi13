@@ -7101,6 +7101,10 @@
               {
                 "type": "SYMBOL",
                 "name": "kExperimental"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kLibrary"
               }
             ]
           }

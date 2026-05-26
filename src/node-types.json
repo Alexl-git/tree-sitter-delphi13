@@ -1474,6 +1474,10 @@
           "named": true
         },
         {
+          "type": "kLibrary",
+          "named": true
+        },
+        {
           "type": "kNil",
           "named": true
         },
