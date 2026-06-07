@@ -3,6 +3,16 @@
 [![npm](https://img.shields.io/npm/v/tree-sitter-delphi13-pure.svg)](https://www.npmjs.com/package/tree-sitter-delphi13-pure)
 [![license](https://img.shields.io/npm/l/tree-sitter-delphi13-pure.svg)](../LICENSE)
 
+> **⚠️ Requires [`delphi13-preprocessor`](https://www.npmjs.com/package/delphi13-preprocessor) for the full benefit.**
+> This grammar parses **preprocessor-resolved** Delphi source only — it drops
+> `{$IFDEF}` / `pp_*` tokens, so on **raw** Delphi it will mis-parse any
+> conditional-directive regions. Run the preprocessor first:
+> ```sh
+> npm install tree-sitter-delphi13-pure delphi13-preprocessor
+> ```
+> Want a single grammar that handles `{$IFDEF}` itself, with no preprocessor
+> step? Use [`tree-sitter-delphi13`](https://www.npmjs.com/package/tree-sitter-delphi13) instead.
+
 Pure Delphi 13 tree-sitter sub-grammar — **drops `pp_*` tokens entirely** and expects preprocessor-resolved source as input.
 
 Pairs with [`delphi13-preprocessor`](https://www.npmjs.com/package/delphi13-preprocessor) for a `preprocessor → pure → AST` pipeline that reaches **99.33%** on real-world Delphi 13 corpora (35,556 files). See [the parent repo](https://github.com/Alexl-git/tree-sitter-delphi13) for context.
