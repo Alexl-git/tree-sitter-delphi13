@@ -43,7 +43,8 @@
     "node-gyp-build": "^4.8.4"
   },
   "peerDependencies": {
-    "tree-sitter": "^0.22.0"
+    "tree-sitter": "^0.22.0",
+    "delphi13-preprocessor": "^1.0.0"
   },
   "peerDependenciesMeta": {
     "tree_sitter": {
