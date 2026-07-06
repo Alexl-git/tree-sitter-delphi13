@@ -4828,7 +4828,7 @@
         ]
       },
       "operator": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -4889,6 +4889,10 @@
           },
           {
             "type": "kNeq",
+            "named": true
+          },
+          {
+            "type": "kNot",
             "named": true
           },
           {

@@ -1,0 +1,60 @@
+==================
+expr: `not in` negated membership operator (Delphi 13)
+==================
+
+procedure P;
+begin
+  if 1 not in a then X;
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (if
+        (kIf)
+        condition: (exprBinary
+          lhs: (literalNumber)
+          operator: (kNot)
+          operator: (kIn)
+          rhs: (identifier))
+        (kThen)
+        then: (statement
+          (identifier)))
+      (kEnd))))
+
+==================
+expr: `is not` negated type-test operator (Delphi 13)
+==================
+
+procedure P;
+begin
+  if b is not TButton then X;
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (if
+        (kIf)
+        condition: (exprBinary
+          lhs: (identifier)
+          operator: (kIs)
+          rhs: (exprUnary
+            operator: (kNot)
+            operand: (identifier)))
+        (kThen)
+        then: (statement
+          (identifier)))
+      (kEnd))))

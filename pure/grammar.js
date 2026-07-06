@@ -689,6 +689,9 @@ module.exports = grammar({
 			op.infix(1, $._expr, $.kGte, $._expr),
 			op.infix(1, $._expr, $.kIn,  $._expr),
 			op.infix(1, $._expr, $.kIs,  $._expr),
+			// Ported from root v1.1.x: Delphi 13 `not in` operator (`is not` needs
+			// no production — it parses via `is` + unary `not` on the RHS).
+			op.infix(1, $._expr, seq($.kNot, $.kIn), $._expr),
 
 			op.infix(2, $._expr, $.kAdd, $._expr),
 			op.infix(2, $._expr, $.kSub, $._expr),

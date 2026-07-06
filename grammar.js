@@ -710,6 +710,11 @@ module.exports = grammar({
 			op.infix(1, $._expr, $.kGte, $._expr),
 			op.infix(1, $._expr, $.kIn,  $._expr),
 			op.infix(1, $._expr, $.kIs,  $._expr),
+			// Delphi 13 negated membership operator. `1 not in a` needs a
+			// dedicated `not in` operator — a leading `not` can't attach to the
+			// left operand. (`is not` already parses via `is` + the unary `not`
+			// prefix on the RHS, so it needs no separate production.) isnotnotin.pas.
+			op.infix(1, $._expr, seq($.kNot, $.kIn), $._expr),
 
 			op.infix(2, $._expr, $.kAdd, $._expr),
 			op.infix(2, $._expr, $.kSub, $._expr),
