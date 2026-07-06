@@ -9850,6 +9850,10 @@
               {
                 "type": "SYMBOL",
                 "name": "kFinal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kUnsafe"
               }
             ]
           }
@@ -11741,6 +11745,11 @@
     "kNoreturn": {
       "type": "PATTERN",
       "value": "noreturn",
+      "flags": "i"
+    },
+    "kUnsafe": {
+      "type": "PATTERN",
+      "value": "unsafe",
       "flags": "i"
     },
     "kIocheck": {

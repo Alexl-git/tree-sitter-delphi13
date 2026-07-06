@@ -1526,7 +1526,11 @@ module.exports = grammar({
 				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
 				$.kRegister, $.kWinapi, $.kInline,
 				$.kOverload, $.kVirtual, $.kAbstract, $.kOverride,
-				$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal
+				$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal,
+				// ARC/AUTOREFCOUNT method directive: `class function NewInstance:
+				// TObject unsafe; override;` (System.pas / JsonDataObjects /
+				// FireDAC guard NewInstance with {$IFDEF AUTOREFCOUNT} unsafe).
+				$.kUnsafe
 			)),
 			';',
 			repeat($._procAttributeNoExt)
@@ -1888,6 +1892,7 @@ module.exports = grammar({
 		kNostackframe:     $ => /nostackframe/i,
 		kInterrupt:        $ => /interrupt/i,
 		kNoreturn:         $ => /noreturn/i,
+		kUnsafe:           $ => /unsafe/i,
 		kIocheck:          $ => /iocheck/i,
 		kLocal:            $ => /local/i,
 		kHardfloat:        $ => /hardfloat/i,

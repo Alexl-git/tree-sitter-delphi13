@@ -1,0 +1,73 @@
+==================
+method: unsafe directive on return type (ARC/AUTOREFCOUNT)
+==================
+
+type
+  T = class
+    class function NewInstance: TObject unsafe; override;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kClass)
+          (declProc
+            (kClass)
+            (kFunction)
+            name: (identifier)
+            type: (typeref
+              (identifier))
+            (kUnsafe)
+            attribute: (procAttribute
+              (kOverride)))
+          (kEnd))))))
+
+==================
+method: Unsafe still usable as a type name after another type decl (regression guard)
+==================
+
+type
+  Bar = class
+    function G: Integer;
+  end;
+
+  Unsafe = class
+    function F: Integer;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kClass)
+          (declProc
+            (kFunction)
+            name: (identifier)
+            type: (typeref
+              (identifier)))
+          (kEnd))))
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kClass)
+          (declProc
+            (kFunction)
+            name: (identifier)
+            type: (typeref
+              (identifier)))
+          (kEnd))))))
