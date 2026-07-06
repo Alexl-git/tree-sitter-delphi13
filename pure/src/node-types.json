@@ -2640,6 +2640,10 @@
           "named": true
         },
         {
+          "type": "kUnsafe",
+          "named": true
+        },
+        {
           "type": "kVirtual",
           "named": true
         },
@@ -9474,6 +9478,10 @@
           "named": true
         },
         {
+          "type": "kLibrary",
+          "named": true
+        },
+        {
           "type": "kNil",
           "named": true
         },
@@ -9517,7 +9525,11 @@
         "required": false,
         "types": [
           {
-            "type": "typeref",
+            "type": "subrangeType",
+            "named": true
+          },
+          {
+            "type": "type",
             "named": true
           }
         ]
@@ -9547,7 +9559,11 @@
         "required": true,
         "types": [
           {
-            "type": "typeref",
+            "type": "subrangeType",
+            "named": true
+          },
+          {
+            "type": "type",
             "named": true
           }
         ]
@@ -10494,6 +10510,10 @@
   },
   {
     "type": "kUnit",
+    "named": true
+  },
+  {
+    "type": "kUnsafe",
     "named": true
   },
   {

@@ -412,6 +412,7 @@ module.exports = grammar({
 				seq($.kDeprecated, optional($._expr)),
 				$.kPlatform,
 				$.kExperimental,
+				$.kLibrary,   // ported from root v1.1.0
 			)),
 			';',
 			repeat(choice(
@@ -465,12 +466,16 @@ module.exports = grammar({
 			),
 			$._expr
 		),
+		// Ported from root grammar.js (v1.1.0): inline-var type slot accepts the
+		// full type (incl. anonymous `array of T`), widened in LOCKSTEP across
+		// varAssignDef (initializer form) and varDef (no-initializer) so the
+		// shared `var X: <type>` prefix doesn't mis-disambiguate.
 		varAssignDef:          $ => seq($.kVar, $.identifier,
 			optional(seq(
 				':',
-				field('type', $.typeref)
+				field('type', choice($.type, $.subrangeType))
 			))),
-		varDef:          $ => seq($.kVar, delimited1($.identifier), ':', field('type', $.typeref)),
+		varDef:          $ => seq($.kVar, delimited1($.identifier), ':', field('type', choice($.type, $.subrangeType))),
 		// Delphi 12+ inline `const NAME [: T] = value`. Used inside statement
 		// bodies (begin..end blocks). Distinct from `declConst` which lives
 		// in unit/procedure-local `const X = 1;\n Y = 2;` blocks under kConst.
@@ -761,11 +766,11 @@ module.exports = grammar({
 			// and "Index" tokenizes as identifier in expressions like
 			// `if i < Index then ...`. _typeref still gets "Index" via the
 			// $.identifier path (no functional regression).
+			// Ported from root v1.1.0: kRead/kWrite/kName/kMessage removed so
+			// `a < Read` is a comparison, not a generic `a<Read>` (phantom `>`).
+			// Word-rule still promotes them to $.identifier for genuine type-name
+			// uses; property read/write accessors are a separate rule.
 			alias($.kReference, $.identifier),
-			alias($.kMessage,   $.identifier),
-			alias($.kName,      $.identifier),
-			alias($.kRead,      $.identifier),
-			alias($.kWrite,     $.identifier),
 		),
 
 		typerefDot:      $ => op.infix(1,$._typeref, $.kDot, $._typeref),
@@ -1110,6 +1115,13 @@ module.exports = grammar({
 				// Phase 3b iter 36: kFinal as var name (Rave RvCsRpt
 				// `Final: boolean;` — local var named Final).
 				alias($.kFinal,     $.identifier),
+				// Ported from root v1.1.0: trailing-hint / callconv keywords as var
+				// names when NOT the first decl in a section (`var X: string;
+				// Platform: string;`). CLI.pas / System.pas.
+				alias($.kPlatform,     $.identifier),
+				alias($.kDeprecated,   $.identifier),
+				alias($.kExperimental, $.identifier),
+				alias($.kRegister,     $.identifier),
 			))),
 			':',
 			// Phase 3b iter 36: declVar type may be a subrange:
@@ -1485,7 +1497,8 @@ module.exports = grammar({
 				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
 				$.kRegister, $.kWinapi, $.kInline,
 				$.kOverload, $.kVirtual, $.kAbstract, $.kOverride,
-				$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal
+				$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal,
+				$.kUnsafe   // ARC/AUTOREFCOUNT method directive (ported v1.1.0)
 			)),
 			';',
 			repeat($._procAttributeNoExt)
@@ -1847,6 +1860,7 @@ module.exports = grammar({
 		kNostackframe:     $ => /nostackframe/i,
 		kInterrupt:        $ => /interrupt/i,
 		kNoreturn:         $ => /noreturn/i,
+		kUnsafe:           $ => /unsafe/i,   // ported from root v1.1.0
 		kIocheck:          $ => /iocheck/i,
 		kLocal:            $ => /local/i,
 		kHardfloat:        $ => /hardfloat/i,

@@ -186,6 +186,10 @@
                 {
                   "type": "SYMBOL",
                   "name": "kExperimental"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kLibrary"
                 }
               ]
             },
@@ -2622,8 +2626,17 @@
                   "type": "FIELD",
                   "name": "type",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "typeref"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "type"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "subrangeType"
+                      }
+                    ]
                   }
                 }
               ]
@@ -2687,8 +2700,17 @@
           "type": "FIELD",
           "name": "type",
           "content": {
-            "type": "SYMBOL",
-            "name": "typeref"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "type"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subrangeType"
+              }
+            ]
           }
         }
       ]
@@ -4823,42 +4845,6 @@
           },
           "named": true,
           "value": "identifier"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "kMessage"
-          },
-          "named": true,
-          "value": "identifier"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "kName"
-          },
-          "named": true,
-          "value": "identifier"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "kRead"
-          },
-          "named": true,
-          "value": "identifier"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "kWrite"
-          },
-          "named": true,
-          "value": "identifier"
         }
       ]
     },
@@ -6906,6 +6892,42 @@
                                 },
                                 "named": true,
                                 "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kPlatform"
+                                },
+                                "named": true,
+                                "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kDeprecated"
+                                },
+                                "named": true,
+                                "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kExperimental"
+                                },
+                                "named": true,
+                                "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kRegister"
+                                },
+                                "named": true,
+                                "value": "identifier"
                               }
                             ]
                           },
@@ -7006,6 +7028,42 @@
                     "content": {
                       "type": "SYMBOL",
                       "name": "kFinal"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kPlatform"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kDeprecated"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kExperimental"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kRegister"
                     },
                     "named": true,
                     "value": "identifier"
@@ -9745,6 +9803,10 @@
               {
                 "type": "SYMBOL",
                 "name": "kFinal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kUnsafe"
               }
             ]
           }
@@ -11636,6 +11698,11 @@
     "kNoreturn": {
       "type": "PATTERN",
       "value": "noreturn",
+      "flags": "i"
+    },
+    "kUnsafe": {
+      "type": "PATTERN",
+      "value": "unsafe",
       "flags": "i"
     },
     "kIocheck": {
