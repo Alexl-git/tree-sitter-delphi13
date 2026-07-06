@@ -8831,6 +8831,10 @@
                 "name": "declClass"
               },
               {
+                "type": "SYMBOL",
+                "name": "kString"
+              },
+              {
                 "type": "PREC",
                 "value": -1,
                 "content": {
@@ -11980,6 +11984,10 @@
     ],
     [
       "type",
+      "declFieldNoSemi"
+    ],
+    [
+      "declString",
       "declFieldNoSemi"
     ],
     [

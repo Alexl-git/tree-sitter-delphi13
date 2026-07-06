@@ -366,6 +366,12 @@ module.exports = grammar({
 		// Phase 3b iter 11: declFieldNoSemi uses a narrower type set; conflicts
 		// with the full `type` rule's choices.
 		[$.type, $.declFieldNoSemi],
+		// Iter 2026-07-06: declFieldNoSemi accepts a bare `kString` as its
+		// last-field type, which is a prefix of the full `declString`
+		// (`string[N]`) reachable via the trailing-`;` declField path. Declare
+		// the ambiguity so tree-sitter's GLR keeps both forks and resolves by
+		// which completes: `string end` -> no-semi, `string[N];` -> declField.
+		[$.declString, $.declFieldNoSemi],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1390,6 +1396,18 @@ module.exports = grammar({
 				$.declFile,
 				$.declProcRef,
 				$.declClass,
+				// Iter 2026-07-06: plain `string` (BARE keyword, no `[N]` size
+				// spec) as the LAST field with no trailing `;`. Real corpus hits:
+				// dxFontIconsImageLoader `record N: string; V: string end =`,
+				// RTTIRoutines `PropName: string end`. We accept the bare `kString`
+				// token -- NOT the full `declString` -- because `declString`'s
+				// optional `[N]` re-introduces the short-string ambiguity
+				// (`string[255]` fields with a trailing `;` mis-parse as no-semi +
+				// stray `[N]`), which a full-corpus diff showed regresses 18 files
+				// (Bde.DBTables `string[DBIMAXSPNAMELEN]`, Zlib `string[255]`, ...).
+				// Bare `string`/`ShortString` has no such tail, so it is
+				// unambiguous here.
+				$.kString,
 				prec(-1, $.pp_block),
 			)),
 			field('defaultValue', optional($.defaultValue)),

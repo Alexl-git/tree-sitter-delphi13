@@ -2028,6 +2028,10 @@
             "named": true
           },
           {
+            "type": "kString",
+            "named": true
+          },
+          {
             "type": "pp_block",
             "named": true
           },

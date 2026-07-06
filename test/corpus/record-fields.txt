@@ -1,0 +1,64 @@
+==================
+record: bare string as last field with no trailing semicolon
+==================
+
+type
+  R = record
+    A: Integer;
+    B: string
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier))))
+          (declFieldNoSemi
+            name: (identifier)
+            type: (kString))
+          (kEnd))))))
+
+==================
+record: short-string field with size spec keeps trailing semicolon (regression guard)
+==================
+
+type
+  R = record
+    A: string[255];
+    B: Integer;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (type
+              (declString
+                (kString)
+                (literalNumber))))
+          (declField
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier))))
+          (kEnd))))))
