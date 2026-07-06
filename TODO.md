@@ -141,6 +141,29 @@ Net: full corpus 16214 → 16233 ok (+19). drag-lint src 110/113 → 112/113 (99
 **0 corpus regressions** (two — the naive #2 with full declString/declArray, and the initial #5
 with kUnsafe in procAttribute — were caught by the diff and narrowed before commit).
 
+### Session 3 (2026-07-06) — published v1.1.0, ported to pure, +2 more gaps
+
+- **Published `v1.1.0`** (pushed + tagged; npm publish still manual). RELEASE-NOTES-v1.1.0.md.
+- **Ported the 5 root fixes to `pure/grammar.js`** (`a9892fe`) so the preprocessor/orchestrated
+  path gets them too. Orchestrated (preprocess → pure) full corpus **99.34% → 99.37%**, 0
+  regressions. (gap #2 was already solved in pure via `alias(kString, typeref)`.) The pure grammar
+  is a SEPARATE hand-maintained file — root fixes must be ported by hand; there's no generator.
+- **Gap #6 — type-alias trailing hint** (`T = Winapi.Windows.TContext deprecated;`, ToolsAPI):
+  added a deprecated/platform/experimental/library slot before the `;` in declType. `a8cb43f`
+  (root + pure). Master +1, orchestrated +1.
+- **Gap #7 — `not in` operator** (`if 1 not in a then`, isnotnotin.pas): a leading `not` can't
+  attach to the left `in` operand, so `not in` needed a dedicated infix op. `0a5b6cd` (root +
+  pure). Master +1, orchestrated +1. (`is not` already parsed via `is` + unary-`not`; no
+  production needed.)
+
+Current: master full corpus **98.34%** (16237 ok), orchestrated **99.40%** (16409 ok).
+
+**drag-lint uses the MASTER path** (raw bytes → full `delphi13` DLL, no preprocessor — confirmed
+via `DRagLint.Core.Indexer.pas:249/269` + `DRagLint.Parser.Delphi13.pas:31`). It benefits from the
+master-grammar fixes once the bundled DLL (stale, May 29) is refreshed. A message proposing the
+preprocessor→pure path (with the CLI contract + trade-offs) was left at
+`Delphi-RAG-lint/docs/INBOX-tree-sitter-preprocessor-adoption.md`.
+
 **Still-open grammar gaps (self-contained, next candidates):**
 - declField half of #5 (`Winapi.D3D10 Register: UINT;`) — table-explosion risk, needs care.
 - `array of T` as last record field with no `;` (SHX, MongoDBCli) — deferred from #2 (element
