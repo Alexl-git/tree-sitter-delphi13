@@ -354,6 +354,9 @@ module.exports = grammar({
 		[$.type, $.declFieldNoSemi],
 		// Ported from root v1.1.x: anon enum in array index vs paren expr.
 		[$._ref, $.declEnumValue],
+		// Ported from root v1.1.x: per-name param attributes in a shared group.
+		[$.rttiAttributes],
+		[$.declArg],
 		[$.declString, $.declFieldNoSemi],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
@@ -1574,7 +1577,9 @@ module.exports = grammar({
 				//   `const [ref] X: T` — pass-by-reference const (Delphi 10+).
 				//   Generally any bracketed attribute is allowed here.
 				optional($.rttiAttributes),
-				field('name', delimited1($.identifier)),
+				// Ported from root v1.1.x: per-name param attribute in a shared
+				// group (`const [REF] A, [REF] B: T`, Datasnap.DSIntf).
+				field('name', delimited1(seq(optional($.rttiAttributes), $.identifier))),
 				optional(seq(
 					':', field('type', $.type),
 					field('defaultValue', optional($.defaultValue))

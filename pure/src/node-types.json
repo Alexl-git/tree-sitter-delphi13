@@ -968,6 +968,10 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "rttiAttributes",
+            "named": true
           }
         ]
       },

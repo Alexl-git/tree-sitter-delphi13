@@ -376,6 +376,11 @@ module.exports = grammar({
 		// the ambiguity so tree-sitter's GLR keeps both forks and resolves by
 		// which completes: `string end` -> no-semi, `string[N];` -> declField.
 		[$.declString, $.declFieldNoSemi],
+		// Iter 2026-07-06: per-name param attributes in a comma-shared group
+		// (`const [REF] A, [REF] B: T`) make consecutive rttiAttributes runs and
+		// the two declArg branches ambiguous at the group boundary; let GLR resolve.
+		[$.rttiAttributes],
+		[$.declArg],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1634,7 +1639,10 @@ module.exports = grammar({
 				//   `const [ref] X: T` — pass-by-reference const (Delphi 10+).
 				//   Generally any bracketed attribute is allowed here.
 				optional($.rttiAttributes),
-				field('name', delimited1($.identifier)),
+				// A parameter attribute (`[ref]`/`[weak]`/`[unsafe]`) may repeat
+				// before EACH name in a comma-shared group, not just once for the
+				// group: `const [REF] CLSID, [REF] IID: TGUID` (Datasnap.DSIntf).
+				field('name', delimited1(seq(optional($.rttiAttributes), $.identifier))),
 				optional(seq(
 					':', field('type', $.type),
 					field('defaultValue', optional($.defaultValue))

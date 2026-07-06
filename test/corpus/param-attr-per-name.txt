@@ -1,0 +1,59 @@
+==================
+param: attribute repeated before each name in a comma-shared group
+==================
+
+type
+  P = function(const [REF] CLSID, [REF] IID: TGUID): HResult;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declProcRef
+          (kFunction)
+          args: (declArgs
+            (declArg
+              (kConst)
+              name: (rttiAttributes
+                (identifier))
+              name: (identifier)
+              name: (rttiAttributes
+                (identifier))
+              name: (identifier)
+              type: (type
+                (typeref
+                  (identifier)))))
+          type: (typeref
+            (identifier)))))))
+
+==================
+param: plain comma-shared group still parses (regression guard)
+==================
+
+procedure P(const A, B: Integer);
+begin
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier)
+      args: (declArgs
+        (declArg
+          (kConst)
+          name: (identifier)
+          name: (identifier)
+          type: (type
+            (typeref
+              (identifier))))))
+    body: (block
+      (kBegin)
+      (kEnd))))
