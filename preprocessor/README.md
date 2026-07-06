@@ -21,7 +21,7 @@ const { preprocess } = require('delphi13-preprocessor');
 
 const raw = fs.readFileSync('MyUnit.pas', 'utf8');
 
-const { text, sourceMap } = preprocess(raw, {
+const { text, defines } = preprocess(raw, {
   defines: ['MSWINDOWS', 'WIN64', 'CPU64BITS', 'UNICODE',
             'COMPILER_VERSION_37', 'VER370',
             'SUPPORTS_GENERICS', 'SUPPORTS_INLINE',
@@ -31,10 +31,24 @@ const { text, sourceMap } = preprocess(raw, {
     RTLVersion: 37,
   },
   baseDir: 'C:/MyProject',     // for {$I X.inc} resolution (same-dir only)
+  includeMode: 'expand',       // 'expand' (default) | 'defines-only' | 'off'
 });
 
-// `text` is the active-branch source with inactive branches replaced by
-// whitespace (preserves line numbers for source-position accuracy).
+// Returns `{ text, defines }`:
+//   text    — the active-branch source with inactive branches (and directives)
+//             replaced by whitespace, preserving line AND byte offsets so
+//             tree-sitter positions map 1:1 back to the ORIGINAL file.
+//   defines — the final define set (Array) after all {$DEFINE}/{$UNDEF}.
+
+// `includeMode` controls {$I X.inc} handling:
+//   'expand'       — splice the resolved .inc body into the output (default).
+//                    Shifts offsets after the include point.
+//   'defines-only' — apply the .inc's {$DEFINE}/{$UNDEF} to the parent (so a
+//                    later {$IFDEF X} in the parent resolves correctly) but do
+//                    NOT splice the body. Keeps output 1:1 with input, and does
+//                    not duplicate .inc symbols for consumers that index .inc
+//                    files separately.
+//   'off'          — blank the {$I} directive, ignore its defines. 1:1 offsets.
 ```
 
 ## CLI

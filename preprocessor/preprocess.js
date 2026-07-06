@@ -19,7 +19,12 @@ const { lex } = require('./lexer');
 const { evalExpr } = require('./evalExpr');
 
 function preprocess(input, options = {}) {
-  const defines = new Set((options.defines || []).map(d => d.toLowerCase()));
+  // In `defines-only` include mode the child recursion shares the PARENT's live
+  // defines Set by reference (options._sharedDefines) so the child's
+  // {$DEFINE}/{$UNDEF} mutate the parent table — required so a parent {$IFDEF X}
+  // after `{$I config.inc}` (where config.inc defined X) resolves correctly.
+  const defines = options._sharedDefines
+    || new Set((options.defines || []).map(d => d.toLowerCase()));
   // Numeric defines for `{\$IF X < N}` form: name->number map.
   const numericDefines = new Map(
     Object.entries(options.numericDefines || {}).map(([k, v]) => [k.toLowerCase(), v])
@@ -27,6 +32,15 @@ function preprocess(input, options = {}) {
   const includePaths = options.includePaths || [];
   const baseDir = options.baseDir || '.';
   const maxIncludeDepth = options.maxIncludeDepth || 64;
+  // Include handling:
+  //   'expand'       (default) — splice the resolved .inc body into the output.
+  //   'defines-only'           — apply the .inc's {$DEFINE}/{$UNDEF} to the
+  //                              parent, but BLANK the `{$I}` directive (no body
+  //                              splice). Keeps output length 1:1 with the input
+  //                              (no offset shift) and avoids double-indexing
+  //                              .inc symbols that a consumer indexes separately.
+  //   'off'                    — blank the `{$I}` directive, ignore its defines.
+  const includeMode = options.includeMode || 'expand';
 
   const chunks = lex(input);
   // State stack for nested IFs:
@@ -137,17 +151,36 @@ function preprocess(input, options = {}) {
       if (depth >= maxIncludeDepth) { blankifyDirective(srcLen); continue; }
       const fname = ch.args.replace(/^['"]|['"]$/g, '').trim();
       const resolved = resolveInclude(fname);
-      if (resolved) {
-        const sub = fs.readFileSync(resolved, 'utf8');
+      if (!resolved) {
+        // Unresolved include — leave as whitespace so line count stays.
+        blankifyDirective(srcLen);
+        continue;
+      }
+      if (includeMode === 'off') {
+        blankifyDirective(srcLen);
+        continue;
+      }
+      const sub = fs.readFileSync(resolved, 'utf8');
+      if (includeMode === 'defines-only') {
+        // Recurse sharing THIS defines Set so the child's {$DEFINE}/{$UNDEF}
+        // mutate the parent table live. Discard the child text; blank the
+        // directive so parent offsets stay 1:1. The child evaluates its own
+        // conditionals under the same (now-shared) active define profile.
+        preprocess(sub, {
+          ...options,
+          _sharedDefines: defines,
+          baseDir: path.dirname(resolved),
+          _depth: depth + 1,
+        });
+        blankifyDirective(srcLen);
+      } else {
+        // 'expand' (default): splice the resolved child text into the output.
         const subOut = preprocess(sub, {
           ...options,
           baseDir: path.dirname(resolved),
           _depth: depth + 1,
         });
         outBuf.push(subOut.text);
-      } else {
-        // Unresolved include — leave as whitespace so line count stays.
-        blankifyDirective(srcLen);
       }
       continue;
     }
