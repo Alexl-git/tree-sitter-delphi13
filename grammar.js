@@ -366,6 +366,10 @@ module.exports = grammar({
 		// Phase 3b iter 11: declFieldNoSemi uses a narrower type set; conflicts
 		// with the full `type` rule's choices.
 		[$.type, $.declFieldNoSemi],
+		// Iter 2026-07-06: an anonymous enum `(a, b, c)` in an array index slot is
+		// ambiguous with a parenthesized expression `_ref` (both start `(`). GLR
+		// resolves by what follows: `(a,b,c)]` in index position -> declEnum.
+		[$._ref, $.declEnumValue],
 		// Iter 2026-07-06: declFieldNoSemi accepts a bare `kString` as its
 		// last-field type, which is a prefix of the full `declString`
 		// (`string[N]`) reachable via the trailing-`;` declField path. Declare
@@ -1292,7 +1296,10 @@ module.exports = grammar({
 		declArray:       $ => seq(
 			optional($.kPacked),
 			$.kArray,
-			optional(seq('[', delimited(choice($.range, $._expr)), ']')),
+			// Index type: a range, an expr/type-id, OR an anonymous enum used
+			// directly as the index dimension — `array [TScheme, (cpHi, cpLo)]`
+			// (Orpheus ovclabel.pas). declEnum covers the `(a, b, c)` form.
+			optional(seq('[', delimited(choice($.range, $.declEnum, $._expr)), ']')),
 			// Element type can be a regular type OR an inline subrange:
 			//   array [0..7] of 0..9 = (0, 1, 2, ...);
 			$.kOf, choice($.type, $.subrangeType)

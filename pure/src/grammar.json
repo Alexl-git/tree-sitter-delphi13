@@ -7865,6 +7865,10 @@
                                         },
                                         {
                                           "type": "SYMBOL",
+                                          "name": "declEnum"
+                                        },
+                                        {
+                                          "type": "SYMBOL",
                                           "name": "_expr"
                                         }
                                       ]
@@ -7888,6 +7892,10 @@
                             {
                               "type": "SYMBOL",
                               "name": "range"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "declEnum"
                             },
                             {
                               "type": "SYMBOL",
@@ -12031,6 +12039,10 @@
     [
       "type",
       "declFieldNoSemi"
+    ],
+    [
+      "_ref",
+      "declEnumValue"
     ],
     [
       "declString",

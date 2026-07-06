@@ -1,0 +1,54 @@
+==================
+array type: anonymous enum as an index dimension
+==================
+
+type
+  T = array [TScheme, (cpHi, cpLo)] of TColor;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declArray
+          (kArray)
+          (identifier)
+          (declEnum
+            (declEnumValue
+              name: (identifier))
+            (declEnumValue
+              name: (identifier)))
+          (kOf)
+          (type
+            (typeref
+              (identifier))))))))
+
+==================
+array type: range index still parses (regression guard)
+==================
+
+type
+  T = array [0..9] of Integer;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declArray
+          (kArray)
+          (range
+            (literalNumber)
+            (literalNumber))
+          (kOf)
+          (type
+            (typeref
+              (identifier))))))))

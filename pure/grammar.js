@@ -352,6 +352,8 @@ module.exports = grammar({
 		// Phase 3b iter 11: declFieldNoSemi uses a narrower type set; conflicts
 		// with the full `type` rule's choices.
 		[$.type, $.declFieldNoSemi],
+		// Ported from root v1.1.x: anon enum in array index vs paren expr.
+		[$._ref, $.declEnumValue],
 		[$.declString, $.declFieldNoSemi],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
@@ -1245,7 +1247,9 @@ module.exports = grammar({
 		declArray:       $ => seq(
 			optional($.kPacked),
 			$.kArray,
-			optional(seq('[', delimited(choice($.range, $._expr)), ']')),
+			// Ported from root v1.1.x: anonymous enum `(a, b, c)` as an array
+			// index dimension — `array [TScheme, (cpHi, cpLo)]` (Orpheus).
+			optional(seq('[', delimited(choice($.range, $.declEnum, $._expr)), ']')),
 			// Element type can be a regular type OR an inline subrange:
 			//   array [0..7] of 0..9 = (0, 1, 2, ...);
 			$.kOf, choice($.type, $.subrangeType)
