@@ -41,35 +41,25 @@ Verified against the CURRENT grammar (`npx tree-sitter parse`, tree-sitter 0.24.
   `test/corpus/inline-var.txt`. Staleness ruled out first: committed `src/parser.c` was already
   current with `grammar.js`, and the gap reproduced against a freshly-generated parser.
 
-- [ ] **NEW GAP (isolated 2026-07-06): `expr < SoftKeyword` misparses as generic instantiation.**
-  Found while parsing the full `Delphi-RAG-lint` tree — `DragLint.Plugin.AutoComplete.pas` and
-  `DragLint.Plugin.Editor.pas` each fail with a MISSING `>` (kGt), NOT an ERROR node (so the
-  corpus first_error sampler shows null — check `missing_count`). Minimal repro:
-  ```pascal
-  procedure P;
-  begin
-    while (EolIdx < Read) do Inc(EolIdx);   // <-- MISSING kGt inserted
-  end;
-  ```
-  `a < Foo` (ordinary ident RHS) is clean; `a < Read` / `a < Write` / `a < Name` misparse because
-  the RHS is a SOFT KEYWORD (`kRead`/`kWrite`/`kName`, aliased to identifier). The `typerefTpl`
-  generic production (`op.args(1, $._typeref, $.kLt, $.typerefArgs, $.kGt)`) wins the GLR conflict
-  and treats `a<Read>` as a generic-args list, demanding `>`. Fix idea: raise precedence of the
-  binary `<` comparison over `typerefTpl` when the RHS is a bare soft-keyword-as-identifier in
-  expression position, OR gate `typerefTpl` so it doesn't fire in pure-expression context. Delicate
-  GLR area — verify with a full pre/post corpus diff. Blast radius: contributes to the ~31 unique
-  MISSING-node-only failures in the full corpus (that bucket also contains other distinct causes,
-  see below).
+- [x] **FIXED 2026-07-06 (commit adf435a): `expr < SoftKeyword` misparsed as generic
+  instantiation.** `while (EolIdx < Read) do` inserted a MISSING `>` — `kRead`/`kWrite`/`kName`/
+  `kMessage` were aliased into `_typeref`, so `a < Read` forked into `a<Read...>` generic and
+  demanded `>`. Fix: removed those 4 soft-keyword aliases from `_typeref` (kept `kReference`),
+  mirroring the `kIndex` precedent — the word-rule still promotes them to `$.identifier`, so
+  type-name uses (`X: Read`) and property `read`/`write` accessors keep parsing. Full corpus 0
+  regressions; drag-lint src 110/113 → 112/113 (both `DragLint.Plugin.*` fixed). Test:
+  `test/corpus/expr-lt-softkeyword.txt`.
 
-- [ ] **NEW GAP FAMILY (isolated 2026-07-06): declaration-hint / callconv keyword as a var/field
-  name after a prior declaration.** Superset of the CLI.pas `Platform` case below. Same root
-  cause seen in RTL: `Winapi.D3D10.pas` has `Register: UINT;` as a struct field (`Register` =
-  `kRegister` callconv), erroring only because a field precedes it. The keywords that collide when
-  used as a NON-FIRST decl name: `platform`, `deprecated`, `experimental` (trailing decl hints)
-  and `register` (callconv). Likely fix: extend `declVar`/`declField`'s name-alias list (which
-  already aliases `kMessage`/`kName`/`kIndex`/`kDefault`/`kOperator`/`kFinal`) to include these,
-  guarded so the trailing-hint slot still works when the keyword is genuinely a hint. Verify via
-  full corpus diff.
+- [~] **PARTIALLY FIXED 2026-07-06 (commit f85b412): declaration-hint / callconv keyword as a
+  var/field name after a prior declaration.** `var X: string; Platform: string;` ate `Platform`
+  as a trailing hint on `X`. **declVar half DONE:** added `kPlatform`/`kDeprecated`/
+  `kExperimental`/`kRegister` to `declVar`'s name-alias list; 0 corpus regressions; CLI.pas leaf
+  errors 4 → 1. Test: `test/corpus/var-keyword-names.txt`.
+  **declField half STILL OPEN** (`Winapi.D3D10.pas` `Register: UINT;` struct field): applying the
+  same alias to `declField` triggers a cascade of `declField`/`declFieldNoSemi`/callconv GLR
+  conflicts that blow up the parser tables (5-min generates). Needs a more careful approach —
+  perhaps a dedicated field-name-that-is-a-keyword production gated so it can't be confused with a
+  trailing callconv on the previous field. Verify via full corpus diff.
 
 - [ ] **NEW GAP (isolated 2026-07-06): type alias with trailing hint on a dotted RHS.**
   `ToolsAPI.pas` L1164: `TOTAThreadContext = Winapi.Windows.TContext deprecated;` inserts a
@@ -133,6 +123,33 @@ half the RTL misses are IFDEF-cross-branch by design. Two paths raise it: (1) ru
 the **MISSING-node grammar gaps** above (recovers ~10 RTL + ~20 more corpus-wide, no defines
 needed). The gaps in (2) are the concrete, self-contained follow-ups; the IFDEF half is orchestrator
 work, not grammar work.
+
+### Grammar-gap sprint 2026-07-06 (session 2) — 5 fixes shipped, full corpus 98.207% → 98.322%
+
+Each fix followed the same discipline: minimal repro → generate+build → **full-corpus pre/post
+diff requiring 0 regressions** → corpus regression test → atomic commit.
+
+| # | Gap | Commit | Corpus effect |
+|---|-----|--------|---------------|
+| 1 | `unit U experimental;` / `platform;` / `library;` (unit-level hint) | `820c5af` | +6 files |
+| 2 | bare `string` as last record field, no trailing `;` | `069107d` | +3 files |
+| 3 | `function F: T unsafe;` (ARC method directive) | `a99900b` | +3 files |
+| 4 | `expr < SoftKeyword` (Read/Write/Name) misparse-as-generic | `adf435a` | drag-lint 97.3→99.1% |
+| 5 | hint/callconv keyword as var name after prior decl (declVar half) | `f85b412` | CLI.pas 4→1 errors |
+
+Net: full corpus 16214 → 16233 ok (+19). drag-lint src 110/113 → 112/113 (99.12%). All five had
+**0 corpus regressions** (two — the naive #2 with full declString/declArray, and the initial #5
+with kUnsafe in procAttribute — were caught by the diff and narrowed before commit).
+
+**Still-open grammar gaps (self-contained, next candidates):**
+- declField half of #5 (`Winapi.D3D10 Register: UINT;`) — table-explosion risk, needs care.
+- `array of T` as last record field with no `;` (SHX, MongoDBCli) — deferred from #2 (element
+  short-string ambiguity).
+- `TAlias = Dotted.Type deprecated;` (ToolsAPI) — type alias with trailing hint on a dotted RHS.
+- `class function F: TObject {$IFDEF AUTOREFCOUNT} unsafe {$ENDIF};` — the IFDEF-wrapped variant of
+  #3 (the bare `unsafe` now parses; the IFDEF-wrapped form is orchestrator-adjacent).
+- CLI.pas L8398 `DoSelfTestManifestMerge` — last CLI.pas error; resisted synthetic isolation, not
+  the keyword-name family. Re-attempt by bisecting the real function body.
 
 ## Near term — finish the orchestrator
 
