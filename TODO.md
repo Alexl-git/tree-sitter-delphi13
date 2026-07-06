@@ -156,7 +156,29 @@ with kUnsafe in procAttribute — were caught by the diff and narrowed before co
   pure). Master +1, orchestrated +1. (`is not` already parsed via `is` + unary-`not`; no
   production needed.)
 
-Current: master full corpus **98.34%** (16237 ok), orchestrated **99.40%** (16409 ok).
+- **Gap #8 — float digit separators** (`6.022_140e23`, Delphi 12+): integer separators already
+  worked; `_literalFloat` didn't. Widened its regex to the `(_?<digit>)*` shape without breaking
+  the `..` range operator (verified guard). `2e14b74` (root + pure). Correctness fix (fixture not
+  in corpus).
+- **Gap #9 — record/class field subrange type** (`FtrListCount: 0 .. FTRRECMAXCOUNT;`): declField's
+  type slot was `$.type` (excludes subrangeType); widened to `choice($.type, $.subrangeType)` like
+  declVar. `db5e6cc` (root + pure). Master +2, orchestrated +3. **Found by parsing ORM3** (below).
+
+### Own-projects measurement (2026-07-06)
+
+| Project | master grammar | orchestrated (preprocessor → pure) |
+|---|---|---|
+| **ORM3** (user production code, 770 files) | **99.74%** (768→**769**/770 after gap #9) | **100.00%** (770/770) |
+| **drag-lint src** (114 files) | **99.12%** (113/114) | — |
+
+ORM3's 2 master-grammar misses: gap #9 (fixed) + `MStreams.pas BitCount` — which is a nested
+`{$IF} asm ... {$ELSE} ... {$IFEND}` (IFDEF-cross-branch **with asm arms**). That's the master
+grammar's by-design THEN-wins limitation, NOT a grammar gap: it PASSES on the orchestrated path
+(confirmed). drag-lint's 1 miss (`CLI.pas` DoSelfTestManifestMerge) is the same class — a
+multiline-const-in-context whole-function interaction the orchestrator resolves. **Takeaway: on the
+user's own code the grammar is effectively complete — 99.7% raw, 100% with the preprocessor.**
+
+Current: master full corpus **98.36%** (16240 ok), orchestrated **99.44%** (16414 ok).
 
 **drag-lint uses the MASTER path** (raw bytes → full `delphi13` DLL, no preprocessor — confirmed
 via `DRagLint.Core.Indexer.pas:249/269` + `DRagLint.Parser.Delphi13.pas:31`). It benefits from the
