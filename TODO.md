@@ -194,6 +194,37 @@ user's own code the grammar is effectively complete — 99.7% raw, 100% with the
 
 Current: master full corpus **98.39%** (16244 ok), orchestrated **99.44%** (16418 ok).
 
+### Session 5 (2026-07-06) — remaining-92 triage: at the practical ceiling
+
+Full classification of the 92 orchestrated failures. **No further clean grammar wins available.**
+
+- **6 encoding/BOM** — NOT grammar gaps. The grammar handles a decoded BOM (`U+FEFF`) fine; these
+  fail only because the *corpus harness* falls back to latin1 and turns the UTF-8 BOM bytes into
+  `ï»¿`. A real consumer (drag-lint `EnsureUtf8Bytes`) decodes properly — e.g. `Velthuis.BigIntegers`
+  parses CLEAN when UTF-8-decoded. (`System.pas` still fails decoded, but for IFDEF/asm reasons.)
+- **~10 intentional fixtures** — `broken_unit`, `forwardwithoutsemicolon`, `numbers.pas` (`123123_`
+  invalid trailing separator), `multiline` (odd triple-quote), `NOTREADYLIST`/`FORPROJECT` (data
+  files), `genericinterfacemethoddelegation` (FPC).
+- **~3 asm**, **C-code-in-.pas**, **.NET/DOTNET** — by-design exclusions.
+- **Remaining "candidates" examined and ruled out:** `{$EXTERNALSYM}` interleaving parses clean in
+  isolation (failures are downstream IFDEF/asm recovery); `dxServerModeUtils` is a *missing-semicolon
+  source typo* (`deprecated 'msg'` with no `;`) — tolerating that would mask real errors; `is nested`
+  is FPC-only (1 file).
+
+**One real gap remains but is architecturally blocked:** `array[...] of T` as a last record field
+with no `;` (SHX, MongoDBCli, ShlObj = +3). Adding `declArray` to `declFieldNoSemi` regresses
+`array[0..4] of String[1];` **with** a trailing `;` (OoMisc, Z19b5 = -2/3) — the short-string `[N]`
+element overlaps the no-semi form at the LEXICAL level, so GLR can't split them. A safe fix needs a
+constrained array element (excludes `declString`); deferred as not worth the parser-table cost for
+~1 net file. Documented inline at `declFieldNoSemi`. Also still open: field named after a
+callconv/hint keyword (`Register: UINT;`, D3D10) — same declField/declFieldNoSemi table-explosion
+risk.
+
+**Bottom line:** the master grammar (98.4%) and orchestrated path (99.4%) are at their practical
+ceiling on this corpus. What's left is by-design (IFDEF/asm — the preprocessor's job), invalid
+source (typos, broken fixtures), non-Delphi (FPC, C, .NET), or harness artifacts (BOM). On the
+maintainer's own production code the effective rate is 100% (orchestrated).
+
 **drag-lint uses the MASTER path** (raw bytes → full `delphi13` DLL, no preprocessor — confirmed
 via `DRagLint.Core.Indexer.pas:249/269` + `DRagLint.Parser.Delphi13.pas:31`). It benefits from the
 master-grammar fixes once the bundled DLL (stale, May 29) is refreshed. A message proposing the

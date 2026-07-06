@@ -1456,6 +1456,14 @@ module.exports = grammar({
 				// Bare `string`/`ShortString` has no such tail, so it is
 				// unambiguous here.
 				$.kString,
+				// NOTE: `array[...] of T` as a last-field-no-`;` is intentionally
+				// NOT here. Adding declArray fixes SHX/MongoDBCli/ShlObj (+3) but
+				// regresses OoMisc/Z19b5 (-2/3): `array[0..4] of String[1];` (a
+				// short-string element, WITH a trailing `;`) becomes ambiguous with
+				// the no-semi array form and mis-parses. The GLR can't split them
+				// (the `[N]` overlap is lexical). Needs a constrained array element
+				// (exclude declString) to do safely — deferred; not worth the
+				// parser-table cost for ~1 net file. See TODO.
 				prec(-1, $.pp_block),
 			)),
 			field('defaultValue', optional($.defaultValue)),
