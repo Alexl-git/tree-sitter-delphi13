@@ -1400,7 +1400,9 @@ module.exports = grammar({
 			...enable_if(rtti, optional($.rttiAttributes)),
 			field('name', delimited1($.identifier)),
 			':',
-			field('type', $.type),
+			// Ported from root v1.1.x: field type may be a subrange
+			// (`FtrListCount: 0 .. FTRRECMAXCOUNT;`, ORM3 ImportCadFile.pas).
+			field('type', choice($.type, $.subrangeType)),
 			field('defaultValue', optional($.defaultValue)),
 			// Declaration hints on record/class fields (Embarcadero RTL):
 			//   FMin: Integer deprecated;

@@ -1,0 +1,25 @@
+==================
+record field: subrange type with an identifier bound
+==================
+
+type
+  R = record
+    C: 0 .. MAXCOUNT;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (subrangeType
+              (identifier)))
+          (kEnd))))))

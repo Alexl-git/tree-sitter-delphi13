@@ -1453,7 +1453,11 @@ module.exports = grammar({
 			...enable_if(rtti, optional($.rttiAttributes)),
 			field('name', delimited1($.identifier)),
 			':',
-			field('type', $.type),
+			// Iter 2026-07-06: a record/class field type may be a subrange, same
+			// as declVar already allows. `FtrListCount: 0 .. FTRRECMAXCOUNT;`
+			// (ORM3 ImportCadFile.pas) — a bare subrange field with an identifier
+			// upper bound. `$.type` alone did not cover subrangeType.
+			field('type', choice($.type, $.subrangeType)),
 			field('defaultValue', optional($.defaultValue)),
 			// Declaration hints on record/class fields (Embarcadero RTL):
 			//   FMin: Integer deprecated;
