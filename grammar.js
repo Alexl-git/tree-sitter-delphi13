@@ -1152,6 +1152,16 @@ module.exports = grammar({
 				// Phase 3b iter 36: kFinal as var name (Rave RvCsRpt
 				// `Final: boolean;` — local var named Final).
 				alias($.kFinal,     $.identifier),
+				// Iter 2026-07-06: trailing-hint / callconv keywords as var names
+				// when NOT the first decl in a section. `var X: string; Platform:
+				// string;` -- after `X`, the parser otherwise eats `Platform` as a
+				// trailing `platform` hint on X. Aliasing them here (name is
+				// followed by `:`, a hint by `;`) lets GLR fork and resolve by
+				// which completes. Real hit: DRagLint.CLI.pas ResolveConsumerDbs.
+				alias($.kPlatform,     $.identifier),
+				alias($.kDeprecated,   $.identifier),
+				alias($.kExperimental, $.identifier),
+				alias($.kRegister,     $.identifier),
 			))),
 			':',
 			// Phase 3b iter 36: declVar type may be a subrange:

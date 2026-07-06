@@ -1,0 +1,67 @@
+==================
+var: hint keyword (platform) as a variable name after a prior decl
+==================
+
+procedure P;
+var
+  X: string;
+  Platform: string;
+begin
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    local: (declVars
+      (kVar)
+      (declVar
+        name: (identifier)
+        type: (type
+          (declString
+            (kString))))
+      (declVar
+        name: (identifier)
+        type: (type
+          (declString
+            (kString)))))
+    body: (block
+      (kBegin)
+      (kEnd))))
+
+==================
+var: callconv keyword (register) as a variable name after a prior decl
+==================
+
+procedure P;
+var
+  X: Integer;
+  Register: Integer;
+begin
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    local: (declVars
+      (kVar)
+      (declVar
+        name: (identifier)
+        type: (type
+          (typeref
+            (identifier))))
+      (declVar
+        name: (identifier)
+        type: (type
+          (typeref
+            (identifier)))))
+    body: (block
+      (kBegin)
+      (kEnd))))
