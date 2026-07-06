@@ -74,7 +74,7 @@ npm install --ignore-scripts
 node-gyp rebuild
 ```
 
-npm publishing is planned for a follow-up — currently the recommended consumption path is git submodule or vendored sources.
+All three packages (`tree-sitter-delphi13`, `tree-sitter-delphi13-pure`, `delphi13-preprocessor`) are now published on npm and installable via `npm install`. Git submodule or vendored sources also work; see the README for the current install steps.
 
 ## Known limitations
 
