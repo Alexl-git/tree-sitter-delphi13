@@ -1,0 +1,64 @@
+==================
+expr: `a < Read` is a comparison, not a generic instantiation
+==================
+
+procedure P;
+begin
+  while (a < Read) do Inc(a);
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (while
+        (kWhile)
+        condition: (exprParens
+          (exprBinary
+            lhs: (identifier)
+            operator: (kLt)
+            rhs: (identifier)))
+        (kDo)
+        body: (statement
+          (exprCall
+            entity: (identifier)
+            args: (exprArgs
+              (identifier)))))
+      (kEnd))))
+
+==================
+expr: property read/write accessors still parse (regression guard)
+==================
+
+type
+  T = class
+    property Value: Integer read FValue write FValue;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kClass)
+          (declProp
+            (kProperty)
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier)))
+            (kRead)
+            getter: (identifier)
+            (kWrite)
+            setter: (identifier))
+          (kEnd))))))

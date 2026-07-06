@@ -799,11 +799,17 @@ module.exports = grammar({
 			// and "Index" tokenizes as identifier in expressions like
 			// `if i < Index then ...`. _typeref still gets "Index" via the
 			// $.identifier path (no functional regression).
+			// Iter 2026-07-06: kRead/kWrite/kName/kMessage/kReference are NO LONGER
+			// aliased here — same reasoning as kIndex (iter 19, comment above). With
+			// them out of `_typeref`'s valid_symbols in expression position, they are
+			// not reachable by `exprTpl`/`typerefTpl`, so `a < Read` no longer forks
+			// into a generic instantiation `a<Read...>` (which inserted a phantom
+			// `>`). tree-sitter's word-rule promotes them to `$.identifier`, which
+			// `_typeref` still accepts via the `$.identifier` branch — so genuine
+			// type-name uses (`X: Read` in OLE wrappers) keep parsing. Fixes the
+			// MISSING-kGt failures in DragLint.Plugin.*, and `Buf[EolIdx] in [..]`
+			// style loops corpus-wide.
 			alias($.kReference, $.identifier),
-			alias($.kMessage,   $.identifier),
-			alias($.kName,      $.identifier),
-			alias($.kRead,      $.identifier),
-			alias($.kWrite,     $.identifier),
 		),
 
 		typerefDot:      $ => op.infix(1,$._typeref, $.kDot, $._typeref),
