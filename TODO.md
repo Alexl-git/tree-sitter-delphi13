@@ -178,7 +178,21 @@ grammar's by-design THEN-wins limitation, NOT a grammar gap: it PASSES on the or
 multiline-const-in-context whole-function interaction the orchestrator resolves. **Takeaway: on the
 user's own code the grammar is effectively complete — 99.7% raw, 100% with the preprocessor.**
 
-Current: master full corpus **98.36%** (16240 ok), orchestrated **99.44%** (16414 ok).
+### Session 4 (2026-07-06) — 2 more gaps (root + pure)
+
+- **Gap #10 — anonymous enum as an array index** (`array [TScheme, (cpHi, cpLo)]`, Orpheus
+  ovclabel.pas): added `$.declEnum` to the array index choice, with a `[_ref, declEnumValue]`
+  conflict so a parenthesized subscript `A[(x+1)]` still parses. `f27689b`. +1 both paths.
+- **Gap #11 — parameter attribute per-name in a shared group** (`const [REF] CLSID, [REF] IID:
+  TGUID`, Datasnap.DSIntf): declArg's name group accepted only bare identifiers; now
+  `delimited1(seq(optional(rttiAttributes), identifier))` with `[rttiAttributes]`+`[declArg]`
+  conflicts. `9ce0460`. +1 both paths.
+- **Attempted+reverted:** a labeled loop/conditional body (`while true do redo: case...`,
+  superobject.pas) — cascaded into `caseCaseTr` GLR conflicts; not worth destabilizing the
+  statement grammar for one file. **Skipped:** `is nested` (FPC-only, 1 Lazarus file, off-mission
+  for a Delphi-13 grammar).
+
+Current: master full corpus **98.39%** (16244 ok), orchestrated **99.44%** (16418 ok).
 
 **drag-lint uses the MASTER path** (raw bytes → full `delphi13` DLL, no preprocessor — confirmed
 via `DRagLint.Core.Indexer.pas:249/269` + `DRagLint.Parser.Delphi13.pas:31`). It benefits from the
