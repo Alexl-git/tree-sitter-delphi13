@@ -1064,6 +1064,17 @@ module.exports = grammar({
 					seq($.kType, $.identifier, '(', $._literalInt, ')'),
 				)
 			),
+			// Iter 2026-07-06: trailing hint directive on a type alias, before the
+			// `;`. `TOTAThreadContext = Winapi.Windows.TContext deprecated;`
+			// (ToolsAPI.pas), `T = Foo platform;`. The `repeat($._procAttribute)`
+			// below is a POST-`;` clause (`= class ... end; deprecated;` form), so
+			// it can't cover the pre-`;` alias-hint position.
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
+				$.kLibrary,
+			)),
 			';',
 			repeat($._procAttribute)
 		),

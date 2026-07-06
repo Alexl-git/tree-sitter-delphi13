@@ -1027,6 +1027,14 @@ module.exports = grammar({
 					seq($.kType, $.identifier, '(', $._literalInt, ')'),
 				)
 			),
+			// Ported from root v1.1.x: trailing hint directive on a type alias,
+			// before the `;`. `T = Winapi.Windows.TContext deprecated;` (ToolsAPI).
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
+				$.kLibrary,
+			)),
 			';',
 			repeat($._procAttribute)
 		),

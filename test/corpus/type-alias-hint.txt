@@ -1,0 +1,45 @@
+==================
+type alias: trailing deprecated hint on a dotted RHS
+==================
+
+type
+  T = A.B.C deprecated;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (typeref
+          (typerefDot
+            lhs: (typerefDot
+              lhs: (identifier)
+              operator: (kDot)
+              rhs: (identifier))
+            operator: (kDot)
+            rhs: (identifier))))
+      (kDeprecated))))
+
+==================
+type alias: platform hint on a simple RHS
+==================
+
+type
+  T = C platform;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (typeref
+          (identifier)))
+      (kPlatform))))
