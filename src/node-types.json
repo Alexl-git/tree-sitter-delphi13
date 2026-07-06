@@ -9525,7 +9525,11 @@
         "required": false,
         "types": [
           {
-            "type": "typeref",
+            "type": "subrangeType",
+            "named": true
+          },
+          {
+            "type": "type",
             "named": true
           }
         ]
@@ -9555,7 +9559,11 @@
         "required": true,
         "types": [
           {
-            "type": "typeref",
+            "type": "subrangeType",
+            "named": true
+          },
+          {
+            "type": "type",
             "named": true
           }
         ]

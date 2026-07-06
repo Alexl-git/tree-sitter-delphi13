@@ -468,12 +468,25 @@ module.exports = grammar({
 			),
 			$._expr
 		),
+		// Inline `var X := e` / `var X: T := e` (Delphi 10.3+ inline-var with
+		// initializer, LHS of an `assignment`). The type slot must accept the
+		// same anonymous types a var-section decl allows — `array of T`, records,
+		// etc. — so `var Buf: array of Byte := nil;` parses. It is widened in
+		// LOCKSTEP with the no-initializer `varDef` below: both inline-var forms
+		// share the `var X: <type>` prefix, so if only one accepted a full
+		// `$.type` the GLR parser would mis-disambiguate the shared prefix and
+		// regress the (far more common) `var S: string := expr;` case.
 		varAssignDef:          $ => seq($.kVar, $.identifier,
 			optional(seq(
 				':',
-				field('type', $.typeref)
+				field('type', choice($.type, $.subrangeType))
 			))),
-		varDef:          $ => seq($.kVar, delimited1($.identifier), ':', field('type', $.typeref)),
+		// Inline `var X: T;` statement, no initializer (Delphi 10.3+). Type slot
+		// mirrors `varAssignDef` above and the var-section `declVar`: full
+		// `$.type` (includes anonymous `array of T`) plus `subrangeType`. Without
+		// this, `var Y: array of Integer;` in a begin..end block errored on the
+		// `array of` span. See the lockstep note on varAssignDef.
+		varDef:          $ => seq($.kVar, delimited1($.identifier), ':', field('type', choice($.type, $.subrangeType))),
 		// Delphi 12+ inline `const NAME [: T] = value`. Used inside statement
 		// bodies (begin..end blocks). Distinct from `declConst` which lives
 		// in unit/procedure-local `const X = 1;\n Y = 2;` blocks under kConst.

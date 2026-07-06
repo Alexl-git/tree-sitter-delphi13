@@ -26,36 +26,49 @@ that still reproduce against a freshly-built parser are real.
 
 Verified against the CURRENT grammar (`npx tree-sitter parse`, tree-sitter 0.24.7), isolated:
 
-- [ ] **CONFIRMED GAP: inline `var` with an anonymous `array of T` type.**
-  `var X: Integer;` (inline var, simple type) parses clean; **`var Y: array of Integer;` errors**
-  (ERROR at the `array of` span). So the miss is specifically an inline `var` declaration whose
-  type is an anonymous dynamic-array (`array of <T>`) — Delphi 13 allows this in a statement
-  block. Repro (minimal):
-  ```pascal
-  procedure P;
-  begin
-    var Y: array of Integer;   // <-- errors
-    SetLength(Y, 2);
-  end;
-  ```
-  Real hits: `DRagLint.CLI.pas` lines ~1091/1092/1100 (`var ProcHandles: array of THandle;`
-  etc.). Likely fix: the inline-var rule's type slot needs to accept the anonymous-array-type
-  production (whatever a normal `var`-section decl already allows), not just a type identifier.
+- [x] **FIXED 2026-07-06: inline `var` with an anonymous `array of T` type.**
+  `var Y: array of Integer;` errored (ERROR at the `array of` span). Root cause: BOTH inline-var
+  rules — `varDef` (no initializer) and `varAssignDef` (the `var X: T := e` initializer form,
+  LHS of `assignment`) — restricted their type slot to a bare `$.typeref`, so any anonymous type
+  (`array of T`, record, enum) was rejected. Fix: widened both type slots to
+  `choice($.type, $.subrangeType)` — the same production the var-section `declVar` already uses.
+  **Critical gotcha (cost one regressing corpus run):** the two rules share the `var X: <type>`
+  prefix, so widening only `varDef` made the GLR parser mis-disambiguate and regress 156 files
+  using the far more common `var S: string := expr;` form. They MUST be widened in lockstep.
+  Verified: minimal repro clean; `DRagLint.CLI.pas` array-of-T hits (1091/1092/1100) clean
+  (CLI.pas leaf errors 39 -> 4); full corpus 0 regressions, +2 files (IBX.IBScript.pas
+  `var oldParams: Array of Variant;`), 98.240% -> 98.257%. Regression tests in
+  `test/corpus/inline-var.txt`. Staleness ruled out first: committed `src/parser.c` was already
+  current with `grammar.js`, and the gap reproduced against a freshly-generated parser.
 
 - [ ] **NOT a gap (hypothesis debunked, recorded so nobody re-chases it):** dot-qualified type
   names in a var decl (`Resolver: DRagLint.Project.Resolver.TProjectResolver;`, and 2-level
-  `R: System.SysUtils.TStringHelper;`) both parse CLEAN in the current grammar. The
-  CLI.pas errors originally *reported at* those lines (8236/8293/8362/8398) have a different,
-  not-yet-isolated root cause — the tree-sitter error node recovers at the next declaration, so
-  the reported line is downstream of the actual failing construct.
+  `R: System.SysUtils.TStringHelper;`) both parse CLEAN in the current grammar. Confirmed again
+  2026-07-06 — a dotted-name line parses clean both alone and inside a full var block once the
+  actual trigger (below) is removed. The reported line was downstream error-recovery noise.
 
-- [ ] **STILL TO ISOLATE: the remaining CLI.pas errors (reported at 8236/8293/8362/8398).**
-  A quick standalone extraction of `ResolveConsumerDbs` introduced its own truncation artifacts,
-  so the true failing construct in that region isn't pinned down yet. Do this properly: after the
-  DLL rebuild, re-index CLI.pas, note which errors survive, then bisect each surviving error's
-  *enclosing scope* (not just the reported line) with `tree-sitter parse` on progressively smaller
-  compiler-clean snippets until the minimal failing construct is isolated. File each confirmed one
-  as its own checkbox with a minimal repro, mirroring the array-of-T item above.
+- [ ] **ISOLATED GAP (2026-07-06): declaration-hint keyword as a var name after a prior decl.**
+  This is the true root cause of the CLI.pas 8236/8293/8362/8398 quartet (the array-of-T fix
+  cleared the OTHER 35 of CLI.pas's 39 leaf errors; exactly these 4 survive). The failing region
+  is `ResolveConsumerDbs`'s var section, which declares a variable named `Platform`. Minimal repro:
+  ```pascal
+  procedure P;
+  var
+    X: string;
+    Platform : string;   // <-- ERROR here (col 11), NOT on X
+  begin
+  end;
+  ```
+  Mechanism (from the parse tree): after the first `declVar` (`X: string`), the parser greedily
+  consumes `Platform` as a trailing `procAttribute (kPlatform)` declaration hint on `X` (the
+  `CmdShow: Integer platform;` production), then chokes on the dangling `: string;`. `Platform`
+  as the FIRST decl in the section parses clean — the ambiguity only bites mid-section. Same bug
+  for the other two hint keywords used as var names after a prior decl: **`Deprecated`** and
+  **`Experimental`**. Likely fix: add `kPlatform`/`kDeprecated`/`kExperimental` to `declVar`'s
+  name-alias list (like the existing `kMessage`/`kName`/`kDefault` aliases) AND/OR make the
+  trailing-hint slot require the hint not be followed by `:` — but this is a delicate GLR area
+  (the hint and the next-var-name genuinely collide), so verify against the full corpus with a
+  pre/post diff exactly as the array-of-T fix did. NOT bundled with the array-of-T fix.
 
 ## Near term — finish the orchestrator
 

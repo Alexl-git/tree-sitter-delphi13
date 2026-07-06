@@ -1,0 +1,95 @@
+==================
+inline var: anonymous array-of-T type, no initializer
+==================
+
+procedure P;
+begin
+  var Y: array of Integer;
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (varDef
+        (kVar)
+        (identifier)
+        type: (type
+          (declArray
+            (kArray)
+            (kOf)
+            (type
+              (typeref
+                (identifier))))))
+      (kEnd))))
+
+==================
+inline var: anonymous array-of-T type with initializer
+==================
+
+procedure P;
+begin
+  var Buf: array of Byte := nil;
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (assignment
+        lhs: (varAssignDef
+          (kVar)
+          (identifier)
+          type: (type
+            (declArray
+              (kArray)
+              (kOf)
+              (type
+                (typeref
+                  (identifier))))))
+        operator: (kAssign)
+        rhs: (kNil))
+      (kEnd))))
+
+==================
+inline var: simple typed initializer still routes through varAssignDef
+==================
+
+procedure P;
+begin
+  var S: string := Copy(Value, 1);
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (assignment
+        lhs: (varAssignDef
+          (kVar)
+          (identifier)
+          type: (type
+            (declString
+              (kString))))
+        operator: (kAssign)
+        rhs: (exprCall
+          entity: (identifier)
+          args: (exprArgs
+            (identifier)
+            (literalNumber))))
+      (kEnd))))
