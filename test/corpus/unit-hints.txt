@@ -1,0 +1,72 @@
+==================
+unit: experimental hint directive after unit name
+==================
+
+unit U experimental;
+interface
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (kExperimental)
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+unit: platform hint directive after unit name
+==================
+
+unit U platform;
+interface
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (kPlatform)
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+unit: deprecated hint with message string still parses
+==================
+
+unit U deprecated 'Use V instead';
+interface
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (kDeprecated)
+    (literalString)
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

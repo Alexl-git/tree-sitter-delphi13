@@ -156,23 +156,40 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SEQ",
+              "type": "CHOICE",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "kDeprecated"
-                },
-                {
-                  "type": "CHOICE",
+                  "type": "SEQ",
                   "members": [
                     {
                       "type": "SYMBOL",
-                      "name": "_expr"
+                      "name": "kDeprecated"
                     },
                     {
-                      "type": "BLANK"
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "_expr"
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kPlatform"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kExperimental"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kLibrary"
                 }
               ]
             },

@@ -417,9 +417,16 @@ module.exports = grammar({
 
 		unit:               $ => seq(
 			$.kUnit, $.moduleName,
-			// `unit Spring.Foo deprecated 'Use Spring.Bar instead';` — unit-level
-			// deprecation hint (Spring4D pattern in retired units).
-			optional(seq($.kDeprecated, optional($._expr))),
+			// Unit-level hint directive. Delphi allows `platform`/`deprecated`/
+			// `experimental`/`library` after the unit name, same set the compiler
+			// accepts on declarations. `unit Spring.Foo deprecated 'Use ... instead';`
+			// (Spring4D retired units); `unit Velthuis.BigRationals experimental;`.
+			optional(choice(
+				seq($.kDeprecated, optional($._expr)),
+				$.kPlatform,
+				$.kExperimental,
+				$.kLibrary,
+			)),
 			';',
 			repeat(choice(
 				$.interface,
