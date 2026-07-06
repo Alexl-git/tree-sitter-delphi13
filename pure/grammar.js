@@ -871,7 +871,9 @@ module.exports = grammar({
 		// NOTE: trailing-dot form (`100.`) is intentionally NOT supported here
 		// because it conflicts with the `..` range operator (e.g. `array [0..N]`
 		// would be lex-greedy-matched as `0.` float + `.N` and break the array).
-		_literalFloat:   $ => prec(10, /[-+]?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/),
+		// Delphi 12+ `_` digit separator in floats too (ported from root):
+		// `1_000.000_1`, `6.022_140e2_3`. Never leading/trailing a digit run.
+		_literalFloat:   $ => prec(10, /[-+]?([0-9](_?[0-9])*)?\.?[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/),
 
 		range:           $ => seq(
 			$._expr, '..', $._expr
