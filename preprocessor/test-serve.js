@@ -68,9 +68,9 @@ srv.on('exit', (code) => {
     // id echo + ordering
     assert.ok(byId[1] && byId[2] && byId[3], 'all ids echoed back');
 
-    // #1 expand: config define NOT propagated -> ELSE branch
+    // #1 expand: config define propagates (textual-include semantics) -> THEN branch
     assert.ok(byId[1].h.ok, '#1 ok');
-    assert.ok(byId[1].b.includes('noFX') && !byId[1].b.includes('hasFX'), '#1 expand takes ELSE');
+    assert.ok(byId[1].b.includes('hasFX') && !byId[1].b.includes('noFX'), '#1 expand takes THEN (defines propagate)');
 
     // #2 defines-only: config define propagated -> THEN, and length is 1:1
     assert.ok(byId[2].h.ok, '#2 ok');

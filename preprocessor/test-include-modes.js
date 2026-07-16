@@ -35,10 +35,12 @@ const src = [
 let pass = 0;
 function check(name, cond) { assert.ok(cond, name); console.log('  ok  ' + name); pass++; }
 
-// --- expand (default): current behavior, config defines DISCARDED, body spliced.
+// --- expand (default): Delphi textual-include semantics — config defines
+// PROPAGATE to the parent (dcc32 behavior), body spliced.
 {
   const r = preprocess(src, { defines: ['LEGACY'], baseDir: dir, includeMode: 'expand' });
-  check('expand: config define NOT propagated (ELSE taken)', r.text.includes('noX') && !r.text.includes('hasX'));
+  check('expand: {$DEFINE FEATURE_X} propagates (THEN taken)', r.text.includes('hasX') && !r.text.includes('noX'));
+  check('expand: {$UNDEF LEGACY} propagates (LEGACY branch dropped)', !r.text.includes('var old'));
   check('expand: consts.inc body IS spliced', r.text.includes('IncOnly'));
   check('expand: offsets shift (length changes)', r.text.length !== src.length);
   // default (no includeMode) must equal expand — no behavior change for existing callers.

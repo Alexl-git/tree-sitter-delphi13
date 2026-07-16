@@ -7,9 +7,19 @@
 // so the virtual source has identical line numbers to the original. This
 // keeps tree-sitter source positions usable for error reporting.
 //
-// `{$I X.inc}` expansion is supported in Phase 1 with a simple resolver
-// that looks up files relative to the current file's directory and any
-// supplied include paths.
+// `{$I X.inc}` expansion is supported with a nearest-first resolver:
+// the current file's directory and any supplied include paths are tried
+// first, then (unless `nearSearch: false`) the search widens to the
+// baseDir's immediate subdirectories and up to `searchLevels` (default 3)
+// parent directories, each with its immediate subdirectories. This covers
+// the common real-world layouts (EurekaLog `Source\..\Common\*.inc`,
+// AsyncPro `PrnDrv\Win9xME\` including `source\AwDefine.inc`) without a
+// per-project search-path config.
+//
+// Defines made inside an included file PROPAGATE to the including file in
+// every include mode — `{$I}` is textual inclusion in Delphi, so a
+// `{$DEFINE X}` in the .inc affects `{$IFDEF X}` after the `{$I}` exactly
+// as dcc32 resolves it.
 
 'use strict';
 
@@ -17,6 +27,26 @@ const fs = require('fs');
 const path = require('path');
 const { lex } = require('./lexer');
 const { evalExpr } = require('./evalExpr');
+
+// Process-lifetime cache of directory listings for the nearest-first include
+// search (dir -> sorted absolute subdirectory paths). Corpus scans call
+// preprocess() once per file with heavily-repeated baseDirs, so caching the
+// readdir is what keeps the widened search O(1)-ish per file. No
+// invalidation: acceptable for a preprocessor utility's process lifetime.
+const _subdirCache = new Map();
+function subdirsOf(dir) {
+  let subs = _subdirCache.get(dir);
+  if (subs) return subs;
+  subs = [];
+  try {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (e.isDirectory()) subs.push(path.join(dir, e.name));
+    }
+  } catch (_) { /* unreadable dir — treat as no subdirs */ }
+  subs.sort();
+  _subdirCache.set(dir, subs);
+  return subs;
+}
 
 function preprocess(input, options = {}) {
   // In `defines-only` include mode the child recursion shares the PARENT's live
@@ -71,11 +101,30 @@ function preprocess(input, options = {}) {
     outBuf.push(' '.repeat(srcLen));
   }
 
+  // `nearSearch` (default true) widens include resolution beyond baseDir +
+  // includePaths: baseDir's immediate subdirs, then each parent (up to
+  // `searchLevels` hops) and that parent's immediate subdirs — nearest first.
+  const nearSearch = options.nearSearch !== false;
+  const searchLevels = options.searchLevels || 3;
+
   function resolveInclude(name) {
     const tryPaths = [baseDir, ...includePaths];
     for (const dir of tryPaths) {
       const p = path.resolve(dir, name);
       if (fs.existsSync(p)) return p;
+    }
+    if (!nearSearch) return null;
+    let dir = path.resolve(baseDir);
+    for (let lvl = 0; lvl <= searchLevels; lvl++) {
+      // Level 0: baseDir itself was already tried above — only its subdirs.
+      const candidates = lvl === 0 ? subdirsOf(dir) : [dir, ...subdirsOf(dir)];
+      for (const c of candidates) {
+        const p = path.resolve(c, name);
+        if (fs.existsSync(p)) return p;
+      }
+      const parent = path.dirname(dir);
+      if (parent === dir) break;
+      dir = parent;
     }
     return null;
   }
@@ -175,8 +224,12 @@ function preprocess(input, options = {}) {
         blankifyDirective(srcLen);
       } else {
         // 'expand' (default): splice the resolved child text into the output.
+        // The child shares THIS defines Set (textual-include semantics): its
+        // {$DEFINE}/{$UNDEF} must affect the parent's conditionals after the
+        // {$I}, and it must see everything defined so far — dcc32 behavior.
         const subOut = preprocess(sub, {
           ...options,
+          _sharedDefines: defines,
           baseDir: path.dirname(resolved),
           _depth: depth + 1,
         });
