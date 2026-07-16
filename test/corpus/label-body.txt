@@ -1,0 +1,125 @@
+==================
+goto label as a then-branch body (AsyncPro LFN.pas shape)
+==================
+
+unit A;
+interface
+implementation
+procedure P;
+label Found;
+var I: Integer;
+begin
+  if I = 0 then
+Found:
+    I := 1;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        header: (declProc
+          (kProcedure)
+          name: (identifier))
+        local: (declLabels
+          (kLabel)
+          (declLabel
+            name: (identifier)))
+        local: (declVars
+          (kVar)
+          (declVar
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier)))))
+        body: (block
+          (kBegin)
+          (if
+            (kIf)
+            condition: (exprBinary
+              lhs: (identifier)
+              operator: (kEq)
+              rhs: (literalNumber))
+            (kThen)
+            then: (label
+              (identifier))
+            then: (assignment
+              lhs: (identifier)
+              operator: (kAssign)
+              rhs: (literalNumber)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+case with an identifier arm label stays a case arm (regression guard)
+==================
+
+unit A;
+interface
+implementation
+procedure P;
+var x: Integer;
+begin
+  case x of
+    1: x := 2;
+    Foo: x := 3;
+  end;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        header: (declProc
+          (kProcedure)
+          name: (identifier))
+        local: (declVars
+          (kVar)
+          (declVar
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier)))))
+        body: (block
+          (kBegin)
+          (case
+            (kCase)
+            (identifier)
+            (kOf)
+            (caseCase
+              label: (caseLabel
+                (literalNumber))
+              body: (assignment
+                lhs: (identifier)
+                operator: (kAssign)
+                rhs: (literalNumber)))
+            (caseCase
+              label: (caseLabel
+                (identifier))
+              body: (assignment
+                lhs: (identifier)
+                operator: (kAssign)
+                rhs: (literalNumber)))
+            (kEnd))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

@@ -104,8 +104,18 @@ function enable_if(cond, ...args) {
 // Generate rules for trailing & non-trailing statements
 function statements(trailing) {
 	let rn            = x => trailing ? x + 'Tr' : x
-	let lastStatement = $ => trailing ? optional(tr($,'_statement')) : $._statement;
-	let lastStatement1= $ => trailing ? tr($,'_statement') : $._statement;
+	// Iter 2026-07-16: a goto label may prefix the single-statement BODY of
+	// then/else/do/on (labels already parse at statement-LIST level via
+	// `_statements`): `if Index = 0 then Found: LFNParamStr := ...`
+	// (AsyncPro LFN.pas), `else FoundMismatch: Exit(-1)` (System.pas),
+	// `while true do redo: case ...` (superobject). prec.dynamic(-1): when
+	// the label could equally close an EMPTY body and open a case-arm
+	// (`case x of 1: if c then Foo: ...` — Foo as arm label vs body label),
+	// the arm interpretation must keep winning — that ambiguity is what
+	// cascaded the previous broad-scope attempt.
+	let bodyLabel     = $ => optional(prec.dynamic(-1, $.label));
+	let lastStatement = $ => trailing ? optional(seq(bodyLabel($), tr($,'_statement'))) : seq(bodyLabel($), $._statement);
+	let lastStatement1= $ => trailing ? seq(bodyLabel($), tr($,'_statement')) : seq(bodyLabel($), $._statement);
 	let semicolon     = trailing ? [] : [';'];
 
 	return Object.fromEntries([
@@ -389,6 +399,12 @@ module.exports = grammar({
 		// single declarable conflict the old flat-repeat shape could not
 		// express (its fork landed inside `_statementsTr_repeat1`).
 		[$.implementation],
+		// Iter 2026-07-16 (label-as-body): a label prefixing a case-arm's BODY
+		// statement forks against the arm's own jumpLabel slot (`1: Foo: x`).
+		// GLR keeps both; prec.dynamic(-1) on the body label makes the
+		// jumpLabel/arm interpretation win wherever both complete.
+		[$.caseCase],
+		[$.caseCaseTr],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses

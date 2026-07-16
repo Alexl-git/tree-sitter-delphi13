@@ -104,8 +104,15 @@ function enable_if(cond, ...args) {
 // Generate rules for trailing & non-trailing statements
 function statements(trailing) {
 	let rn            = x => trailing ? x + 'Tr' : x
-	let lastStatement = $ => trailing ? optional(tr($,'_statement')) : $._statement;
-	let lastStatement1= $ => trailing ? tr($,'_statement') : $._statement;
+	// Ported from root 2026-07-16: a goto label may prefix the
+	// single-statement BODY of then/else/do/on (`if I = 0 then Found: ...`,
+	// `else FoundMismatch: Exit`, `while true do redo: case ...`).
+	// prec.dynamic(-1) keeps the case-ARM interpretation winning where a
+	// label could also open an arm; requires [caseCase]/[caseCaseTr]
+	// conflicts.
+	let bodyLabel     = $ => optional(prec.dynamic(-1, $.label));
+	let lastStatement = $ => trailing ? optional(seq(bodyLabel($), tr($,'_statement'))) : seq(bodyLabel($), $._statement);
+	let lastStatement1= $ => trailing ? seq(bodyLabel($), tr($,'_statement')) : seq(bodyLabel($), $._statement);
 	let semicolon     = trailing ? [] : [';'];
 
 	return Object.fromEntries([
@@ -313,6 +320,11 @@ module.exports = grammar({
 		// same `begin` into its `_definitions` (prec(-1) blockTr recovery).
 		// GLR keeps both; precedence picks the unit-tail block.
 		[$.implementation],
+		// Iter 2026-07-16 (label-as-body, ported from root): body label vs
+		// the arm's own jumpLabel slot (`1: Foo: x`); prec.dynamic(-1) keeps
+		// the arm interpretation winning.
+		[$.caseCase],
+		[$.caseCaseTr],
 		// Anonymous record/class types in type position conflict with the
 		// type-declaration form (`type Foo = record ... end;`). Both reach
 		// declClass but at different parser states.
