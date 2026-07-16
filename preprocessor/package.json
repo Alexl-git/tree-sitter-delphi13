@@ -10,7 +10,10 @@
     "preprocess.js",
     "lexer.js",
     "evalExpr.js",
+    "tolerance.js",
+    "defaults.js",
     "cli.js",
+    "serve.js",
     "README.md"
   ],
   "repository": {

@@ -6,7 +6,7 @@ then [TODO.md](TODO.md) (session table + remaining gaps) and
 
 ---
 
-## Status — v1.2.0 committed + tagged + pushed; npm publish is the ONLY open step
+## Status — v1.2.1 committed + tagged + pushed (100.000% adjusted); npm: root+pure 1.2.0 LIVE, 1.2.1 + preprocessor 1.1.0 need one OTP publish each
 
 - **v1.2.0** (root) / **1.2.0** (pure) / **1.1.0** (preprocessor) — 11 commits over
   v1.1.2, tagged `v1.2.0`, pushed to origin/master.

@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-delphi13",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Tree-sitter grammar focused on Delphi 13 (RAD Studio 37.0)",
   "main": "bindings/node",
   "types": "bindings/node",

@@ -7,6 +7,16 @@ construct isolated into a minimal repro and **verified against `dcc32` (RAD Stud
 
 ---
 
+## 0.0 FINAL ADDENDUM 2026-07-16 (d, v1.2.1) — gap 0.000%: zero real gaps remain
+
+v1.2.1 (`e2c1318`) closed the last two: `platform`-before-initializer via a
+trailing `kPlatform` on **typeref** (the declVar-level arm stays a documented
+table bomb), and `Register:` as a field name via a **kRegister-only** alias in
+declField. Final numbers: orchestrated raw **99.818%** (30 fails), deduped
+**99.735%**, deduped + valid-Delphi-13-only **100.000%** (11,292/11,292; the 30
+residual failures are all INVALID_SRC / INTENTIONAL_FIXTURE / NOT_DELPHI —
+dcc32 rejects them too). `System.pas` parses clean on the orchestrated path.
+
 ## 0. ADDENDUM 2026-07-16 (b+c, v1.2.0) — the ranked path was executed; gap 0.275% → 0.035%
 
 Eleven commits later (`6f10463`…v1.2.0, same day), the numbers in §1 are superseded:

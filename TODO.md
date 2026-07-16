@@ -325,12 +325,22 @@ Commits `6f10463`, `f7f590f`, `9bfffa9`, `32766a4`, `fa9ce2e`, `9ce187b`. What m
 | **label as then/else/do body** — `lastStatement` gains optional `prec.dynamic(-1) $.label`; case-ARM interpretation keeps winning (`[caseCase]`/`[caseCaseTr]` conflicts — NAMED, unlike the old cascade) | `1537fd7` | LFN ×2, superobject (both paths) |
 | **lenient directive tail in interface lists** — `declProcFront($)` extraction; `_declProcLenient` separator-form tail used only via `_declarations`; defProc header stays strict (`procedure P; stdcall begin` still rejected); `[procAttribute]` + `[_declProcLenient, _procAttributeNoExt]` conflicts | `9452610` | dxCryptoAPI, dxServerModeUtils, dxGDIPlusAPI (master path — orchestrated already covered by tolerance) |
 
-**Ranked remaining REAL gaps, post-v1.2.0 — 4 rows total:**
+### Session 2026-07-16 (d) — v1.2.1: ZERO real gaps remain (adjusted 100.000%)
 
-| rows | gap | status |
+Both remaining gaps closed in `e2c1318` — each was a previously-documented
+"blocked" item whose v1.2.1 shape rides an EXISTING keyword role-set instead of
+adding a new one:
+
+| fix | how the block was dodged | recovered |
 |---|---|---|
-| 2 | **System.pas** (+ dated backup) — `platform` hint before initializer (`Default8087CW: Word platform = $033F;`, 6 sites/file) | parked — the declVar arm is a bisect-confirmed generate table bomb. UNTRIED angle: `typeref` already tolerates a trailing `deprecated` hint (`[$.typeref]` conflict exists); adding `platform` there would make `Word platform` parse as the TYPE and `= $033F` follow naturally — one experiment, same 10-min abort rule |
-| 2 | record field named after a callconv keyword (`Register: UINT;`, D3D10/D3D10_1) | **not worth it** (documented declField/declFieldNoSemi table-explosion risk) |
+| `platform` before initializer (`Default8087CW: Word platform = $033F;`) | trailing `kPlatform` on **typeref** (mirrors its existing `kDeprecated 'msg'` slot; the declVar-level arm remains a bisect-confirmed table bomb — do not retry that shape). Generate needed NO new conflicts. CST nuance: `T = C platform;` now carries kPlatform inside typeref | System.pas + backup (orchestrated; ×2 case-variant rows) |
+| `Register: UINT;` field after a prior field | alias ONLY `kRegister` into declField's name slot (the 2026-07-06 all-7-callconvs-in-both-field-rules attempt was the explosion); `[declFieldNoSemi, declField]` + `[declField]` conflicts; `; cdecl;` trailing-callconv guard fixture | Winapi.D3D10 ×2 (both paths) |
+
+**Remaining REAL gaps on valid Delphi 13: NONE.** The 30 residual unique failures
+are invalid source / intentional fixtures / FPC / .NET — all classified in
+CORPUS-CEILING-REPORT.md §0/§3.1. Watchlist for future corpus expansion: the other
+6 callconv keywords as field names (only `Register` occurs in the wild so far),
+`is nested` (FPC-only by policy), `{$IF declared()}` symbol awareness.
 
 **Still-open grammar gaps — RE-VERIFIED 2026-07-16 (every entry below was retested; two were
 already fixed and one is now closed, so trust this list over older prose above):**

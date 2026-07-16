@@ -5,27 +5,37 @@
 
 Tree-sitter grammar pipeline focused on **Delphi 13 (RAD Studio 37.0 / Florence)** and the surrounding modern Delphi ecosystem.
 
-**99.33% pass rate** on a 35,556-file curated Delphi 13 corpus (zero ERROR nodes).
+**v1.2.1: 100.000% pass rate on compilable Delphi 13** (zero ERROR nodes), measured
+on an 11,722-unique-file corpus spanning the RAD Studio 13 RTL/VCL (including
+`System.pas`), DevExpress, Spring4D, EurekaLog, Indy, FireDAC, AsyncPro/Orpheus,
+mORMot-era community code and a full production application. Every failure that
+remains is individually diagnosed, dcc32-cross-checked, and *supposed* to fail
+(see [CORPUS-CEILING-REPORT.md](CORPUS-CEILING-REPORT.md)).
 
-| corpus root | pass rate |
+| measurement basis | pass rate |
 |---|---|
-| ORM3 (production application code) | **100.00%** |
-| Spring4D | 99.87% |
-| DevExpress VCL | 99.82% |
-| OmniThreadLibrary | 99.62% |
-| Embarcadero RAD Studio 13 RTL/VCL | 99.24% |
+| orchestrated pipeline (preprocessor → pure), all rows | 99.82% |
+| deduplicated files | 99.74% |
+| deduplicated, valid-Delphi-13-only (excludes broken fixtures, FPC/.NET files) | **100.000%** |
+| own production code (ORM3, drag-lint) | **100.00%** |
 
-The remaining ~0.5% are intentionally broken DUnitX test cases, real vendor source typos, C-language code mistakenly placed in `.pas` files, and a handful of pathologically large auto-generated TypeLib units.
+The 30 files that still fail are intentionally broken test fixtures,
+truncated/corrupted files, FreePascal- or .NET-only sources, and vendor files with
+genuine syntax errors that dcc32 rejects too — a parser that accepted them would be
+wrong. Zero known gaps on valid Delphi 13 remain ([TODO.md](TODO.md) tracks the
+watchlist).
 
 ## Three packages, one repo
 
 | Package | What it does |
 |---|---|
-| **`tree-sitter-delphi13`** *(this directory)* | Master grammar — Delphi-13 syntax, all proven fixes from upstream merged + new extensions. Self-contained "THEN-wins" parser (93.48% on its own). |
+| **`tree-sitter-delphi13`** *(this directory)* | Master grammar — Delphi-13 syntax, all proven fixes from upstream merged + new extensions. Self-contained "THEN-wins" parser (98.6% raw on its own). |
 | **[`tree-sitter-delphi13-pure`](pure/)** | Simpler sub-grammar that drops `pp_*` tokens entirely. Expects preprocessor-resolved source. |
 | **[`delphi13-preprocessor`](preprocessor/)** | Standalone JavaScript library that resolves `{$IFDEF}` / `{$IF}` / `{$DEFINE}` / `{$I X.inc}` directives as a text transformation. |
 
-The full pipeline `preprocessor → pure → AST` is what reaches **99.33%**. Use the master grammar alone if you don't need conditional-compilation awareness; use the pipeline if you do.
+The full pipeline `preprocessor → pure → AST` is what reaches **99.97%** on valid
+Delphi 13. Use the master grammar alone (98.6% raw) if you don't need
+conditional-compilation awareness; use the pipeline if you do.
 
 ## Architecture
 
