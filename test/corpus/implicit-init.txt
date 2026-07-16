@@ -1,0 +1,92 @@
+==================
+unit: implicit begin..end. initialization (Turbo Pascal form)
+==================
+
+unit U;
+interface
+implementation
+begin
+  X := 1;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation))
+    (block
+      (kBegin)
+      (assignment
+        lhs: (identifier)
+        operator: (kAssign)
+        rhs: (literalNumber))
+      (kEnd))
+    (kEndDot)))
+
+==================
+unit: explicit initialization + finalization still parse
+==================
+
+unit U;
+interface
+implementation
+initialization
+  X := 1;
+finalization
+  Y := 2;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation))
+    (initialization
+      (kInitialization)
+      (assignment
+        lhs: (identifier)
+        operator: (kAssign)
+        rhs: (literalNumber)))
+    (finalization
+      (kFinalization)
+      (assignment
+        lhs: (identifier)
+        operator: (kAssign)
+        rhs: (literalNumber)))
+    (kEnd)
+    (kEndDot)))
+
+==================
+unit: plain end. tail unchanged
+==================
+
+unit U;
+interface
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

@@ -381,6 +381,14 @@ module.exports = grammar({
 		// the two declArg branches ambiguous at the group boundary; let GLR resolve.
 		[$.rttiAttributes],
 		[$.declArg],
+		// Iter 2026-07-16 (implicit-init): the unit tail's `tr($,'block')` arm
+		// forks against `implementation` absorbing the same `begin` into its
+		// `_definitions` (the prec(-1) blockTr recovery in `_definition`).
+		// Reduce-implementation-early must be a live GLR fork; precedence picks
+		// the unit-tail block (prec 0 beats the recovery's -1). This is the
+		// single declarable conflict the old flat-repeat shape could not
+		// express (its fork landed inside `_statementsTr_repeat1`).
+		[$.implementation],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -443,33 +451,41 @@ module.exports = grammar({
 				$.kLibrary,
 			)),
 			';',
+			// Unit tail, restructured 2026-07-16 (iter: implicit-init). The old
+			// shape was one flat `repeat(choice(interface, implementation,
+			// initialization, finalization))` followed by `kEnd kEndDot`. That
+			// made the Turbo-Pascal implicit initialization block (`begin
+			// <stmts> end.` — still accepted by dcc 13; bdemts.pas, SHDocVw.pas,
+			// System.Win.InternetExplorer.pas, Winapi.OpenGL.PkgHelper.pas,
+			// AsyncPro APFPDENG.pas) unparseable: `optional(blockish)` before
+			// `kEnd` forks against `initialization`'s own statement list and
+			// cascades into the auto-generated `_statementsTr_repeat1` states,
+			// which cannot be named in `conflicts` (attempted + reverted).
+			// The fix: split `initialization`/`finalization` OUT of the flat
+			// repeat into the kEnd tail arm, and give the implicit block its own
+			// mutually-exclusive arm — after `initialization` appears, the block
+			// arm is unreachable, so the fork never exists. The block arm itself
+			// is the same `tr($,'block')` used by `program`/`library` tails, so
+			// the only fork is blockTr-inside-_definitions (the prec(-1)
+			// recovery rule in `_definition`) vs blockTr-as-unit-tail (prec 0),
+			// which GLR resolves by precedence exactly as it already does for
+			// `library`. CST: the implicit block renders as the same `block`
+			// node `program`/`library` produce.
 			repeat(choice(
 				$.interface,
 				$.implementation,
-				$.initialization,
-				$.finalization,
 			)),
-			// KNOWN GAP — implicit `begin <stmts> end.` initialization (the
-			// Turbo-Pascal-era form of `initialization <stmts> end.`, still
-			// accepted by dcc 13). NOT supported; attempted + reverted 2026-07-16.
-			// Hits bdemts.pas, SHDocVw.pas, System.Win.InternetExplorer.pas,
-			// Winapi.OpenGL.PkgHelper.pas (4 files) — signature is a whole-unit
-			// ERROR with ZERO inner errors, because `_definition`'s prec(-1)
-			// `blockTr` recovery rule absorbs the `begin..end` and leaves the
-			// final `.` dangling.
-			// Why reverted: adding `optional($.initializationImplicit)` here needs
-			// a declared conflict on `implementation` (its `_definitions` can
-			// start with `begin` via that same blockTr). Resolving that cascades
-			// to `initialization`/`finalization` and then into `_statementsTr` /
-			// `_statementsTr_repeat1` — an unbounded GLR cascade, same shape as
-			// the reverted labeled-loop attempt. The cheap alternative (accept a
-			// bare `.` and let blockTr eat the `end`) makes the unit's `end`
-			// effectively OPTIONAL, so a genuinely missing `end` would parse
-			// clean — unacceptable for a linter consumer. A real fix needs the
-			// unit tail restructured from `repeat(choice(...))` into an ordered
-			// sequence so initialization and initializationImplicit are mutually
-			// exclusive; that is a bigger change needing its own corpus diff.
-			$.kEnd, $.kEndDot
+			choice(
+				seq(
+					repeat(choice(
+						$.initialization,
+						$.finalization,
+					)),
+					$.kEnd
+				),
+				tr($,'block'),
+			),
+			$.kEndDot
 		),
 
 		// Delphi package file (.dpk). Structure:

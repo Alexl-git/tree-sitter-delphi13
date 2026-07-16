@@ -214,21 +214,48 @@
               {
                 "type": "SYMBOL",
                 "name": "implementation"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "initialization"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "finalization"
               }
             ]
           }
         },
         {
-          "type": "SYMBOL",
-          "name": "kEnd"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "initialization"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "finalization"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kEnd"
+                }
+              ]
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "blockTr"
+              },
+              "named": true,
+              "value": "block"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -12227,6 +12254,9 @@
     ],
     [
       "declArg"
+    ],
+    [
+      "implementation"
     ],
     [
       "declProcFwd"

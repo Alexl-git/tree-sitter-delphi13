@@ -308,6 +308,11 @@ module.exports = grammar({
 		// optional _definitions before AND after declContains. GLR forks
 		// on which slot absorbs a given definition.
 		[$.package],
+		// Iter 2026-07-16 (implicit-init, ported from root): the unit tail's
+		// `tr($,'block')` arm forks against `implementation` absorbing the
+		// same `begin` into its `_definitions` (prec(-1) blockTr recovery).
+		// GLR keeps both; precedence picks the unit-tail block.
+		[$.implementation],
 		// Anonymous record/class types in type position conflict with the
 		// type-declaration form (`type Foo = record ... end;`). Both reach
 		// declClass but at different parser states.
@@ -420,13 +425,32 @@ module.exports = grammar({
 				$.kLibrary,   // ported from root v1.1.0
 			)),
 			';',
+			// Unit tail, restructured 2026-07-16 (ported from root, iter:
+			// implicit-init): `initialization`/`finalization` moved out of the
+			// flat repeat into the kEnd tail arm, plus a mutually-exclusive
+			// `tr($,'block')` arm for the Turbo-Pascal implicit initialization
+			// block (`begin <stmts> end.` — dcc 13 still accepts it). Because
+			// the block arm is unreachable once `initialization` appears, the
+			// statement-list fork the old shape suffered cannot arise; the only
+			// fork is blockTr-inside-_definitions (prec -1 recovery) vs
+			// blockTr-as-unit-tail (prec 0), same as `library`. Requires the
+			// [$.implementation] conflict. CST: the implicit block renders as
+			// the same `block` node `program`/`library` produce.
 			repeat(choice(
 				$.interface,
 				$.implementation,
-				$.initialization,
-				$.finalization,
 			)),
-			$.kEnd, $.kEndDot
+			choice(
+				seq(
+					repeat(choice(
+						$.initialization,
+						$.finalization,
+					)),
+					$.kEnd
+				),
+				tr($,'block'),
+			),
+			$.kEndDot
 		),
 
 		// Delphi package file (.dpk). Structure:

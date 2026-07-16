@@ -9518,6 +9518,10 @@
       "required": true,
       "types": [
         {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "exprBinary",
           "named": true
         },
