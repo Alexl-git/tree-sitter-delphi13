@@ -49,6 +49,11 @@ function subdirsOf(dir) {
 }
 
 function preprocess(input, options = {}) {
+  // A decoded UTF-8 BOM (U+FEFF) is encoding metadata, not source. Blank it
+  // offset-preservingly. This also covers BOMs in INCLUDED files (they come
+  // back through this entry), which would otherwise be spliced mid-output
+  // where no parser accepts them (Velthuis bases.inc).
+  if (input.charCodeAt(0) === 0xFEFF) input = ' ' + input.slice(1);
   // In `defines-only` include mode the child recursion shares the PARENT's live
   // defines Set by reference (options._sharedDefines) so the child's
   // {$DEFINE}/{$UNDEF} mutate the parent table — required so a parent {$IFDEF X}
