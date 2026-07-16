@@ -2,6 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/tree-sitter-delphi13.svg)](https://www.npmjs.com/package/tree-sitter-delphi13)
 [![license](https://img.shields.io/npm/l/tree-sitter-delphi13.svg)](LICENSE)
+[![corpus](https://img.shields.io/badge/valid_Delphi_13-100.000%25-brightgreen.svg)](CORPUS-CEILING-REPORT.md)
+[![corpus raw](https://img.shields.io/badge/full_corpus_raw-99.82%25-green.svg)](CORPUS-CEILING-REPORT.md)
 
 Tree-sitter grammar pipeline focused on **Delphi 13 (RAD Studio 37.0 / Florence)** and the surrounding modern Delphi ecosystem.
 
@@ -33,7 +35,7 @@ watchlist).
 | **[`tree-sitter-delphi13-pure`](pure/)** | Simpler sub-grammar that drops `pp_*` tokens entirely. Expects preprocessor-resolved source. |
 | **[`delphi13-preprocessor`](preprocessor/)** | Standalone JavaScript library that resolves `{$IFDEF}` / `{$IF}` / `{$DEFINE}` / `{$I X.inc}` directives as a text transformation. |
 
-The full pipeline `preprocessor → pure → AST` is what reaches **99.97%** on valid
+The full pipeline `preprocessor → pure → AST` is what reaches **100.000%** on valid
 Delphi 13. Use the master grammar alone (98.6% raw) if you don't need
 conditional-compilation awareness; use the pipeline if you do.
 
@@ -138,7 +140,9 @@ node-gyp rebuild
 
 - **Inline `asm` blocks** treated as opaque text by design. Not tree-sitter-asm.
 - **`{$IF declared(SymName)}`** always evaluates to `false` — no symbol table. ~10 corpus files use this. A lightweight symbol pre-scan would address most cases.
-- **Include search path** is currently same-directory only. Cross-directory `{$I ..\Common\X.inc}` requires a search-path option (see TODO.md).
+- **Include resolution** is nearest-first (same directory, its subdirectories, then
+  up to 3 parent levels with their subdirectories — v1.1.0 of the preprocessor).
+  Arbitrary project search paths still need the `includePaths` option.
 - **FreePascal-specific extensions** (operator overloading variants, `{$mode ObjFPC}` directives, macOS PasCocoa namespaces) are not covered. A separate `tree-sitter-delphi-plus-fp` repo is planned.
 
 ## Acknowledgements
