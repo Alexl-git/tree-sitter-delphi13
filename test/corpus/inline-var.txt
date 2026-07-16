@@ -93,3 +93,128 @@ end;
             (identifier)
             (literalNumber))))
       (kEnd))))
+
+==================
+inline var: nested anonymous array-of-array-of-T type
+==================
+
+procedure P;
+begin
+  var Grid: array of array of Integer;
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (varDef
+        (kVar)
+        (identifier)
+        type: (type
+          (declArray
+            (kArray)
+            (kOf)
+            (type
+              (declArray
+                (kArray)
+                (kOf)
+                (type
+                  (typeref
+                    (identifier))))))))
+      (kEnd))))
+
+==================
+inline var: fixed-range anonymous array type
+==================
+
+procedure P;
+begin
+  var Buf: array[0..3] of Byte;
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (varDef
+        (kVar)
+        (identifier)
+        type: (type
+          (declArray
+            (kArray)
+            (range
+              (literalNumber)
+              (literalNumber))
+            (kOf)
+            (type
+              (typeref
+                (identifier))))))
+      (kEnd))))
+
+==================
+inline var: simple named type (control)
+==================
+
+procedure P;
+begin
+  var Count: Integer;
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (block
+      (kBegin)
+      (varDef
+        (kVar)
+        (identifier)
+        type: (type
+          (typeref
+            (identifier))))
+      (kEnd))))
+
+==================
+classic var-section: anonymous array-of-T type (control)
+==================
+
+procedure P;
+var
+  Handles: array of THandle;
+begin
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    local: (declVars
+      (kVar)
+      (declVar
+        name: (identifier)
+        type: (type
+          (declArray
+            (kArray)
+            (kOf)
+            (type
+              (typeref
+                (identifier)))))))
+    body: (block
+      (kBegin)
+      (kEnd))))

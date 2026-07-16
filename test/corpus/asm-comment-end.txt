@@ -1,0 +1,66 @@
+==================
+asm: bare `end` inside a {} comment does not terminate the block
+==================
+
+procedure P;
+asm
+  add edi,ecx {point EDI to end of destination}
+  mov eax,1
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (asm
+      (kAsm)
+      (asmBody)
+      (kEnd))))
+
+==================
+asm: bare `end` inside a // line comment does not terminate the block
+==================
+
+procedure P;
+asm
+  mov eax,1 // end of loop
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (asm
+      (kAsm)
+      (asmBody)
+      (kEnd))))
+
+==================
+asm: {$IFDEF} directives still do not terminate the block (control)
+==================
+
+procedure P;
+asm
+{$IFDEF WIN32}
+  mov eax,1
+{$ENDIF}
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (identifier))
+    body: (asm
+      (kAsm)
+      (pp_open)
+      (asmBody)
+      (kEnd))))

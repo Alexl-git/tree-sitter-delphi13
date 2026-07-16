@@ -515,6 +515,13 @@ module.exports = grammar({
 		// en/EN not followed by d/D, end immediately followed by ident-char
 		// (so it's NOT the keyword, e.g. 'endif' / 'endloop').
 		asmBody: $ => token(prec(-1, repeat1(choice(
+			// Ported from root 2026-07-16: consume a whole COMMENT as one chunk so a
+			// bare `end` *inside* a comment doesn't falsely terminate the asm block.
+			//   add edi,ecx {point EDI to end of destination}   <-- AsyncPro AwFView
+			//   mov eax,1   // end of loop
+			// Must precede the single-char alternatives: longest match wins.
+			/\{[^}]*\}/,
+			/\/\/[^\n]*/,
 			// Identifier not starting with e/E — consume as a unit so an
 			// embedded `end` substring (like in `addend` or `xchg ext`)
 			// doesn't falsely terminate the body.
@@ -1140,6 +1147,13 @@ module.exports = grammar({
 				alias($.kDeprecated,   $.identifier),
 				alias($.kExperimental, $.identifier),
 				alias($.kRegister,     $.identifier),
+				// Ported from root 2026-07-16: same family — `local` is a
+				// procAttribute, so `var X: Integer; Local: Integer;` had the
+				// parser eat `Local` as a trailing directive on X.
+				alias($.kLocal,        $.identifier),
+				// Ported from root 2026-07-16: `dispid` is a property/method
+				// directive — same trap (System.Win.ObjComAuto, Vcl.OleCtrls).
+				alias($.kDispId,       $.identifier),
 			))),
 			':',
 			// Phase 3b iter 36: declVar type may be a subrange:

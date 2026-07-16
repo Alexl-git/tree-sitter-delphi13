@@ -449,6 +449,26 @@ module.exports = grammar({
 				$.initialization,
 				$.finalization,
 			)),
+			// KNOWN GAP — implicit `begin <stmts> end.` initialization (the
+			// Turbo-Pascal-era form of `initialization <stmts> end.`, still
+			// accepted by dcc 13). NOT supported; attempted + reverted 2026-07-16.
+			// Hits bdemts.pas, SHDocVw.pas, System.Win.InternetExplorer.pas,
+			// Winapi.OpenGL.PkgHelper.pas (4 files) — signature is a whole-unit
+			// ERROR with ZERO inner errors, because `_definition`'s prec(-1)
+			// `blockTr` recovery rule absorbs the `begin..end` and leaves the
+			// final `.` dangling.
+			// Why reverted: adding `optional($.initializationImplicit)` here needs
+			// a declared conflict on `implementation` (its `_definitions` can
+			// start with `begin` via that same blockTr). Resolving that cascades
+			// to `initialization`/`finalization` and then into `_statementsTr` /
+			// `_statementsTr_repeat1` — an unbounded GLR cascade, same shape as
+			// the reverted labeled-loop attempt. The cheap alternative (accept a
+			// bare `.` and let blockTr eat the `end`) makes the unit's `end`
+			// effectively OPTIONAL, so a genuinely missing `end` would parse
+			// clean — unacceptable for a linter consumer. A real fix needs the
+			// unit tail restructured from `repeat(choice(...))` into an ordered
+			// sequence so initialization and initializationImplicit are mutually
+			// exclusive; that is a bigger change needing its own corpus diff.
 			$.kEnd, $.kEndDot
 		),
 
@@ -540,6 +560,17 @@ module.exports = grammar({
 		// en/EN not followed by d/D, end immediately followed by ident-char
 		// (so it's NOT the keyword, e.g. 'endif' / 'endloop').
 		asmBody: $ => token(prec(-1, repeat1(choice(
+			// Iter 2026-07-16: consume a whole COMMENT as one chunk, so a bare
+			// `end` *inside* a comment doesn't falsely terminate the asm block.
+			//   add edi,ecx {point EDI to end of destination}   <-- AsyncPro AwFView
+			//   mov eax,1   // end of loop
+			// `{$IFDEF}`-style directives were already safe (the `end[A-Za-z0-9_]`
+			// alternative below covers `endif`), but a comment containing the bare
+			// WORD `end` was not. Brace comments do not nest in Delphi, so
+			// `[^}]*` is exact. These must precede the single-char alternatives:
+			// the lexer takes the longest match, so `{...}` wins over `[^eE]`.
+			/\{[^}]*\}/,
+			/\/\/[^\n]*/,
 			// Identifier not starting with e/E — consume as a unit so an
 			// embedded `end` substring (like in `addend` or `xchg ext`)
 			// doesn't falsely terminate the body.
@@ -1191,6 +1222,16 @@ module.exports = grammar({
 				alias($.kDeprecated,   $.identifier),
 				alias($.kExperimental, $.identifier),
 				alias($.kRegister,     $.identifier),
+				// Iter 2026-07-16: same family — `local` is a procAttribute
+				// (FPC directive), so `var X: Integer; Local: Integer;` had the
+				// parser eat `Local` as a trailing directive on X. This is the
+				// L8398/DoSelfTestManifestMerge error f85b412 deferred as "not
+				// the keyword-name family" — it is; it just isn't a hint/callconv.
+				alias($.kLocal,        $.identifier),
+				// Iter 2026-07-16: `dispid` is a property/method directive, so
+				// `var Foo: Integer; DispID: Integer;` hit the same trap.
+				// (System.Win.ObjComAuto L341, Vcl.OleCtrls L2143.)
+				alias($.kDispId,       $.identifier),
 			))),
 			':',
 			// Phase 3b iter 36: declVar type may be a subrange:
@@ -1593,6 +1634,24 @@ module.exports = grammar({
 				$.kUnsafe
 			)),
 			';',
+			// KNOWN GAP — the FINAL directive group may omit its trailing `;` and
+			// dcc32 accepts it. VERIFIED 2026-07-16 with dcc32 (RAD Studio 37):
+			//   `function F(x: Integer): Integer; deprecated 'msg'`  -> exit 0
+			//   `function IsEq(...): Boolean; overload`              -> exit 0
+			//   `function G: LongWord; stdcall; external 'k32' name 'GetTickCount'`
+			//                                                        -> exit 0
+			// So an earlier TODO calling DevExpress dxServerModeUtils a *source
+			// typo* whose tolerance "would mask real errors" was WRONG — dcc accepts
+			// it silently. Hits dxCryptoAPI L775, dxServerModeUtils L47,
+			// dxGDIPlusAPI L1554 (3 files).
+			// Why NOT fixed: `repeat($._procAttributeNoExt)` + a final
+			// `optional(repeat1(procAttribute))` share their entire prefix — after
+			// `stdcall` the parser cannot tell which group it is until it sees
+			// whether a `;` follows. The fork is between two hidden AUTO-GENERATED
+			// repeat rules (`_procAttribute_repeat1`), which cannot be named in a
+			// `conflicts` entry, and declaring the parent (`_declProc`) does not
+			// resolve it. A real fix needs the directive tail restructured so the
+			// with-`;` and no-`;` forms don't share a prefix.
 			repeat($._procAttributeNoExt)
 		),
 

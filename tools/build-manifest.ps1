@@ -66,6 +66,17 @@ $writer = New-Object System.IO.StreamWriter($OutFile, $false, [System.Text.Encod
 $count = 0
 $skipped = 0
 
+# Roots routinely OVERLAP: corpus-roots.txt lists whole trees (e.g. ...\DevExpress\VCL)
+# while the registry-imported delphi13-roots.txt lists SUBDIRECTORIES of those same
+# trees (...\DevExpress\VCL\ExpressBars\Sources). `Sort-Object -Unique` above dedupes
+# root STRINGS but cannot see nesting, so without this set every overlapped file is
+# emitted once per covering root. That silently inflated the manifest by ~31%
+# (17,081 rows for 11,722 real files) and, because Windows paths are case-insensitive,
+# case-variant rows (SOURCE\RTL\SYS vs source\rtl\sys) double-counted the same file too.
+# Dedupe on the case-insensitive full path so each physical file is measured exactly once.
+$seen = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase)
+$dupes = 0
+
 foreach ($r in $roots) {
   if (-not (Test-Path $r)) {
     Write-Host "  MISSING root: $r"
@@ -78,7 +89,9 @@ foreach ($r in $roots) {
     foreach ($pat in $excludePatterns) {
       if ($p -match $pat) { $skip = $true; break }
     }
-    if ($skip) { $skipped++ } else {
+    if ($skip) { $skipped++ }
+    elseif (-not $seen.Add($p)) { $dupes++ }
+    else {
       $writer.WriteLine($p)
       $count++
     }
@@ -89,4 +102,5 @@ $writer.Close()
 Write-Host ""
 Write-Host "manifest: $OutFile"
 Write-Host "  included: $count"
+Write-Host "  duplicate rows suppressed (overlapping/case-variant roots): $dupes"
 Write-Host "  excluded: $skipped"

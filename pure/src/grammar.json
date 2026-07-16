@@ -2924,6 +2924,14 @@
             "members": [
               {
                 "type": "PATTERN",
+                "value": "\\{[^}]*\\}"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\/\\/[^\\n]*"
+              },
+              {
+                "type": "PATTERN",
                 "value": "[a-df-zA-DF-Z_][a-zA-Z0-9_]*"
               },
               {
@@ -7016,6 +7024,24 @@
                                 },
                                 "named": true,
                                 "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kLocal"
+                                },
+                                "named": true,
+                                "value": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kDispId"
+                                },
+                                "named": true,
+                                "value": "identifier"
                               }
                             ]
                           },
@@ -7152,6 +7178,24 @@
                     "content": {
                       "type": "SYMBOL",
                       "name": "kRegister"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kLocal"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kDispId"
                     },
                     "named": true,
                     "value": "identifier"

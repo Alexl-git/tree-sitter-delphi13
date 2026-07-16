@@ -13,6 +13,11 @@ C:\Program Files (x86)\Embarcadero\Studio\37.0\source
 C:\Projects\spring4d
 C:\Projects\OmniThreadLibrary
 
+# Own projects — the drag-lint toolchain (added 2026-07-16). These are the
+# primary consumers of this grammar, so a gap here is felt immediately.
+C:\Projects\Delphi-RAG-lint
+C:\Projects\Delphi-RAG-Lint-Graph
+
 # DevExpress VCL components (if installed)
 C:\Program Files (x86)\DevExpress\VCL
 

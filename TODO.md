@@ -18,11 +18,25 @@ above — specific *valid* Delphi-13 constructs that the master grammar errors o
 undercuts the "parses ~99.9% of real code" claim at the statement level, and a recovering
 error still drops the local symbols in that scope from a consumer's index.
 
-**FIRST STEP before any grammar edit — rule out staleness.** The DLL shipped in Delphi-RAG-lint
-(`third_party/dll-win64/tree-sitter-delphi13.dll`, dated **May 29**) is OLDER than the current
-grammar HEAD (**June 7, v1.0.0**). Rebuild the DLL from current `master`, drop it into the lint
-project, and re-index CLI.pas — some of the reported errors may already be fixed. Only the gaps
-that still reproduce against a freshly-built parser are real.
+**FIRST STEP before any grammar edit — rule out staleness.** [RESOLVED 2026-07-16 — but keep
+reading, the rule stands.] The DLL shipped in Delphi-RAG-lint was dated **May 29** and stayed that
+way for ~6 weeks, so drag-lint ran a pre-v1.1.0 grammar while filing bug reports against it as if
+it were current. **All 17 live DLL copies were rebuilt + refreshed 2026-07-16** (2,544,640 →
+2,895,360 bytes on Win64). Recipes: `Delphi-RAG-lint/build/_buildgrammar{32,64}_manual.bat` and
+`_builddfm{32,64}_manual.bat` — run via PowerShell `Start-Process -Wait` **without**
+`-NoNewWindow` (it hangs after the first build with it).
+
+**Why it went unnoticed, and why it will recur:** `drag-lint info` prints
+`tree-sitter: delphi13 14 / dfm 14`. That `14` is the **tree-sitter ABI version, not a grammar
+version** — constant across every grammar and every build. There is no grammar build stamp, so
+staleness is invisible. A fix was proposed to drag-lint in
+`INBOX-draglint-reply-inline-var-array-of.md` (export a version symbol, or print DLL mtime+size).
+
+**Also stale-prone — the measurement harness:** `build/Release/*.node` and
+`pure/build/Release/*.node` are what `tools/parse-corpus*.js` load. Run `npx node-gyp build` in
+BOTH the root and `pure/` after `tree-sitter generate`, or you will measure the OLD grammar.
+
+Only the gaps that still reproduce against a freshly-built parser are real.
 
 Verified against the CURRENT grammar (`npx tree-sitter parse`, tree-sitter 0.24.7), isolated:
 
@@ -164,19 +178,30 @@ with kUnsafe in procAttribute — were caught by the diff and narrowed before co
   type slot was `$.type` (excludes subrangeType); widened to `choice($.type, $.subrangeType)` like
   declVar. `db5e6cc` (root + pure). Master +2, orchestrated +3. **Found by parsing ORM3** (below).
 
-### Own-projects measurement (2026-07-06)
+### Own-projects measurement (2026-07-06, drag-lint rows re-measured 2026-07-16)
 
 | Project | master grammar | orchestrated (preprocessor → pure) |
 |---|---|---|
 | **ORM3** (user production code, 770 files) | **99.74%** (768→**769**/770 after gap #9) | **100.00%** (770/770) |
-| **drag-lint src** (114 files) | **99.12%** (113/114) | — |
+| **drag-lint src** (139 files) | **100.00%** (139/139) — was 99.12% (113/114) before the `Local` fix | — |
+| **drag-lint-graph** (31 files) | **100.00%** (31/31, 1 harness-excluded) | — |
+| **drag-lint tests** (322 files) | 98.76% (318/322) — all 4 fails intentional* | — |
+
+\* `BrokenSyntax.pas`, `syntax-error-ifend.pas`, `Docs.pas` (doc-comment stress fixture), and
+`tests/preprocess/fixtures/platform_heavy.pas` — the last is an `{$IFDEF MSWINDOWS}` cross-branch
+*preprocessor* fixture, so failing on the MASTER path is by design, not a gap.
 
 ORM3's 2 master-grammar misses: gap #9 (fixed) + `MStreams.pas BitCount` — which is a nested
 `{$IF} asm ... {$ELSE} ... {$IFEND}` (IFDEF-cross-branch **with asm arms**). That's the master
 grammar's by-design THEN-wins limitation, NOT a grammar gap: it PASSES on the orchestrated path
-(confirmed). drag-lint's 1 miss (`CLI.pas` DoSelfTestManifestMerge) is the same class — a
-multiline-const-in-context whole-function interaction the orchestrator resolves. **Takeaway: on the
-user's own code the grammar is effectively complete — 99.7% raw, 100% with the preprocessor.**
+(confirmed).
+
+**CORRECTION 2026-07-16:** the claim that drag-lint's 1 miss (`CLI.pas DoSelfTestManifestMerge`)
+was "the same class — a multiline-const-in-context whole-function interaction the orchestrator
+resolves" was **wrong**. It was an ordinary grammar gap: a local var named `Local` (see the closed
+entry in the still-open list). Now fixed, so **drag-lint src is 100% on the MASTER path** — no
+preprocessor required. **Takeaway: on the user's own code the grammar is effectively complete —
+99.7% raw ORM3 / 100% raw drag-lint, 100% with the preprocessor.**
 
 ### Session 4 (2026-07-06) — 2 more gaps (root + pure)
 
@@ -226,20 +251,88 @@ source (typos, broken fixtures), non-Delphi (FPC, C, .NET), or harness artifacts
 maintainer's own production code the effective rate is 100% (orchestrated).
 
 **drag-lint uses the MASTER path** (raw bytes → full `delphi13` DLL, no preprocessor — confirmed
-via `DRagLint.Core.Indexer.pas:249/269` + `DRagLint.Parser.Delphi13.pas:31`). It benefits from the
-master-grammar fixes once the bundled DLL (stale, May 29) is refreshed. A message proposing the
-preprocessor→pure path (with the CLI contract + trade-offs) was left at
-`Delphi-RAG-lint/docs/INBOX-tree-sitter-preprocessor-adoption.md`.
+via `DRagLint.Core.Indexer.pas:249/269` + `DRagLint.Parser.Delphi13.pas:31`). **DLL refreshed
+2026-07-16**, so it now has every master-grammar fix through the `Local` gap. A message proposing
+the preprocessor→pure path (with the CLI contract + trade-offs) was left at
+`Delphi-RAG-lint/docs/INBOX-tree-sitter-preprocessor-adoption.md`. Note drag-lint's own Delphi
+preprocessor port is complete + oracle-diff green (canonical for them since v0.92.0-alpha), but the
+preprocessor→pure grammar swap is still deferred on their side — they run the full grammar.
 
-**Still-open grammar gaps (self-contained, next candidates):**
-- declField half of #5 (`Winapi.D3D10 Register: UINT;`) — table-explosion risk, needs care.
-- `array of T` as last record field with no `;` (SHX, MongoDBCli) — deferred from #2 (element
-  short-string ambiguity).
-- `TAlias = Dotted.Type deprecated;` (ToolsAPI) — type alias with trailing hint on a dotted RHS.
-- `class function F: TObject {$IFDEF AUTOREFCOUNT} unsafe {$ENDIF};` — the IFDEF-wrapped variant of
-  #3 (the bare `unsafe` now parses; the IFDEF-wrapped form is orchestrator-adjacent).
-- CLI.pas L8398 `DoSelfTestManifestMerge` — last CLI.pas error; resisted synthetic isolation, not
-  the keyword-name family. Re-attempt by bisecting the real function body.
+### Measurement re-run 2026-07-16 (post `Local` fix, freshly rebuilt bindings)
+
+| Path | ok / readable | rate | vs session-4 |
+|---|---|---|---|
+| **master** (raw → full grammar) | 16,242 / 16,508 | **98.389%** | 98.39% — unchanged |
+| **orchestrated** (preprocessor → pure) | 16,416 / 16,508 | **99.443%** | 99.44% — unchanged |
+
+The `Local` fix added **0 corpus files** — no file in the baseline corpus names a var `Local`; it
+only occurs in drag-lint's own source, which was never in the corpus (now added to
+`corpus-roots.txt`). The `-2 ok` vs session-4's 16,244/16,418 is **not a regression**: two
+DevExpress files vanished from disk (DevExpress ships ~monthly), leaving both numerator and
+denominator, so the rate is identical.
+
+**Harness gotcha — denominators.** `parse-corpus*.js` emits an `error` key for files it
+*intentionally excludes* (573 here: 410 `inc_fragment`, 154 `read_failed`, 7
+`interpreter_fragment`, 2 `template_placeholder`). Those are NOT parse failures. Score as
+`ok / (total - excluded)`; counting them as failures yields a bogus ~95%.
+
+**`tools/corpus-roots.txt` does NOT reproduce this corpus.** It is a public *starter* file (6
+roots). The real 17,081-file baseline additionally spans ORM3 (699), Indy (662),
+RADStudio12Demos (787), Orpheus, dsharp, AsyncPro, DUnitX, EurekaLog, Loader2019 and IDE library
+paths pulled by `import-delphi-paths.ps1` (`E:\CAD`, `CatalogRepository`). **Regenerating
+`manifest-baseline.txt` from `corpus-roots.txt` alone silently shrinks the corpus to 12,889 and
+drops ORM3** — do not do it without reconciling the roots first. Decide before publishing whether
+to (a) keep the starter file public and record the maintainer's real roots in a gitignored local
+file, or (b) commit the full root list.
+
+> **2026-07-16 — every unique corpus failure has now been individually diagnosed and
+> dcc32-verified. See [CORPUS-CEILING-REPORT.md](CORPUS-CEILING-REPORT.md) for the full
+> classification, the two measurement defects found (31% duplicate manifest rows; the
+> `error`-key scoring trap), and the ranked path from 0.275% to 0.1%. The list below is
+> the grammar-gap subset of that report.**
+
+**Ranked remaining REAL gaps (all dcc32-verified valid Delphi 13), 2026-07-16:**
+
+| files | gap | status |
+|---|---|---|
+| 5 | **chained adjacent IFDEF arms** `{$IFDEF A}x{$ENDIF}{$IFDEF B}y{$ENDIF}` (the `{$ELSE}` form parses; chaining does not) — all EurekaLog | **open — best single lever** |
+| 4 | **implicit `begin..end.` initialization** (Turbo-Pascal form of `initialization..end.`) | attempted+reverted 2026-07-16 — see the inline note at the `unit` rule |
+| 3 | **no trailing `;` after a routine directive** (`stdcall`/`overload`/`deprecated '<msg>'`) in a forward decl — DevExpress | open |
+| 3 | `array[..] of T` as last record field, no `;` | architecturally blocked |
+| 3 | **label as a loop/then-branch body** | attempted+reverted previously |
+| 2 | **asm scanner ends block at `end` inside a `{}` comment** (`AwFView.pas`) | open — self-contained scanner fix, low risk |
+| 2 | **text after final `end.`** (dcc: `W1011` warning only) | open |
+| 2 | **nested generic in a method resolution clause** — `function TFunc<T1, IEnumerable<TResult>>.Invoke = Bind;` | open — root cause found: `genericArg`'s name is `delimited1($.identifier)`, bare identifiers only |
+| 2 | record field named after a callconv keyword (`Register: UINT;`) | open — 2 files vs table-explosion risk; **not worth it** |
+| 2 | `platform` hint + initializer — `X: UInt32 platform = $0;` | open |
+
+**Still-open grammar gaps — RE-VERIFIED 2026-07-16 (every entry below was retested; two were
+already fixed and one is now closed, so trust this list over older prose above):**
+
+- [ ] **STILL OPEN — declField half of #5** (`Winapi.D3D10 Register: UINT;`). Now precisely
+  characterised: it is **exactly the 7 callconv keywords** in declField's post-`;` slot
+  (grammar.js ~1504) — `Register`, `Stdcall`, `Cdecl`, `Safecall`, `Winapi`, `Inline`, `Pascal` —
+  all ERROR as a field name after a prior field. The *hint* keywords (`Deprecated`,
+  `Experimental`) and soft keywords (`Name`, `Index`) are **clean**, because the hint slot sits
+  BEFORE the `;` while the callconv slot sits AFTER it (the `DispInvoke: procedure(...); cdecl;`
+  production), so after `Foo: Integer;` the parser takes `Register` as a trailing callconv on the
+  previous field and then chokes on `: UINT;`.
+  **Verdict: not worth it.** Corpus-wide this is **2 files** (`Winapi.D3D10.pas`,
+  `Winapi.D3D10_1.pas`) against the documented declField/declFieldNoSemi table-explosion risk.
+- [ ] **STILL OPEN — `array of T` as last record field with no `;`** (SHX, MongoDBCli): +3 but
+  regresses -2/3 via the short-string `[N]` lexical overlap. Architecturally blocked; see the
+  inline note at `declFieldNoSemi`. Net ~+1 file — not worth the parser-table cost.
+- [x] **ALREADY FIXED — `TAlias = Dotted.Type deprecated;`** (ToolsAPI). Fixed in `a8cb43f`
+  (session 3, gap #6); this list just never got updated. Retested 2026-07-16: **parses clean.**
+- [x] **ALREADY FIXED — `class function F: TObject {$IFDEF AUTOREFCOUNT} unsafe {$ENDIF};`**
+  Retested 2026-07-16: **parses clean.**
+- [x] **CLOSED 2026-07-16 — CLI.pas `DoSelfTestManifestMerge`** (was L8398, now L12305). `f85b412`
+  recorded this as *"resisted synthetic isolation; not the keyword-name family"* — **that was
+  wrong.** It IS the keyword-name family: the var is named **`Local`**, and `local` is a
+  `procAttribute`, so after a prior `declVar` the parser ate it as a trailing directive. The
+  earlier isolation attempt never tried `Local` as the name (`Global` on the preceding line was a
+  red herring). Fixed root + pure via `alias($.kLocal, $.identifier)`; test in
+  `test/corpus/var-keyword-names.txt`. **DRagLint.CLI.pas: 7 → 0 syntax errors.**
 
 ## Near term — finish the orchestrator
 
