@@ -1,0 +1,35 @@
+==================
+var: platform hint before the initializer (System.pas Default8087CW shape)
+==================
+
+unit A;
+interface
+var
+  Default8087CW: Word platform = $033F;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          name: (identifier)
+          type: (type
+            (typeref
+              (identifier)
+              (kPlatform)))
+          defaultValue: (defaultValue
+            (kEq)
+            (literalNumber)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

@@ -41,5 +41,5 @@ type
       (kEq)
       type: (type
         (typeref
-          (identifier)))
-      (kPlatform))))
+          (identifier)
+          (kPlatform))))))

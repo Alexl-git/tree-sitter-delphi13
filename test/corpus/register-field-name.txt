@@ -1,0 +1,106 @@
+==================
+record field named Register after a prior field (Winapi.D3D10 shape)
+==================
+
+unit A;
+interface
+type
+  TShaderDesc = record
+    Name: PAnsiChar;
+    Register: UINT;
+    Size: UINT;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          name: (identifier)
+          (kEq)
+          type: (type
+            (declClass
+              (kRecord)
+              (declField
+                name: (identifier)
+                type: (type
+                  (typeref
+                    (identifier))))
+              (declField
+                name: (identifier)
+                type: (type
+                  (typeref
+                    (identifier))))
+              (declField
+                name: (identifier)
+                type: (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+trailing callconv on a procedural-type field still parses (regression guard)
+==================
+
+unit A;
+interface
+type
+  TVM = record
+    DispInvoke: procedure(D: Pointer); cdecl;
+    Reserved: Pointer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          name: (identifier)
+          (kEq)
+          type: (type
+            (declClass
+              (kRecord)
+              (declField
+                name: (identifier)
+                type: (type
+                  (declProcRef
+                    (kProcedure)
+                    args: (declArgs
+                      (declArg
+                        name: (identifier)
+                        type: (type
+                          (typeref
+                            (identifier)))))))
+                (kCdecl))
+              (declField
+                name: (identifier)
+                type: (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

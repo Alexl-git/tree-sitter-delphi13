@@ -361,6 +361,11 @@ module.exports = grammar({
 		// declProcFwd's strict groups while both are live.
 		[$.procAttribute],
 		[$._declProcLenient, $._procAttributeNoExt],
+		// Iter 2026-07-16 (Register as a field name, ported from root):
+		// previous field's trailing callconv vs next field's name; `;` vs `:`
+		// one token later decides.
+		[$.declFieldNoSemi, $.declField],
+		[$.declField],
 		// Anonymous record/class types in type position conflict with the
 		// type-declaration form (`type Foo = record ... end;`). Both reach
 		// declClass but at different parser states.
@@ -848,7 +853,15 @@ module.exports = grammar({
 		typeref:         $ => seq(
 			...enable_if(fpc, field('_dummy', optional($.kSpecialize))),
 			$._typeref,
-			...enable_if(delphi, optional(seq($.kDeprecated, $._expr))),
+			// Ported from root 2026-07-16: trailing kPlatform hint on the
+			// typeref — makes `Default8087CW: Word platform = $033F;`
+			// (System.pas x6) parse with declVar's normal defaultValue.
+			// Mirrors the existing kDeprecated role-set; the hint-then-value
+			// ARM inside declVar is a bisect-confirmed table bomb (TODO.md).
+			...enable_if(delphi, optional(choice(
+				seq($.kDeprecated, $._expr),
+				$.kPlatform,
+			))),
 		),
 
 		_typeref:        $ => choice(
@@ -1527,7 +1540,13 @@ module.exports = grammar({
 
 		declField:       $ =>  seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			field('name', delimited1($.identifier)),
+			// Ported from root 2026-07-16: `Register` as a FIELD NAME after a
+			// prior field (Winapi.D3D10 shader reflection records). Narrow —
+			// only kRegister; see the root note for why not all callconvs.
+			field('name', delimited1(choice(
+				$.identifier,
+				alias($.kRegister, $.identifier),
+			))),
 			':',
 			// Ported from root v1.1.x: field type may be a subrange
 			// (`FtrListCount: 0 .. FTRRECMAXCOUNT;`, ORM3 ImportCadFile.pas).

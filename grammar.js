@@ -448,6 +448,14 @@ module.exports = grammar({
 		// `_procAttributeNoExt` groups while both interpretations are still
 		// live (`function F; stdcall; forward;` — forward only decides later).
 		[$._declProcLenient, $._procAttributeNoExt],
+		// Iter 2026-07-16 (Register as a field name): after `Foo: T;` the
+		// token `Register` is either the previous field's trailing callconv
+		// (`; register;`) or the NEXT field's name (`Register: UINT;`) —
+		// `;` vs `:` one token later decides; GLR forks across the
+		// declField/declFieldNoSemi boundary AND within declField itself
+		// (trailing-callconv slot vs end-of-field).
+		[$.declFieldNoSemi, $.declField],
+		[$.declField],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -915,7 +923,19 @@ module.exports = grammar({
 		typeref:         $ => seq(
 			...enable_if(fpc, field('_dummy', optional($.kSpecialize))),
 			$._typeref,
-			...enable_if(delphi, optional(seq($.kDeprecated, $._expr))),
+			// Trailing declaration hints on the type reference itself. The
+			// kDeprecated+message form predates this note; kPlatform (bare)
+			// added 2026-07-16 for the hint-BEFORE-initializer pattern
+			//   Default8087CW: Word platform = $033F;   (System.pas, x6)
+			// — with the hint absorbed here, declVar's `= expr` defaultValue
+			// follows naturally. A hint-then-value ARM inside declVar itself
+			// was tried first and is a bisect-confirmed generate table bomb
+			// (see TODO.md); this mirrors the existing kDeprecated role-set
+			// instead, which the tables already accommodate.
+			...enable_if(delphi, optional(choice(
+				seq($.kDeprecated, $._expr),
+				$.kPlatform,
+			))),
 		),
 
 		_typeref:        $ => choice(
@@ -1632,7 +1652,18 @@ module.exports = grammar({
 
 		declField:       $ =>  seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			field('name', delimited1($.identifier)),
+			// Iter 2026-07-16: `Register` as a FIELD NAME after a prior field
+			// (`Name: PAnsiChar; Register: UINT;` — Winapi.D3D10 shader
+			// reflection records). Without the alias, the trailing-callconv
+			// slot below ate `Register` and choked on the `:`. ONLY kRegister
+			// is aliased — the 2026-07-06 attempt aliased all 7 callconv
+			// keywords into BOTH declField and declFieldNoSemi and blew up
+			// the tables; the narrow form + one-token lookahead (`:` vs `;`)
+			// is all D3D10 needs.
+			field('name', delimited1(choice(
+				$.identifier,
+				alias($.kRegister, $.identifier),
+			))),
 			':',
 			// Iter 2026-07-06: a record/class field type may be a subrange, same
 			// as declVar already allows. `FtrListCount: 0 .. FTRRECMAXCOUNT;`
