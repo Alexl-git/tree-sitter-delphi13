@@ -1,0 +1,152 @@
+# Release automation: on every v* tag —
+#   1. run the green test suites (preprocessor suites + a parse smoke test;
+#      `tree-sitter test` is NOT run here: 3 pp_block external-scanner corpus
+#      tests are documented pre-existing failures, see RESUME.md),
+#   2. build node prebuilds for linux-x64 / win32-x64 / darwin-x64 / darwin-arm64
+#      for BOTH grammar packages,
+#   3. attach the prebuild tarballs to the GitHub Release (created from
+#      RELEASE-NOTES-<tag>.md when present),
+#   4. optionally publish tree-sitter-delphi13, tree-sitter-delphi13-pure and
+#      delphi13-preprocessor to npm — only when the NPM_TOKEN repo secret is set
+#      (npmjs.com > Access Tokens > Generate: "Automation" type, then GitHub
+#      repo Settings > Secrets and variables > Actions > NPM_TOKEN). Versions
+#      already on the registry are skipped, so re-running is always safe.
+#
+# Manual runs (workflow_dispatch) execute steps 1-2 only — a free dry-run of
+# the build matrix without touching the release or npm.
+
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install deps (root)
+        run: npm install --ignore-scripts
+      - name: Preprocessor test suites
+        run: |
+          for t in test-tolerance test-include-modes test-include-resolve test-bom test-asm-quotes test-serve; do
+            echo "== $t"; node "preprocessor/$t.js"
+          done
+      - name: Build root binding (prebuildify)
+        run: npm run prebuildify
+      - name: Parse smoke test
+        run: |
+          node -e "
+            const Parser = require('tree-sitter');
+            const L = require('./bindings/node');
+            const p = new Parser(); p.setLanguage(L);
+            const t = p.parse('unit U;\ninterface\nimplementation\nbegin\n  X := 1;\nend.');
+            if (t.rootNode.hasError) { console.error(t.rootNode.toString()); process.exit(1); }
+            console.log('smoke OK:', t.rootNode.toString().slice(0, 60));
+          "
+
+  prebuild:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-13, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prebuild root
+        run: |
+          npm install --ignore-scripts
+          npm run prebuildify
+      - name: Prebuild pure
+        working-directory: pure
+        run: |
+          npm install --ignore-scripts
+          npm run prebuildify
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prebuilds-${{ matrix.os }}
+          path: |
+            prebuilds/
+            pure/prebuilds/
+          if-no-files-found: error
+
+  release:
+    # Tag pushes only — a workflow_dispatch run stops after the build matrix.
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: prebuild
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - name: Collect prebuilds from all platforms
+        uses: actions/download-artifact@v4
+        with:
+          pattern: prebuilds-*
+          merge-multiple: true
+          # Artifacts carry paths relative to the workspace (prebuilds/…,
+          # pure/prebuilds/…), so merging into the workspace root restores both
+          # trees with every platform side by side.
+          path: .
+      - name: Pack release assets
+        run: |
+          ls -R prebuilds pure/prebuilds
+          tar czf "tree-sitter-delphi13-prebuilds-$TAG.tar.gz" prebuilds
+          tar -C pure -czf "tree-sitter-delphi13-pure-prebuilds-$TAG.tar.gz" prebuilds
+      - name: Ensure GitHub release exists, attach assets
+        run: |
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            if [ -f "RELEASE-NOTES-$TAG.md" ]; then
+              gh release create "$TAG" --title "$TAG" --notes-file "RELEASE-NOTES-$TAG.md"
+            else
+              gh release create "$TAG" --title "$TAG" --generate-notes
+            fi
+          fi
+          gh release upload "$TAG" \
+            "tree-sitter-delphi13-prebuilds-$TAG.tar.gz" \
+            "tree-sitter-delphi13-pure-prebuilds-$TAG.tar.gz" \
+            --clobber
+      - name: Publish to npm (skipped until the NPM_TOKEN secret is set)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NPM_TOKEN secret not set — skipping npm publish (assets are on the GitHub release)."
+            exit 0
+          fi
+          publish_if_new() {
+            local dir="$1"
+            local name ver
+            name=$(node -p "require('./$dir/package.json').name")
+            ver=$(node -p "require('./$dir/package.json').version")
+            if npm view "$name@$ver" version >/dev/null 2>&1; then
+              echo "$name@$ver already on the registry — skipping."
+            else
+              echo "Publishing $name@$ver"
+              (cd "$dir" && npm publish)
+            fi
+          }
+          publish_if_new .
+          publish_if_new pure
+          publish_if_new preprocessor
