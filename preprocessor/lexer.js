@@ -85,15 +85,30 @@ function lex(input) {
       continue;
     }
 
-    // String literal — skip without interpreting any `{` inside
+    // String literal — skip without interpreting any `{` inside. Bounded at
+    // end-of-line: Pascal strings cannot span lines, so a stray unpaired
+    // quote must not hide directives on later lines.
     if (c === 39 /* ' */) {
       i++;
-      while (i < n && !(input.charCodeAt(i) === 39 && input.charCodeAt(i + 1) !== 39)) {
+      while (i < n && input.charCodeAt(i) !== 10 /* \n */
+             && !(input.charCodeAt(i) === 39 && input.charCodeAt(i + 1) !== 39)) {
         // doubled quote = escaped quote, consume both
         if (input.charCodeAt(i) === 39 && input.charCodeAt(i + 1) === 39) { i += 2; continue; }
         i++;
       }
-      if (i < n) i++; // consume closing '
+      if (i < n && input.charCodeAt(i) === 39) i++; // consume closing '
+      continue;
+    }
+
+    // Double-quoted string — dcc's built-in assembler accepts MASM-style
+    // operands like `CMP AL,"'"` (System.AnsiStrings X86ASM arms). Without
+    // this skip the apostrophe INSIDE "..." opens a phantom '-string whose
+    // mis-pairing can swallow real directives ({$ENDIF}) far downstream.
+    // Same end-of-line bound as '-strings.
+    if (c === 34 /* " */) {
+      i++;
+      while (i < n && input.charCodeAt(i) !== 34 && input.charCodeAt(i) !== 10) i++;
+      if (i < n && input.charCodeAt(i) === 34) i++; // consume closing "
       continue;
     }
 
