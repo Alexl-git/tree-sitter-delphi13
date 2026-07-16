@@ -1,0 +1,77 @@
+==================
+method resolution clause with a nested generic instantiation
+==================
+
+unit A;
+interface
+type
+  TG<T1, TResult> = class(TObject, TFunc<T1, IEnumerable<TResult>>)
+    function TFunc<T1, IEnumerable<TResult>>.Invoke = Bind;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          name: (genericTpl
+            entity: (identifier)
+            (kLt)
+            args: (genericArgs
+              (genericArg
+                name: (identifier)
+                name: (identifier)))
+            (kGt))
+          (kEq)
+          type: (type
+            (declClass
+              (kClass)
+              parent: (typeref
+                (identifier))
+              parent: (typeref
+                (typerefTpl
+                  entity: (identifier)
+                  (kLt)
+                  args: (typerefArgs
+                    (identifier)
+                    (typerefTpl
+                      entity: (identifier)
+                      (kLt)
+                      args: (typerefArgs
+                        (identifier))
+                      (kGt)))
+                  (kGt)))
+              (declProc
+                (kFunction)
+                name: (genericDot
+                  lhs: (genericTpl
+                    entity: (identifier)
+                    (kLt)
+                    args: (genericArgs
+                      (genericArg
+                        name: (identifier)
+                        name: (genericArgTpl
+                          (identifier)
+                          (kLt)
+                          (identifier)
+                          (kGt))))
+                    (kGt))
+                  operator: (kDot)
+                  rhs: (identifier))
+                assign: (defaultValue
+                  (kEq)
+                  (identifier)))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

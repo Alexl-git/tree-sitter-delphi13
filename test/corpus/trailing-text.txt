@@ -1,0 +1,24 @@
+==================
+unit: stray text after the final end. is tolerated (dcc W1011)
+==================
+
+unit A;
+interface
+implementation
+end.
+uses Database;
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot))
+  (trailingText))

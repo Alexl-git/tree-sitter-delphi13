@@ -1,0 +1,34 @@
+==================
+ctrl chars (<= 0x1F) between tokens are whitespace
+==================
+
+unit A;
+interface
+procedure Foo;
+implementation
+procedure Foo; begin end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declProc
+        (kProcedure)
+        name: (identifier)))
+    (implementation
+      (kImplementation)
+      (defProc
+        header: (declProc
+          (kProcedure)
+          name: (identifier))
+        body: (block
+          (kBegin)
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

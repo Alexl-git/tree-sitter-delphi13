@@ -386,12 +386,28 @@ module.exports = grammar({
 
 	rules: {
 		root:               $ => optional(choice(
-			$.program,
-			$.library,
-			$.unit,
-			$.package,
+			seq(
+				choice(
+					$.program,
+					$.library,
+					$.unit,
+					$.package,
+				),
+				// Iter 2026-07-16 (ported from root): dcc ignores everything
+				// after the final `end.` (warning W1011 only). One
+				// low-precedence catch-all token; linters can flag the node.
+				optional($.trailingText),
+			),
 			$._definitions // For include files
 		)),
+
+		// Everything from the first non-blank char after the module's final
+		// `end.` to EOF. token(prec(-2)) so real tokens (incl. comments)
+		// always win over it.
+		// NOTE: `(.|\s)*` rather than `[\s\S]*` — tree-sitter's regex engine
+		// compiles the latter to a non-greedy/empty match (token stopped after
+		// one char; observed 2026-07-16).
+		trailingText:       $ => token(prec(-2, /[^\s](.|\s)*/)),
 
 		// HIGH LEVEL ----------------------------------------------------------
 
@@ -836,8 +852,18 @@ module.exports = grammar({
 			$.identifier, $.genericDot, ...enable_if(templates, $.genericTpl)
 		),
 		genericArgs:     $ => delimited1($.genericArg, ';'),
+		// Ported from root 2026-07-16: nested generic instantiation as a
+		// genericArg name element (method resolution clause `function
+		// TFunc<T1, IEnumerable<TResult>>.Invoke = Bind;`). Self-contained
+		// identifier-only recursion — referencing genericTpl/_genericName
+		// here explodes table construction.
+		genericArgTpl:   $ => seq(
+			$.identifier, $.kLt,
+			delimited1(choice($.identifier, $.genericArgTpl)),
+			$.kGt
+		),
 		genericArg:      $ => seq(
-			field('name', delimited1($.identifier)),
+			field('name', delimited1(choice($.identifier, $.genericArgTpl))),
 			// Type constraint: `T: BaseType` or one/more of the special
 			// constraint keywords `class` / `record` / `constructor`, comma-
 			// separated. Examples:
@@ -1959,7 +1985,10 @@ module.exports = grammar({
 		// so structural tokens stay intact.
 		identifier:        $ => /&{0,2}[a-zA-Z_-￿][0-9_a-zA-Z-￿]*/,
 
-	  	_space:            $ => /[\s\r\n\t]+/,
+		// Classic Pascal treats every control char <= #31 as a token
+		// separator (dcc compiles sources with stray bytes like the 0x12 in
+		// DevExpress dxPDFForm.pas), so the whitespace extra does too.
+	  	_space:            $ => /[\s\x00-\x1F]+/,
 		// Single preprocessor directive. The external scanner (src/scanner.c)
 		// handles multi-line `{$IF*}...{$END*}` blocks via the pp_block token,
 		// refusing blocks that wrap structural decls so they parse normally.

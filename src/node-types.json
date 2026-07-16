@@ -6521,6 +6521,10 @@
             "named": false
           },
           {
+            "type": "genericArgTpl",
+            "named": true
+          },
+          {
             "type": "identifier",
             "named": true
           }
@@ -6556,6 +6560,33 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "genericArgTpl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "genericArgTpl",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kGt",
+          "named": true
+        },
+        {
+          "type": "kLt",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -8846,6 +8877,10 @@
           "named": true
         },
         {
+          "type": "trailingText",
+          "named": true
+        },
+        {
           "type": "unit",
           "named": true
         }
@@ -10702,6 +10737,10 @@
   },
   {
     "type": "pp_open",
+    "named": true
+  },
+  {
+    "type": "trailingText",
     "named": true
   },
   {
