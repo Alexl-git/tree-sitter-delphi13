@@ -6485,8 +6485,13 @@
             "name": "declConsts"
           },
           {
-            "type": "SYMBOL",
-            "name": "declProc"
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "declProcLenient"
+            },
+            "named": true,
+            "value": "declProc"
           },
           {
             "type": "SYMBOL",
@@ -7463,6 +7468,36 @@
             {
               "type": "SYMBOL",
               "name": "_declProc"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_declOperator"
+            }
+          ]
+        }
+      ]
+    },
+    "declProcLenient": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "rttiAttributes"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_declProcLenient"
             },
             {
               "type": "SYMBOL",
@@ -10584,6 +10619,244 @@
         }
       ]
     },
+    "_declProcLenient": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kClass"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kProcedure"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kFunction"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kConstructor"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kDestructor"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_genericName"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "args",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "declArgs"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": ":"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "type",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "typeref"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "assign",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "defaultValue"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "kStdcall"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kCdecl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kSafecall"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kPascal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kRegister"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kWinapi"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kInline"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kOverload"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kVirtual"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kAbstract"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kOverride"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kReintroduce"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kStatic"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kDynamic"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kFinal"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kUnsafe"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "REPEAT1",
+                  "content": {
+                    "type": "FIELD",
+                    "name": "attribute",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "procAttribute"
+                    }
+                  }
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ";"
+                      },
+                      {
+                        "type": "REPEAT1",
+                        "content": {
+                          "type": "FIELD",
+                          "name": "attribute",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "procAttribute"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ";"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
     "_declOperator": {
       "type": "SEQ",
       "members": [
@@ -12764,6 +13037,13 @@
     ],
     [
       "caseCaseTr"
+    ],
+    [
+      "procAttribute"
+    ],
+    [
+      "_declProcLenient",
+      "_procAttributeNoExt"
     ],
     [
       "declProcFwd"

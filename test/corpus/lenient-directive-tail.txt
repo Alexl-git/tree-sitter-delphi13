@@ -1,0 +1,75 @@
+==================
+interface decl: final directive group may omit its ';' (dcc-accepted)
+==================
+
+unit A;
+interface
+function IsEq(const R1, R2: Integer): Boolean; overload
+procedure Next;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declProc
+        (kFunction)
+        name: (identifier)
+        args: (declArgs
+          (declArg
+            (kConst)
+            name: (identifier)
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier)))))
+        type: (typeref
+          (identifier))
+        attribute: (procAttribute
+          (kOverload)))
+      (declProc
+        (kProcedure)
+        name: (identifier)))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+interface decl: terminated directive groups still parse (regression guard)
+==================
+
+unit A;
+interface
+function F: Integer; stdcall; overload;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declProc
+        (kFunction)
+        name: (identifier)
+        type: (typeref
+          (identifier))
+        attribute: (procAttribute
+          (kStdcall))
+        attribute: (procAttribute
+          (kOverload))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

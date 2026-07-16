@@ -279,6 +279,37 @@ function statements(trailing) {
 	]);
 }
 
+// Ported from root 2026-07-16: shared front of a routine declaration
+// (everything before the first `;`) — used by _declProc (strict tail,
+// backs defProc) and _declProcLenient (separator-form tail, interface
+// declaration lists only).
+function declProcFront($) {
+	return [
+		...enable_if(fpc, optional($.kGeneric)),
+		optional($.kClass),
+		choice($.kProcedure, $.kFunction, $.kConstructor, $.kDestructor),
+		field('name', $._genericName),
+		field('args', optional($.declArgs)),
+		optional(seq(
+			':',
+			field('type', $.typeref),
+		)),
+		field('assign', optional($.defaultValue)),
+		// Inline calling-convention or procAttribute BEFORE the terminating
+		// ';' — Embarcadero RTL / AzureAPI use lenient forms:
+		//   function DbiInitFn(...): DBIResult stdcall;   (iter 56)
+		//   procedure PreflightBlobRequest(...) overload; (iter 60)
+		// `repeat` allows multiple chained attributes like `... cdecl overload`.
+		repeat(choice(
+			$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+			$.kRegister, $.kWinapi, $.kInline,
+			$.kOverload, $.kVirtual, $.kAbstract, $.kOverride,
+			$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal,
+			$.kUnsafe   // ARC/AUTOREFCOUNT method directive (ported v1.1.0)
+		)),
+	];
+}
+
 module.exports = grammar({
 	name: "delphi13_pure",
 
@@ -325,6 +356,11 @@ module.exports = grammar({
 		// the arm interpretation winning.
 		[$.caseCase],
 		[$.caseCaseTr],
+		// Iter 2026-07-16 (lenient directive tail, ported from root): group
+		// separator `;` vs optional final `;`, and lenient-tail groups vs
+		// declProcFwd's strict groups while both are live.
+		[$.procAttribute],
+		[$._declProcLenient, $._procAttributeNoExt],
 		// Anonymous record/class types in type position conflict with the
 		// type-declaration form (`type Foo = record ... end;`). Both reach
 		// declClass but at different parser states.
@@ -1012,7 +1048,11 @@ module.exports = grammar({
 		),
 
 		_declarations:   $ => repeat1(choice(
-			$.declTypes, $.declVars, $.declConsts, $.declProc, $.declProp,
+			$.declTypes, $.declVars, $.declConsts,
+			// Lenient directive tail in interface declaration lists (ported
+			// from root); rendered as a plain declProc node.
+			alias($.declProcLenient, $.declProc),
+			$.declProp,
 			alias($.declProcFwd, $.declProc),
 			$.declUses, $.declLabels, $.declExports,
 			// Phase 3 (pure): CIL/.NET [assembly: ...] attributes inside
@@ -1178,6 +1218,12 @@ module.exports = grammar({
 		declProc:        $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
 			choice($._declProc, $._declOperator),
+		),
+		// Interface/forward flavor with the lenient directive tail; aliased
+		// back to `declProc` at its use site (CST-identical).
+		declProcLenient: $ => seq(
+			...enable_if(rtti, optional($.rttiAttributes)),
+			choice($._declProcLenient, $._declOperator),
 		),
 
 		declVar:         $ => seq(
@@ -1576,30 +1622,25 @@ module.exports = grammar({
 		// Stuff for procedure / function / operator declarations
 
 		_declProc:       $ => seq(
-			...enable_if(fpc, optional($.kGeneric)),
-			optional($.kClass),
-			choice($.kProcedure, $.kFunction, $.kConstructor, $.kDestructor),
-			field('name', $._genericName),
-			field('args', optional($.declArgs)),
-			optional(seq(
-				':',
-				field('type', $.typeref),
-			)),
-			field('assign', optional($.defaultValue)),
-			// Inline calling-convention or procAttribute BEFORE the terminating
-			// ';' — Embarcadero RTL / AzureAPI use lenient forms:
-			//   function DbiInitFn(...): DBIResult stdcall;   (iter 56)
-			//   procedure PreflightBlobRequest(...) overload; (iter 60)
-			// `repeat` allows multiple chained attributes like `... cdecl overload`.
-			repeat(choice(
-				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
-				$.kRegister, $.kWinapi, $.kInline,
-				$.kOverload, $.kVirtual, $.kAbstract, $.kOverride,
-				$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal,
-				$.kUnsafe   // ARC/AUTOREFCOUNT method directive (ported v1.1.0)
-			)),
+			...declProcFront($),
 			';',
+			// STRICT tail — backs defProc, where the `;` before the body is
+			// mandatory. Lenient separator-form twin below (ported from root).
 			repeat($._procAttributeNoExt)
+		),
+
+		// Lenient twin for interface declaration lists: directive groups are
+		// `;`-SEPARATED with the final `;` optional, so
+		// `function F: Boolean; overload` before another declaration parses
+		// (dxCryptoAPI, dxServerModeUtils, dxGDIPlusAPI — dcc32-verified).
+		_declProcLenient: $ => seq(
+			...declProcFront($),
+			';',
+			optional(seq(
+				repeat1(field('attribute', $.procAttribute)),
+				repeat(seq(';', repeat1(field('attribute', $.procAttribute)))),
+				optional(';')
+			))
 		),
 
 		_declOperator:   $ => seq(

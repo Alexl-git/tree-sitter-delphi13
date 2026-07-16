@@ -282,6 +282,40 @@ function statements(trailing) {
 	]);
 }
 
+// Shared front of a routine declaration (everything before the first `;`):
+// used by BOTH `_declProc` (strict directive tail — backs defProc, where a
+// body follows) and `_declProcLenient` (separator-form tail with optional
+// final `;` — interface/forward declaration lists only).
+function declProcFront($) {
+	return [
+		...enable_if(fpc, optional($.kGeneric)),
+		optional($.kClass),
+		choice($.kProcedure, $.kFunction, $.kConstructor, $.kDestructor),
+		field('name', $._genericName),
+		field('args', optional($.declArgs)),
+		optional(seq(
+			':',
+			field('type', $.typeref),
+		)),
+		field('assign', optional($.defaultValue)),
+		// Inline calling-convention or procAttribute BEFORE the terminating
+		// ';' — Embarcadero RTL / AzureAPI use lenient forms:
+		//   function DbiInitFn(...): DBIResult stdcall;   (iter 56)
+		//   procedure PreflightBlobRequest(...) overload; (iter 60)
+		// `repeat` allows multiple chained attributes like `... cdecl overload`.
+		repeat(choice(
+			$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+			$.kRegister, $.kWinapi, $.kInline,
+			$.kOverload, $.kVirtual, $.kAbstract, $.kOverride,
+			$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal,
+			// ARC/AUTOREFCOUNT method directive: `class function NewInstance:
+			// TObject unsafe; override;` (System.pas / JsonDataObjects /
+			// FireDAC guard NewInstance with {$IFDEF AUTOREFCOUNT} unsafe).
+			$.kUnsafe
+		)),
+	];
+}
+
 module.exports = grammar({
 	name: "delphi13",
 
@@ -405,6 +439,15 @@ module.exports = grammar({
 		// jumpLabel/arm interpretation win wherever both complete.
 		[$.caseCase],
 		[$.caseCaseTr],
+		// Iter 2026-07-16 (lenient directive tail): inside _declProcLenient a
+		// `;` after an attribute group is either the group SEPARATOR (another
+		// group follows) or the optional FINAL `;` — one further token
+		// decides; GLR forks briefly at the attribute keyword.
+		[$.procAttribute],
+		// ...and the lenient tail's groups fork against declProcFwd's strict
+		// `_procAttributeNoExt` groups while both interpretations are still
+		// live (`function F; stdcall; forward;` — forward only decides later).
+		[$._declProcLenient, $._procAttributeNoExt],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1086,7 +1129,12 @@ module.exports = grammar({
 		),
 
 		_declarations:   $ => repeat1(choice(
-			$.declTypes, $.declVars, $.declConsts, $.declProc, $.declProp,
+			$.declTypes, $.declVars, $.declConsts,
+			// Interface declaration lists take the LENIENT directive tail
+			// (final group may omit its `;` — dxCryptoAPI, dxServerModeUtils,
+			// dxGDIPlusAPI); rendered as a plain declProc node.
+			alias($.declProcLenient, $.declProc),
+			$.declProp,
 			alias($.declProcFwd, $.declProc),
 			$.declUses, $.declLabels, $.declExports
 		)),
@@ -1253,6 +1301,13 @@ module.exports = grammar({
 		declProc:        $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
 			choice($._declProc, $._declOperator),
+		),
+		// Interface/forward flavor: lenient directive tail (see
+		// _declProcLenient). Aliased back to `declProc` at its use site so
+		// the CST is indistinguishable.
+		declProcLenient: $ => seq(
+			...enable_if(rtti, optional($.rttiAttributes)),
+			choice($._declProcLenient, $._declOperator),
 		),
 
 		declVar:         $ => seq(
@@ -1673,51 +1728,38 @@ module.exports = grammar({
 		// Stuff for procedure / function / operator declarations
 
 		_declProc:       $ => seq(
-			...enable_if(fpc, optional($.kGeneric)),
-			optional($.kClass),
-			choice($.kProcedure, $.kFunction, $.kConstructor, $.kDestructor),
-			field('name', $._genericName),
-			field('args', optional($.declArgs)),
-			optional(seq(
-				':',
-				field('type', $.typeref),
-			)),
-			field('assign', optional($.defaultValue)),
-			// Inline calling-convention or procAttribute BEFORE the terminating
-			// ';' — Embarcadero RTL / AzureAPI use lenient forms:
-			//   function DbiInitFn(...): DBIResult stdcall;   (iter 56)
-			//   procedure PreflightBlobRequest(...) overload; (iter 60)
-			// `repeat` allows multiple chained attributes like `... cdecl overload`.
-			repeat(choice(
-				$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
-				$.kRegister, $.kWinapi, $.kInline,
-				$.kOverload, $.kVirtual, $.kAbstract, $.kOverride,
-				$.kReintroduce, $.kStatic, $.kDynamic, $.kFinal,
-				// ARC/AUTOREFCOUNT method directive: `class function NewInstance:
-				// TObject unsafe; override;` (System.pas / JsonDataObjects /
-				// FireDAC guard NewInstance with {$IFDEF AUTOREFCOUNT} unsafe).
-				$.kUnsafe
-			)),
+			...declProcFront($),
 			';',
-			// KNOWN GAP — the FINAL directive group may omit its trailing `;` and
-			// dcc32 accepts it. VERIFIED 2026-07-16 with dcc32 (RAD Studio 37):
-			//   `function F(x: Integer): Integer; deprecated 'msg'`  -> exit 0
-			//   `function IsEq(...): Boolean; overload`              -> exit 0
+			// The FINAL directive group may omit its trailing `;` and dcc32
+			// accepts it (VERIFIED 2026-07-16, exit 0):
+			//   `function F(x: Integer): Integer; deprecated 'msg'`
+			//   `function IsEq(...): Boolean; overload`
 			//   `function G: LongWord; stdcall; external 'k32' name 'GetTickCount'`
-			//                                                        -> exit 0
-			// So an earlier TODO calling DevExpress dxServerModeUtils a *source
-			// typo* whose tolerance "would mask real errors" was WRONG — dcc accepts
-			// it silently. Hits dxCryptoAPI L775, dxServerModeUtils L47,
-			// dxGDIPlusAPI L1554 (3 files).
-			// Why NOT fixed: `repeat($._procAttributeNoExt)` + a final
-			// `optional(repeat1(procAttribute))` share their entire prefix — after
-			// `stdcall` the parser cannot tell which group it is until it sees
-			// whether a `;` follows. The fork is between two hidden AUTO-GENERATED
-			// repeat rules (`_procAttribute_repeat1`), which cannot be named in a
-			// `conflicts` entry, and declaring the parent (`_declProc`) does not
-			// resolve it. A real fix needs the directive tail restructured so the
-			// with-`;` and no-`;` forms don't share a prefix.
+			// This STRICT variant does not tolerate that — it backs defProc's
+			// header, where the `;` before the body is mandatory. The lenient
+			// SEPARATOR-form tail lives in `_declProcLenient` (used only via
+			// `_declarations`); a naive `repeat($._procAttributeNoExt)` +
+			// `optional(repeat1(procAttribute))` here would share its whole
+			// prefix and fork inside auto-generated repeat states that cannot
+			// be declared as conflicts (the old KNOWN-GAP note).
 			repeat($._procAttributeNoExt)
+		),
+
+		// Lenient twin of _declProc for FORWARD/interface declaration lists:
+		// directive groups are `;`-SEPARATED with the final `;` optional, so
+		// `function F: Boolean; overload` before another declaration parses.
+		// After each `;` one token of lookahead decides (attribute keyword →
+		// another group, declaration keyword → done) — no shared-prefix fork.
+		// Never used where a body can follow (defProc header stays strict, so
+		// `procedure P; stdcall begin` is still rejected like dcc rejects it).
+		_declProcLenient: $ => seq(
+			...declProcFront($),
+			';',
+			optional(seq(
+				repeat1(field('attribute', $.procAttribute)),
+				repeat(seq(';', repeat1(field('attribute', $.procAttribute)))),
+				optional(';')
+			))
 		),
 
 		_declOperator:   $ => seq(
