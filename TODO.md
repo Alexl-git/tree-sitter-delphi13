@@ -291,20 +291,41 @@ file, or (b) commit the full root list.
 > `error`-key scoring trap), and the ranked path from 0.275% to 0.1%. The list below is
 > the grammar-gap subset of that report.**
 
-**Ranked remaining REAL gaps (all dcc32-verified valid Delphi 13), 2026-07-16:**
+### Session 2026-07-16 (b) — 6 commits, orchestrated 82 → 53 fails (99.503% → 99.679% raw)
 
-| files | gap | status |
+Commits `6f10463`, `f7f590f`, `9bfffa9`, `32766a4`, `fa9ce2e`, `9ce187b`. What moved:
+
+| fix | recovered (orchestrated rows) |
+|---|---|
+| preprocessor: include defines now PROPAGATE in expand mode (dcc textual-include semantics) + nearest-first include search (baseDir subdirs, then up to 3 parents each with their subdirs) | EurekaLog ELowLevel/ETools/EExceptionInfoGeneric (the whole "chained IFDEF arms" cluster — it was never a grammar gap, both arms blanked because `ELDefines.inc` in `Source\Common\` was unresolved AND its `{$DEFINE CPU64}` was being discarded), fibplus VariantRtn + Samples Zlib, YADF includefile |
+| preprocessor: blank decoded UTF-8 BOM, incl. inside spliced includes | Velthuis.BigIntegers (`bases.inc` BOM landed mid-unit) |
+| preprocessor lexer: `"..."` MASM asm strings + quote skips line-bounded | System.AnsiStrings (a `CMP AL,"'"` operand mis-paired `'`-strings and swallowed `{$ENDIF}`s to EOF) |
+| grammar: implicit `begin..end.` unit initialization (unit-tail restructure, `[$.implementation]` conflict — the library-shaped `tr($,'block')` arm) | bdemts ×2, SHDocVw ×2, System.Win.InternetExplorer, Winapi.OpenGL.PkgHelper, AsyncPro APFPDENG ×2 |
+| grammar: `trailingText` after final `end.` (W1011) | MainScreenForm, lazfileutils (doubled `end.`) |
+| grammar: `genericArgTpl` (nested generic in method resolution clause) | YADF genericinterfacemethoddelegation ×2 |
+| grammar: `_space` includes `\x00-\x1F` (dcc treats ctrl chars as blanks) | dxPDFForm (stray 0x12) |
+| harness: BOM-sniffing UTF-16 reads + POSIX define profile for `\rtl\posix\` | umlauts (UTF-16LE), Posix.SysSocket |
+
+**Attempted and DROPPED this session — read before retrying:**
+
+- **`platform` hint before initializer** (`Default8087CW: Word platform = $033F;`,
+  System.pas — 6 of its 7 errors). Adding a hint-then-defaultValue arm to `declVar`'s
+  post-type optional **explodes `tree-sitter generate`** (>20 min, killed twice;
+  bisect-confirmed the arm is the bomb — kPlatform/kDeprecated already have two other
+  roles there: name-alias and post-value hint). Standalone value is ZERO anyway:
+  System.pas also contains a labeled-body gap, so it stays failing until BOTH land.
+- **genericArg name = full `genericTpl`** — same explosion; the shipped fix is the
+  self-contained `genericArgTpl` (identifier-only recursion) instead.
+
+**Ranked remaining REAL gaps (all dcc32-verified valid Delphi 13), post-session 2026-07-16(b) — 13 rows total:**
+
+| rows | gap | status |
 |---|---|---|
-| 5 | **chained adjacent IFDEF arms** `{$IFDEF A}x{$ENDIF}{$IFDEF B}y{$ENDIF}` (the `{$ELSE}` form parses; chaining does not) — all EurekaLog | **open — best single lever** |
-| 4 | **implicit `begin..end.` initialization** (Turbo-Pascal form of `initialization..end.`) | attempted+reverted 2026-07-16 — see the inline note at the `unit` rule |
-| 3 | **no trailing `;` after a routine directive** (`stdcall`/`overload`/`deprecated '<msg>'`) in a forward decl — DevExpress | open |
-| 3 | `array[..] of T` as last record field, no `;` | architecturally blocked |
-| 3 | **label as a loop/then-branch body** | attempted+reverted previously |
-| 2 | **asm scanner ends block at `end` inside a `{}` comment** (`AwFView.pas`) | open — self-contained scanner fix, low risk |
-| 2 | **text after final `end.`** (dcc: `W1011` warning only) | open |
-| 2 | **nested generic in a method resolution clause** — `function TFunc<T1, IEnumerable<TResult>>.Invoke = Bind;` | open — root cause found: `genericArg`'s name is `delimited1($.identifier)`, bare identifiers only |
-| 2 | record field named after a callconv keyword (`Register: UINT;`) | open — 2 files vs table-explosion risk; **not worth it** |
-| 2 | `platform` hint + initializer — `X: UInt32 platform = $0;` | open |
+| 3 | **no trailing `;` after the FINAL directive group** — dxCryptoAPI, dxServerModeUtils, dxGDIPlusAPI | parked — a separator-form rewrite inside `_declProc` would false-accept `procedure P; stdcall begin` (defProc shares the tail); a correct fix needs strict (defProc) / lenient (declProcFwd) tail variants via a JS helper — doubles those item sets, high table-growth risk |
+| 3 | **label as a then/else/loop-body** — LFN ×2 (`if Index = 0 then Found: ...`), superobject | attempted+reverted previously (caseCaseTr GLR cascade — case labels are lexically identical) |
+| 2 | **System.pas** (+ dated backup copy) — needs BOTH platform-before-init (table bomb above) AND labeled-body | parked |
+| 2 | record field named after a callconv keyword (`Register: UINT;`, D3D10/D3D10_1) | **not worth it** (documented table-explosion risk) |
+| 3 | `array[..] of T` as last record field, no `;` (MongoDBCli, ShlObj, SHX) | architecturally blocked (lexical `[N]` overlap) |
 
 **Still-open grammar gaps — RE-VERIFIED 2026-07-16 (every entry below was retested; two were
 already fixed and one is now closed, so trust this list over older prose above):**

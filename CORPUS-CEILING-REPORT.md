@@ -7,6 +7,49 @@ construct isolated into a minimal repro and **verified against `dcc32` (RAD Stud
 
 ---
 
+## 0. ADDENDUM 2026-07-16 (b) — the ranked path was executed; gap 0.275% → 0.115%
+
+Six commits later (`6f10463`…`9ce187b`, same day), the numbers in §1 are superseded:
+
+| Corpus | ok / readable | rate | gap |
+|---|---|---|---|
+| Master, raw rows | 16,266 / 16,508 | 98.534% | 1.466% |
+| Orchestrated, raw rows | 16,455 / 16,508 | **99.679%** | 0.321% |
+| Orchestrated, deduped | 11,279 / 11,322 | **99.620%** | 0.380% |
+| Orchestrated, deduped + Delphi-13-only | 11,279 / 11,292 | **99.885%** | **0.115%** |
+
+What changed (full detail in TODO.md "Session 2026-07-16 (b)"):
+
+- **The "chained adjacent IFDEF arms" cluster (§3.3's top lever) was never a grammar
+  gap.** The preprocessor discarded `{$DEFINE}`s made inside `{$I}`-included files in
+  expand mode and could not resolve includes outside the file's own directory, so
+  EurekaLog's `ELDefines.inc` (in `Source\Common\`) never defined `CPU64` — both arms
+  blanked. Fixed in the preprocessor (defines propagation + nearest-first search).
+- **Implicit `begin..end.` initialization** — fixed via the unit-tail restructure §4
+  called for (library-shaped `tr($,'block')` arm + one declarable `[$.implementation]`
+  conflict). Also recovered AsyncPro APFPDENG ×2, which §5's stale note had
+  mis-attributed.
+- **Text after final `end.`**, **nested generic in a method resolution clause**, and a
+  new class — **control chars ≤ #31 between tokens** (dcc treats them as blanks;
+  dxPDFForm's stray 0x12) — all fixed in the grammar.
+- **System.AnsiStrings** was a preprocessor LEXER bug (MASM `"..."` operand in an asm
+  arm mis-paired `'`-strings and swallowed `{$ENDIF}`s). **Velthuis.BigIntegers** was a
+  BOM spliced mid-unit from an included file. **umlauts** (UTF-16) and
+  **Posix.SysSocket** (wrong platform profile) were harness measurement artifacts.
+
+Reclassified out of "real": `TargetB.pas` ×2 (extra `end;` — INVALID_SRC),
+`OtlAsyncStreams.Common.pas` (`?` placeholder args — INVALID_SRC), `paswstring.pas`
+(FPC `[external name]` exposed once include defines propagate — NOT_DELPHI_FPC).
+
+**The 13 remaining real-gap rows** (all parked with recorded reasons, see TODO.md):
+no-`;` final directive group (dxCryptoAPI, dxServerModeUtils, dxGDIPlusAPI), labeled
+then/else/loop-body (LFN ×2, superobject), System.pas ×2 (needs BOTH the labeled-body
+fix and the `platform`-before-initializer arm — the latter bisect-confirmed to explode
+`tree-sitter generate`), `Register:` field (D3D10 ×2), `array[..] of T` last-field-no-`;`
+(MongoDBCli, ShlObj, SHX).
+
+---
+
 ## 1. Headline
 
 | Corpus | ok / readable | rate | gap |
