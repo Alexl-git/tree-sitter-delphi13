@@ -27,6 +27,7 @@ const fs = require('fs');
 const path = require('path');
 const { lex } = require('./lexer');
 const { evalExpr } = require('./evalExpr');
+const { applyTolerances } = require('./tolerance');
 
 // Process-lifetime cache of directory listings for the nearest-first include
 // search (dir -> sorted absolute subdirectory paths). Corpus scans call
@@ -248,7 +249,20 @@ function preprocess(input, options = {}) {
     blankifyDirective(srcLen);
   }
 
-  return { text: outBuf.join(''), defines: Array.from(defines) };
+  let text = outBuf.join('');
+  let toleranceEdits;
+  // Opt-in dcc-tolerance normalization (see tolerance.js): inserts the ';'
+  // dcc itself imagines in a few verified no-';' constructs. Top-level text
+  // only — include recursion returns raw text to the parent, which runs the
+  // pass once over the assembled output.
+  if (options.tolerances && !options._depth) {
+    const t = applyTolerances(text);
+    text = t.text;
+    toleranceEdits = t.edits;
+  }
+  const result = { text, defines: Array.from(defines) };
+  if (toleranceEdits) result.toleranceEdits = toleranceEdits;
+  return result;
 }
 
 module.exports = { preprocess };

@@ -167,6 +167,9 @@ for (const file of files) {
   try {
     preprocessed = preprocess(source, {
       defines: fileDefines, numericDefines: DEFAULT_NUMERIC, baseDir: path.dirname(file),
+      // dcc-tolerance normalization (tolerance.js): dcc accepts these
+      // no-';' forms, so the scan should too.
+      tolerances: true,
     }).text;
   } catch (e) {
     skipCount++;
