@@ -7,16 +7,25 @@ construct isolated into a minimal repro and **verified against `dcc32` (RAD Stud
 
 ---
 
-## 0. ADDENDUM 2026-07-16 (b) — the ranked path was executed; gap 0.275% → 0.115%
+## 0. ADDENDUM 2026-07-16 (b+c, v1.2.0) — the ranked path was executed; gap 0.275% → 0.035%
 
-Six commits later (`6f10463`…`9ce187b`, same day), the numbers in §1 are superseded:
+Eleven commits later (`6f10463`…v1.2.0, same day), the numbers in §1 are superseded:
 
 | Corpus | ok / readable | rate | gap |
 |---|---|---|---|
-| Master, raw rows | 16,266 / 16,508 | 98.534% | 1.466% |
-| Orchestrated, raw rows | 16,455 / 16,508 | **99.679%** | 0.321% |
-| Orchestrated, deduped | 11,279 / 11,322 | **99.620%** | 0.380% |
-| Orchestrated, deduped + Delphi-13-only | 11,279 / 11,292 | **99.885%** | **0.115%** |
+| Master, raw rows | 16,275 / 16,508 | 98.588% | 1.412% |
+| Orchestrated, raw rows | 16,470 / 16,508 | **99.770%** | 0.230% |
+| Orchestrated, deduped | 11,288 / 11,322 | **99.700%** | 0.300% |
+| Orchestrated, deduped + Delphi-13-only | 11,288 / 11,292 | **99.965%** | **0.035%** |
+
+Late-session additions (c): the **dcc-tolerance pass** (preprocessor, opt-in) closed
+the no-`;` directive-tail trio AND the "architecturally blocked" `array[..] of T`
+last-field trio at the text level; the **label-as-body** and **lenient-directive-tail
+(interface lists)** grammar restructures then landed cleanly too — each needed only
+NAMED conflicts, defeating both previously-recorded cascades. Remaining real gaps:
+**4 rows** — System.pas ×2 (platform-before-initializer, the bisect-confirmed
+declVar table bomb; an untried `typeref`-trailing-`platform` angle is noted in
+TODO.md) and D3D10 ×2 (`Register:` field, documented not-worth-it).
 
 What changed (full detail in TODO.md "Session 2026-07-16 (b)"):
 

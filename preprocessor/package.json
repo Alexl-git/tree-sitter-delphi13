@@ -1,6 +1,6 @@
 {
   "name": "delphi13-preprocessor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Standalone Delphi 13 preprocessor — resolves {$IFDEF}/{$IF}/{$ELSE}/{$ENDIF} chains, {$DEFINE}/{$UNDEF}, {$I X.inc} includes, and numeric directives. Produces preprocessor-resolved text suitable for tree-sitter-delphi13-pure or any other consumer that prefers a flat source.",
   "main": "preprocess.js",
   "bin": {

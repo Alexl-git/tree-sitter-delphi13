@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-delphi13-pure",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Pure Delphi 13 tree-sitter sub-grammar — drops {$IFDEF}/pp_* tokens entirely and expects preprocessor-resolved source as input. Pairs with delphi13-preprocessor to reach 99%+ pass on real Delphi 13 corpora.",
   "main": "bindings/node",
   "types": "bindings/node",

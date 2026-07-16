@@ -317,15 +317,20 @@ Commits `6f10463`, `f7f590f`, `9bfffa9`, `32766a4`, `fa9ce2e`, `9ce187b`. What m
 - **genericArg name = full `genericTpl`** — same explosion; the shipped fix is the
   self-contained `genericArgTpl` (identifier-only recursion) instead.
 
-**Ranked remaining REAL gaps (all dcc32-verified valid Delphi 13), post-session 2026-07-16(b) — 13 rows total:**
+### Session 2026-07-16 (c) — v1.2.0: +4 commits, orchestrated 53 → 38 fails, adjusted gap 0.115% → 0.035%
+
+| fix | commit | recovered |
+|---|---|---|
+| **dcc-tolerance pass** (preprocessor, opt-in `tolerances:true`) — inserts the `;` dcc itself imagines; Rule A = final directive group (same-line-`;` + decl-keyword-follower anchors), Rule B = `array[..] of T` last field (next-code-line-`end` anchor); row/col-preserving, false positives provably harmless | `d0842ff` | dxCryptoAPI, dxServerModeUtils, dxGDIPlusAPI, MongoDBCli ×2, ShlObj, SHX (orchestrated) |
+| **label as then/else/do body** — `lastStatement` gains optional `prec.dynamic(-1) $.label`; case-ARM interpretation keeps winning (`[caseCase]`/`[caseCaseTr]` conflicts — NAMED, unlike the old cascade) | `1537fd7` | LFN ×2, superobject (both paths) |
+| **lenient directive tail in interface lists** — `declProcFront($)` extraction; `_declProcLenient` separator-form tail used only via `_declarations`; defProc header stays strict (`procedure P; stdcall begin` still rejected); `[procAttribute]` + `[_declProcLenient, _procAttributeNoExt]` conflicts | `9452610` | dxCryptoAPI, dxServerModeUtils, dxGDIPlusAPI (master path — orchestrated already covered by tolerance) |
+
+**Ranked remaining REAL gaps, post-v1.2.0 — 4 rows total:**
 
 | rows | gap | status |
 |---|---|---|
-| 3 | **no trailing `;` after the FINAL directive group** — dxCryptoAPI, dxServerModeUtils, dxGDIPlusAPI | parked — a separator-form rewrite inside `_declProc` would false-accept `procedure P; stdcall begin` (defProc shares the tail); a correct fix needs strict (defProc) / lenient (declProcFwd) tail variants via a JS helper — doubles those item sets, high table-growth risk |
-| 3 | **label as a then/else/loop-body** — LFN ×2 (`if Index = 0 then Found: ...`), superobject | attempted+reverted previously (caseCaseTr GLR cascade — case labels are lexically identical) |
-| 2 | **System.pas** (+ dated backup copy) — needs BOTH platform-before-init (table bomb above) AND labeled-body | parked |
-| 2 | record field named after a callconv keyword (`Register: UINT;`, D3D10/D3D10_1) | **not worth it** (documented table-explosion risk) |
-| 3 | `array[..] of T` as last record field, no `;` (MongoDBCli, ShlObj, SHX) | architecturally blocked (lexical `[N]` overlap) |
+| 2 | **System.pas** (+ dated backup) — `platform` hint before initializer (`Default8087CW: Word platform = $033F;`, 6 sites/file) | parked — the declVar arm is a bisect-confirmed generate table bomb. UNTRIED angle: `typeref` already tolerates a trailing `deprecated` hint (`[$.typeref]` conflict exists); adding `platform` there would make `Word platform` parse as the TYPE and `= $033F` follow naturally — one experiment, same 10-min abort rule |
+| 2 | record field named after a callconv keyword (`Register: UINT;`, D3D10/D3D10_1) | **not worth it** (documented declField/declFieldNoSemi table-explosion risk) |
 
 **Still-open grammar gaps — RE-VERIFIED 2026-07-16 (every entry below was retested; two were
 already fixed and one is now closed, so trust this list over older prose above):**
