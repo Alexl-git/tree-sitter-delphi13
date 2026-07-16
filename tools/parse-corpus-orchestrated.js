@@ -81,7 +81,14 @@ for (const file of files) {
   if (i % 500 === 0) process.stderr.write(`  ... ${i}/${files.length}  ok=${okCount} fail=${failCount} skip=${skipCount}\n`);
 
   let source;
-  try { source = fs.readFileSync(file, 'utf8'); }
+  try {
+    // BOM-sniffing read — see parse-corpus.js; keeps UTF-16 sources (YADF
+    // umlauts fixture) from being mangled by a blind utf8 decode.
+    const buf = fs.readFileSync(file);
+    if (buf.length >= 2 && buf[0] === 0xFF && buf[1] === 0xFE) source = buf.toString('utf16le');
+    else if (buf.length >= 2 && buf[0] === 0xFE && buf[1] === 0xFF) source = Buffer.from(buf).swap16().toString('utf16le');
+    else source = buf.toString('utf8');
+  }
   catch (_) { skipCount++; fs.writeSync(out, JSON.stringify({ file, error: 'read' }) + '\n'); continue; }
 
   // Apply same harness filter as parse-corpus.js
@@ -99,8 +106,16 @@ for (const file of files) {
 
   // Path-based per-project defines tuning. Each entry adds defines when
   // the file path matches. Designed for the common case where a project
-  // assumes its own gate define is on.
+  // assumes its own gate define is on. `replaceBase: true` swaps the whole
+  // base profile instead of appending — for sources that target a different
+  // platform than the default Win64 profile (the RTL's Posix units are
+  // meant to be compiled with POSIX/LINUX defines, never MSWINDOWS).
   const PATH_DEFINES = [
+    { re: /\\rtl\\posix\\/i, replaceBase: true, defs: [
+      'POSIX', 'POSIX64', 'LINUX', 'LINUX64', 'CPUX64', 'CPU64BITS',
+      'CPUX86_64', 'CONDITIONALEXPRESSIONS', 'UNICODE',
+      'COMPILER_VERSION_37', 'VER370', 'ASSEMBLER',
+    ]},
     { re: /EurekaLog/i, defs: [
       'EUREKALOG', 'USE_NAMESPACES',
       'HAS_UNIT_TYPES', 'HAS_UNIT_CONTNRS', 'HAS_UNIT_GENERICS',
@@ -140,8 +155,12 @@ for (const file of files) {
       'D_X12', 'D_X13',
     ]},
   ];
-  const fileDefines = [...defines];
-  for (const p of PATH_DEFINES) if (p.re.test(file)) fileDefines.push(...p.defs);
+  let fileDefines = [...defines];
+  for (const p of PATH_DEFINES) {
+    if (!p.re.test(file)) continue;
+    if (p.replaceBase) fileDefines = [...p.defs];
+    else fileDefines.push(...p.defs);
+  }
 
   // Preprocess
   let preprocessed;

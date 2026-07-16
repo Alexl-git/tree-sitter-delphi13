@@ -111,11 +111,16 @@ for (const file of files) {
   try {
     source = fs.readFileSync(file);
     bytes = source.length;
-    // Pascal source is typically ANSI/CP-1252 or UTF-8. Try UTF-8, fall back.
-    try {
+    // Pascal source is typically ANSI/CP-1252 or UTF-8, occasionally UTF-16
+    // with BOM (YADF umlauts fixture; IDE "Save As" accidents). Sniff the BOM
+    // like a real consumer (drag-lint EnsureUtf8Bytes) instead of mangling
+    // UTF-16 through a utf8 decode.
+    if (source.length >= 2 && source[0] === 0xFF && source[1] === 0xFE) {
+      source = source.toString('utf16le');
+    } else if (source.length >= 2 && source[0] === 0xFE && source[1] === 0xFF) {
+      source = Buffer.from(source).swap16().toString('utf16le');
+    } else {
       source = source.toString('utf8');
-    } catch (e) {
-      source = source.toString('binary');
     }
     lines = (source.match(/\n/g) || []).length + 1;
   } catch (e) {
