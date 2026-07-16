@@ -8,17 +8,17 @@ then [TODO.md](TODO.md) (session table + remaining gaps) and
 
 ## Status — v1.2.1 committed + tagged + pushed (100.000% adjusted); npm: root+pure 1.2.0 LIVE, 1.2.1 + preprocessor 1.1.0 need one OTP publish each
 
-- **v1.2.0** (root) / **1.2.0** (pure) / **1.1.0** (preprocessor) — 11 commits over
-  v1.1.2, tagged `v1.2.0`, pushed to origin/master.
-- **npm publish blocked on auth** (`npm whoami` → E401), exactly like v1.1.2 was:
+- **v1.2.1** (root+pure) — tagged + pushed. **npm state:** root+pure **1.2.0 are
+  LIVE** (user published with OTP); **1.2.1 and delphi13-preprocessor 1.1.0 are
+  built and one OTP away each**:
   ```
-  npm login
-  cd C:\Projects\tree-sitter-delphi13      && npm publish
-  cd C:\Projects\tree-sitter-delphi13\pure && npm publish
+  cd C:\Projects\tree-sitter-delphi13              && npm publish   (OTP)
+  cd C:\Projects\tree-sitter-delphi13\pure         && npm publish   (OTP)
+  cd C:\Projects\tree-sitter-delphi13\preprocessor && npm publish   (OTP)
   ```
-  (Optionally also `preprocessor/` if publishing `delphi13-preprocessor` separately.)
-  NOTE: registry still has root 1.1.1 / pure 1.1.0 — v1.1.2/1.1.1 were never
-  published; v1.2.0 supersedes them.
+  The preprocessor publish matters: the registry's 1.0.0 has a broken `bin`
+  (files-whitelist omitted defaults.js; 1.1.0 fixes packaging + adds the include
+  semantics + tolerance pass).
 - **drag-lint DLLs rebuilt from the v1.2.0 parser and all 9 live copies refreshed**
   (see the INBOX note in their repo). They preprocess by default (PP-Task-9), so
   they benefit from the whole orchestrated stack once they port the preprocessor
@@ -32,9 +32,11 @@ then [TODO.md](TODO.md) (session table + remaining gaps) and
 | master raw | 98.443% (257) | **98.588% (233)** |
 | deduped + Delphi-13-only | 99.761% (27 rows) | **99.965% (4 rows)** |
 
-The 4 remaining real rows: System.pas ×2 (needs the `platform = $x` declVar arm —
-**table bomb**, bisect-confirmed; a `typeref`-trailing-`platform` angle is untried),
-D3D10 ×2 (`Register:` field — documented not-worth-it).
+**v1.2.1 closed the last two**: System.pas ×2 via typeref-trailing-`platform` (the
+declVar arm remains a documented table bomb — don't retry that shape) and D3D10 ×2
+via a kRegister-only field-name alias. **Adjusted rate: 100.000% — zero real gaps.**
+Final: orchestrated 99.818% raw (30 fails, all invalid/fixture/non-Delphi), master
+98.612%.
 
 ## What landed (11 commits) — full detail in TODO.md session table
 
