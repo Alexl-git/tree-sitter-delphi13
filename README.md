@@ -33,7 +33,7 @@ watchlist).
 |---|---|
 | **`tree-sitter-delphi13`** *(this directory)* | Master grammar — Delphi-13 syntax, all proven fixes from upstream merged + new extensions. Self-contained "THEN-wins" parser (98.6% raw on its own). |
 | **[`tree-sitter-delphi13-pure`](pure/)** | Simpler sub-grammar that drops `pp_*` tokens entirely. Expects preprocessor-resolved source. |
-| **[`delphi13-preprocessor`](preprocessor/)** | Standalone JavaScript library that resolves `{$IFDEF}` / `{$IF}` / `{$DEFINE}` / `{$I X.inc}` directives as a text transformation. |
+| **[`delphi13-preprocessor`](preprocessor/)** | Standalone JavaScript library that resolves `{$IFDEF}` / `{$IF}` / `{$DEFINE}` / `{$I X.inc}` directives as a text transformation. The **canonical** preprocessor is now a pure-Delphi port of this library (shipping inside drag-lint); this JS package remains the byte-for-byte oracle and the drop-in choice for JavaScript consumers. |
 
 The full pipeline `preprocessor → pure → AST` is what reaches **100.000%** on valid
 Delphi 13. Use the master grammar alone (98.6% raw) if you don't need

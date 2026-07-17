@@ -1,6 +1,36 @@
 # RESUME — tree-sitter-delphi13
 
-## >>> ALL-DELPHI MIGRATION (IN FLIGHT 2026-07-17) — read this section first
+## >>> USER'S IMMEDIATE NEXT ACTION (2026-07-17 #2) — DONE 2026-07-17 #3
+
+All three steps completed. Next real work = the ALL-DELPHI MIGRATION section below.
+
+1. **VERIFIED — 100% still holds.** Re-ran `CorpusScanDelphi` (Win64\Release exe +
+   staged delphi13 DLL) against `work\manifest-baseline.txt` →
+   `SUMMARY total 17081, ok 16376, fail 51, skip 654` — **byte-identical** to the
+   recorded `work\results-delphi-harness.jsonl` (0 differing lines; fresh out =
+   `work\results-delphi-verify.jsonl`). Second confirmation: `git diff v1.2.1..HEAD`
+   touches only CI/docs/JS-tolerance — **no `grammar.js`/`src\parser.c` change**, so
+   the v1.2.1 100.000%-adjusted ceiling is definitionally preserved. The 51
+   all-Delphi-harness fails are the known in-flight set (EurekaLog/fibplus/Indy/
+   Orpheus include-body-splice by-design + YADF/jcf/Loader2019 fixtures & non-D13).
+2. **PUBLISHED.** The v1.2.1 GitHub Release already existed (published
+   2026-07-16); it had **no assets**. Attached `delphi13-preprocessor-1.1.0.tgz`
+   (`npm pack` of `preprocessor/`) and appended a "For JavaScript users" section to
+   the release body pointing JS consumers at it. `gh release view v1.2.1`.
+3. **README fixed.** 100.000% figure already correctly placed (badge/headline/
+   table). Added to the `delphi13-preprocessor` row: canonical preprocessor is now
+   the pure-Delphi port (in drag-lint); JS package = byte-for-byte oracle + drop-in
+   for JS consumers. Committed.
+
+Note: npm state — root+pure **1.2.0 LIVE**; **1.2.1 + delphi13-preprocessor 1.1.0
+still need one OTP publish each** (user runs `npm publish ... --auth-type=web`).
+drag-lint repo has **6 local unpushed commits** (the team's call to push) incl. the
+tolerance.pas port; INBOX `Delphi-RAG-lint/docs/INBOX-tree-sitter-preprocessor-fully-ported.md`
+tells them to review + push.
+
+---
+
+## >>> ALL-DELPHI MIGRATION (IN FLIGHT 2026-07-17) — read this section second
 
 User directive: "get rid of JS, preprocessor 100% only Delphi." State at handoff:
 
