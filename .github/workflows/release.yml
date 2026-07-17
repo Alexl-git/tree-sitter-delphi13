@@ -62,7 +62,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-latest]
+        # windows-2022 pinned: the Server 2025 image behind windows-latest
+        # breaks node-gyp's Visual Studio detection (observed 2026-07-16).
+        # macos-13 = darwin-x64, macos-latest = darwin-arm64.
+        os: [ubuntu-latest, windows-2022, macos-13, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
