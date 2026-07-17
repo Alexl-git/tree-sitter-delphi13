@@ -7,12 +7,17 @@
 
 Tree-sitter grammar pipeline focused on **Delphi 13 (RAD Studio 37.0 / Florence)** and the surrounding modern Delphi ecosystem.
 
-**v1.2.1: 100.000% pass rate on compilable Delphi 13** (zero ERROR nodes), measured
-on an 11,722-unique-file corpus spanning the RAD Studio 13 RTL/VCL (including
-`System.pas`), DevExpress, Spring4D, EurekaLog, Indy, FireDAC, AsyncPro/Orpheus,
-mORMot-era community code and a full production application. Every failure that
-remains is individually diagnosed, dcc32-cross-checked, and *supposed* to fail
-(see [CORPUS-CEILING-REPORT.md](CORPUS-CEILING-REPORT.md)).
+**v1.2.2: 100.000% pass rate on compilable Delphi 13** (zero ERROR nodes), measured
+on a corpus spanning the RAD Studio 13 RTL/VCL (including `System.pas`), DevExpress,
+Spring4D, EurekaLog, Indy, FireDAC, AsyncPro/Orpheus, **JCL/JVCL (JEDI)**, mORMot-era
+community code and a full production application — 23,385 deduplicated files. Every
+failure that remains is individually diagnosed, dcc32-cross-checked, and *supposed*
+to fail (see [CORPUS-CEILING-REPORT.md](CORPUS-CEILING-REPORT.md)).
+
+v1.2.2 added the JEDI (JCL + JVCL) libraries to the corpus and closed the three
+valid-Delphi-13 gaps they surfaced: a subrange bound that is a nested constant-expr
+call (`2..Succ(High(T))`), the `at` soft keyword as an `inherited` method name
+(`inherited At(...)`), and `Operator` used as a record/class field name.
 
 | measurement basis | pass rate |
 |---|---|
