@@ -1,5 +1,51 @@
 # RESUME — tree-sitter-delphi13
 
+## >>> ALL-DELPHI MIGRATION (IN FLIGHT 2026-07-17) — read this section first
+
+User directive: "get rid of JS, preprocessor 100% only Delphi." State at handoff:
+
+**DONE (committed):**
+- tree-sitter `e92e158`: JS tolerance switched to REPLACEMENT semantics
+  (offset-identity; corpus outcome identical 16,478 ok) — the frozen reference.
+- drag-lint `260dd7d`: **tolerance.pas port COMPLETE** — the Delphi preprocessor
+  now has ALL 5 v1.2.1 changes. All 13 preprocess suites green.
+  `run_tolerance.ps1` = the FIRST node-free suite (byte-compares against frozen
+  `fixtures/tolerance/*.expected` snapshots) — the template for de-JS-ing the rest.
+- drag-lint `dabd499`: **CorpusScanDelphi** (tools\corpusscan) — all-Delphi
+  harness (lenient Node-parity encoding; defines-only includes; --tolerances;
+  full delphi13 DLL), 17,081 rows in ~137s.
+
+**NEXT ACTION (the exact spot):** diff `work\results-delphi-harness.jsonl`
+(ok 16,376 / fail 51 / skip 654) against the JS reference
+`work\results-orch-tolrepl.jsonl` (16,478 / 30 / 573) with the session's node
+differ pattern (join per-file, categorize error-class changes). Remaining deltas:
+(a) skip +81 — re-categorize after the lenient-decode fix (was read/threw);
+(b) fail +21, of which ~12 are the include-BODY-splice class (EurekaLog
+ESendAPI*/EConsts/EUnmangling, fibplus VariantRtn, Indy idassemblyinfo +
+iddsnsasllisteditorformnet, Orpheus ovcspary) — JS 'expand' spliced content
+includes (const lists / routine bodies); Delphi is deliberately defines-only
+(offset-identity). POLICY DECISION NEEDED: accept+document as the harness
+semantic (recommended) or add measurement-only expansion. Gate: no JS-pass may
+fail without a recorded reason.
+
+**THEN:** (1) convert the 4 render.js-calling suites (asm_quotes, include_modes,
+include_resolve, preprocess_core/oracle_corpus) to frozen snapshots per the
+run_tolerance template; (2) JS decommission in THIS repo: label `preprocessor/`
+as frozen reference, remove delphi13-preprocessor from `.github/workflows/
+release.yml` npm-publish step + publishing plans, README note ("canonical
+preprocessor is Delphi, in drag-lint"); (3) new corpus numbers = Delphi-harness
+numbers going forward; (4) INBOX note to drag-lint + memory update.
+
+**Gotchas:** drag-lint repo = git, branch `main`, has origin (my 2 commits are
+LOCAL; pushing is the drag-lint team's call). Their 3 dirty files (BACKLOG.md,
+dclDragLintWizard.*) are THEIR pre-existing changes — do not touch. Delphi
+TEncoding is STRICT where Node is lenient (the harness has LenientUtf8Decode /
+SafeUtf8Encode for parity — reuse them). TTSParser.ParseString raises on ''.
+Build recipes: scratchpad bats (build-draglint-cli.bat, build-corpusscan.bat)
+via PowerShell Start-Process; stage drag-lint.exe to third_party\dll-win64.
+
+---
+
 Cold-start pointer. Written 2026-07-16 (c) — v1.2.0 release state. Read this first,
 then [TODO.md](TODO.md) (session table + remaining gaps) and
 [CORPUS-CEILING-REPORT.md](CORPUS-CEILING-REPORT.md) (§0 addendum).
