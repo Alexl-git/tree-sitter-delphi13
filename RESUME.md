@@ -1,14 +1,15 @@
 # RESUME — tree-sitter-delphi13
 
-## >>> v1.2.2 PUBLISHED — DONE 2026-07-17 #5 (npm publish = your OTP)
+## >>> v1.2.2 FULLY PUBLISHED — DONE 2026-07-17 #5
 
 Released v1.2.2 (JEDI/JVCL corpus + 3 grammar-gap fixes). Commit 2f1e844, tag
 v1.2.2 pushed. **GitHub Release v1.2.2 LIVE** with 4 assets: root+pure 1.2.2 tgz,
 JS `delphi13-preprocessor-1.1.0.tgz`, AND the canonical **Delphi** preprocessor
 source `delphi13-preprocessor-delphi-1.2.2.zip` (6 drag-lint `src/preprocess/*.pas`
-units + README). **STILL PENDING (your OTP):** `npm publish` root@1.2.2 +
-pure@1.2.2 (npm currently shows 1.2.1 live for both; preprocessor JS 1.1.0
-unchanged/already live). Packed tarballs in scratchpad `release-assets/`.
+units + README). **npm: `tree-sitter-delphi13` 1.2.2 + `tree-sitter-delphi13-pure`
+1.2.2 are LIVE** (user published w/ OTP 2026-07-17); `delphi13-preprocessor` 1.1.0
+unchanged/already live. Nothing pending. drag-lint still needs to rebuild their
+production DLL — see `Delphi-RAG-lint/docs/INBOX-tree-sitter-jedi-jvcl-grammar-fixes.md`.
 
 ## >>> JEDI/JVCL CORPUS + 3 GRAMMAR-GAP FIXES — DONE 2026-07-17 #4
 
