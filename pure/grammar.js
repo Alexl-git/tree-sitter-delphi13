@@ -700,7 +700,13 @@ module.exports = grammar({
 			field('body', choice(tr($, 'block'), tr($, 'asm'))),
 		),
 
-		inherited:       $ => prec.right(seq($.kInherited, optional($.identifier))),
+		inherited:       $ => prec.right(seq($.kInherited, optional(choice(
+			$.identifier,
+			// Soft keyword `at` (raise-with-address) as an INHERITED method
+			// name: `inherited At(Offset)` (JCL JclCLR.pas). Mirrors the root
+			// full grammar's fix (2026-07-17).
+			alias($.kAtWord, $.identifier),
+		)))),
 
 		exprDot:         $ => choice(
 			op.infix(5, $._ref, $.kDot, $._ref),
@@ -1198,6 +1204,9 @@ module.exports = grammar({
 			// conflicts with typerefDot in this position.)
 			seq($.identifier, '.', $.identifier),
 			seq($.identifier, '(', $.identifier, ')'),
+			// Nested const-expr call bound — `2 .. Succ(High(TV))` (JCL
+			// JclSysUtils). Mirrors the root full grammar's fix (2026-07-17).
+			seq($.identifier, '(', seq($.identifier, '(', $.identifier, ')'), ')'),
 			// `hid - 1`, `MaxN + 2` — narrow `identifier OP integer` form for
 			// real-corpus patterns like `TNmbrRange = 0 .. hid - 1;`.
 			// Kept narrow (no full _expr) to avoid the conflict cascade hit
@@ -1546,6 +1555,9 @@ module.exports = grammar({
 			field('name', delimited1(choice(
 				$.identifier,
 				alias($.kRegister, $.identifier),
+				// `Operator` as a FIELD NAME (JVCL JvXmlDatabase). Mirrors the
+				// root full grammar's fix (2026-07-17).
+				alias($.kOperator, $.identifier),
 			))),
 			':',
 			// Ported from root v1.1.x: field type may be a subrange

@@ -1,5 +1,27 @@
 # RESUME — tree-sitter-delphi13
 
+## >>> JEDI/JVCL CORPUS + 3 GRAMMAR-GAP FIXES — DONE 2026-07-17 #4
+
+User asked to scan JEDI+JVCL (were NOT in the corpus), fix the gaps found, add
+them permanently. Result:
+- **3 grammar gaps fixed** in BOTH `grammar.js` (full) and `pure/grammar.js`,
+  each dcc32-confirmed valid Delphi 13, each a minimal keyword-alias / narrow
+  form (no table bomb; generate 4m18s full / 3m58s pure):
+  1. subrange bound = nested const-expr call `2..Succ(High(TV))` (JclSysUtils);
+  2. `inherited At(...)` — `at` soft keyword as inherited method name (JclCLR);
+  3. `Operator:` as a class/record FIELD name (JvXmlDatabase) — alias kOperator.
+- **Verification (zero regression everywhere):** tree-sitter test 52 pass / 3
+  pre-existing pp_block fails; 3 new corpus tests added. Full grammar (rebuilt
+  DLL) baseline 16376/51/654 IDENTICAL; JEDI/JVCL 14917->14921 (the 4 gap files
+  fixed, 0 regressed). Pure grammar orch baseline 16478/30/573 IDENTICAL.
+- **JEDI+JVCL added to `tools/corpus-roots.txt`** (durable); regenerated
+  `work/manifest.txt` = 23,385 deduped files -> full scan 22467 ok / 364 fail /
+  554 skip (364 = excludable long tail: JvInterpreter scripts, jpp-macro
+  sources, archive, .NET, define-profile artifacts).
+- Rebuilt DLL is at `tools/corpusscan/Win64/Release` ONLY (old = `.dll.bak-jul16`);
+  drag-lint's production `third_party/dll-win64` copy NOT touched (their call).
+  Node bindings (root+pure) rebuilt. See [[jedi-jvcl-corpus-gaps]].
+
 ## >>> USER'S IMMEDIATE NEXT ACTION (2026-07-17 #2) — DONE 2026-07-17 #3
 
 All three steps completed. Next real work = the ALL-DELPHI MIGRATION section below.

@@ -1,0 +1,29 @@
+==================
+inherited method named 'At' (at soft keyword as method name)
+==================
+
+procedure TD.M;
+begin
+  inherited At(x);
+end;
+
+---
+
+(root
+  (defProc
+    header: (declProc
+      (kProcedure)
+      name: (genericDot
+        lhs: (identifier)
+        operator: (kDot)
+        rhs: (identifier)))
+    body: (block
+      (kBegin)
+      (statement
+        (exprCall
+          entity: (inherited
+            (kInherited)
+            (identifier))
+          args: (exprArgs
+            (identifier))))
+      (kEnd))))

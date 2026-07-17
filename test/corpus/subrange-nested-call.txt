@@ -1,0 +1,19 @@
+==================
+subrange type bound: nested const-expr call (Succ(High(T)))
+==================
+
+type
+  TB = 2..Succ(High(TV));
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (subrangeType
+        (identifier)
+        (identifier)
+        (identifier)))))

@@ -1,0 +1,26 @@
+==================
+record field named 'Operator' (operator soft keyword as field name)
+==================
+
+type
+  R = record
+    Operator: Integer;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier))))
+          (kEnd))))))

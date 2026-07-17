@@ -756,7 +756,16 @@ module.exports = grammar({
 			field('body', choice(tr($, 'block'), tr($, 'asm'))),
 		),
 
-		inherited:       $ => prec.right(seq($.kInherited, optional($.identifier))),
+		inherited:       $ => prec.right(seq($.kInherited, optional(choice(
+			$.identifier,
+			// Soft keyword `at` (the raise-with-address `raise E at Addr`
+			// keyword) used as an INHERITED method name: `inherited At(Offset)`
+			// (JCL JclCLR.pas). `At` already works as a plain/dotted call and a
+			// field name; only the inherited slot lost it to the kAtWord token.
+			// Aliased to identifier so the call-args attach exactly as for
+			// `inherited Foo(x)`. Narrow — only the corpus-confirmed kAtWord.
+			alias($.kAtWord, $.identifier),
+		)))),
 
 		exprDot:         $ => choice(
 			op.infix(5, $._ref, $.kDot, $._ref),
@@ -1288,6 +1297,13 @@ module.exports = grammar({
 			// conflicts with typerefDot in this position.)
 			seq($.identifier, '.', $.identifier),
 			seq($.identifier, '(', $.identifier, ')'),
+			// Iter 2026-07-17: nested const-expr call bound —
+			// `2 .. Succ(High(TDigitValue))` (JCL JclSysUtils TNumericSystemBase).
+			// dcc accepts any constant ordinal expression as a bound; the grammar
+			// stays with the narrow corpus-driven enumeration (a wide `_expr`
+			// bound blows the parser tables, see above), adding just the one
+			// real shape: `Ident( Ident(Ident) )`, one level of call nesting.
+			seq($.identifier, '(', seq($.identifier, '(', $.identifier, ')'), ')'),
 			// `hid - 1`, `MaxN + 2` — narrow `identifier OP integer` form for
 			// real-corpus patterns like `TNmbrRange = 0 .. hid - 1;`.
 			// Kept narrow (no full _expr) to avoid the conflict cascade hit
@@ -1663,6 +1679,12 @@ module.exports = grammar({
 			field('name', delimited1(choice(
 				$.identifier,
 				alias($.kRegister, $.identifier),
+				// Iter 2026-07-17: `Operator` as a FIELD NAME
+				// (`Operator: TJvXmlSQLOperator;` — JVCL JvXmlDatabase). The
+				// `operator` token otherwise starts _declOperator; GLR splits
+				// on the follow token (`:` -> field, operator-name -> class
+				// operator). Same narrow one-keyword alias as kRegister above.
+				alias($.kOperator, $.identifier),
 			))),
 			':',
 			// Iter 2026-07-06: a record/class field type may be a subrange, same

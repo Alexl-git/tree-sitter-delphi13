@@ -13,6 +13,14 @@ C:\Program Files (x86)\Embarcadero\Studio\37.0\source
 C:\Projects\spring4d
 C:\Projects\OmniThreadLibrary
 
+# JEDI: JCL + JVCL (added 2026-07-17). Large real-world Delphi corpus; surfaced
+# the subrange-nested-call, `inherited At`, and `Operator:`-field grammar gaps
+# fixed the same day. Note: contains non-compilable material excluded by the
+# harness skip filters / measurement (JvInterpreter runtime scripts, JVCL/JCL
+# `jpp` macro sources, archive/legacy, FPC/.NET) — see CORPUS-CEILING-REPORT.
+C:\Projects\JEDI
+C:\Projects\JVCL
+
 # Own projects — the drag-lint toolchain (added 2026-07-16). These are the
 # primary consumers of this grammar, so a gap here is felt immediately.
 C:\Projects\Delphi-RAG-lint
