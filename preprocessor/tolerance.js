@@ -26,13 +26,17 @@
 //
 // Safety property (why false positives cannot corrupt valid code): in
 // Pascal an extra ';' before `end` is an empty statement, and none of the
-// follower keywords can legally continue an expression — so inserting ';'
-// at a mis-identified site keeps valid code valid and invalid code invalid.
+// follower keywords can legally continue an expression — so a ';' at a
+// mis-identified site keeps valid code valid and invalid code invalid.
 //
-// Positions: the ';' is inserted directly after the LAST CODE character of
-// the line — everything before it (all declaration tokens) keeps its exact
-// (row, col); only a trailing comment on the same line shifts right by one
-// column. Line/row numbers never change.
+// REPLACEMENT, not insertion (offset-identity invariant): the ';' REPLACES
+// the first whitespace byte after the last code character of the line —
+// a space, a tab, or the CR of a CRLF ending. LF is never touched (line
+// count and every following offset stay identical), and if the line has no
+// eligible byte (LF-only ending with no trailing whitespace) it is left
+// unfixed. Output length is therefore ALWAYS byte-identical to the input,
+// matching the canonical Delphi port, whose tree-sitter spans map 1:1 back
+// to the original file with no source map.
 //
 // The pass is OPT-IN (`preprocess(..., { tolerances: true })`) and runs on
 // the final preprocessed text only (not inside include recursion).
@@ -94,10 +98,12 @@ function stripComments(line, st) {
 }
 
 function applyTolerances(text) {
-  const nl = text.includes('\r\n') ? '\r\n' : '\n';
-  const lines = text.split(nl);
+  // Split on LF only, keeping any trailing '\r' inside each line — so the CR
+  // of a CRLF ending is an in-line byte the replacement below may consume.
+  const lines = text.split('\n');
   const st = { brace: false, paren: false };
-  // code[i] = line with comments blanked (columns preserved)
+  // code[i] = line with comments blanked (columns preserved). A trailing '\r'
+  // is whitespace to every trim/regex below, so scanning the raw line is fine.
   const code = lines.map(l => stripComments(l, st));
 
   function nextCodeLine(i) {
@@ -123,13 +129,18 @@ function applyTolerances(text) {
     }
     if (!match) continue;
 
-    // Insert ';' right after the last code character.
-    const col = trimmed.length; // trimEnd of the column-preserving strip
-    lines[i] = lines[i].slice(0, col) + ';' + lines[i].slice(col);
+    // REPLACE the first whitespace byte after the last code character with
+    // ';' — space, tab, or the CR of a CRLF ending. No eligible byte (LF-only
+    // ending, code runs to the line's last char) -> leave the line unfixed;
+    // offsets always take precedence over the fix.
+    const col = trimmed.length; // first char after the code (column-preserving strip)
+    const c = lines[i][col];
+    if (c !== ' ' && c !== '\t' && c !== '\r') continue;
+    lines[i] = lines[i].slice(0, col) + ';' + lines[i].slice(col + 1);
     edits.push({ row: i, col });
   }
 
-  return { text: lines.join(nl), edits };
+  return { text: lines.join('\n'), edits };
 }
 
 module.exports = { applyTolerances };
