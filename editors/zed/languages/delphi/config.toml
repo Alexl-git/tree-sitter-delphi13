@@ -1,0 +1,13 @@
+name = "Delphi"
+grammar = "delphi13"
+path_suffixes = ["pas", "dpr", "dpk", "inc"]
+line_comments = ["// "]
+block_comment = { start = "{", prefix = "", end = "}", tab_size = 0 }
+autoclose_before = ";:.,=}])>"
+
+brackets = [
+    { start = "(", end = ")", close = true, newline = false },
+    { start = "[", end = "]", close = true, newline = false },
+    { start = "{", end = "}", close = true, newline = true },
+    { start = "'", end = "'", close = true, newline = false, not_in = ["comment", "string"] },
+]

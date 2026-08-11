@@ -1,0 +1,22 @@
+id = "delphi13"
+name = "Delphi 13"
+version = "0.1.0"
+schema_version = 1
+description = "Delphi 13 (Object Pascal) and DFM/FMX form support, powered by tree-sitter-delphi13 and tree-sitter-dfm."
+repository = "https://github.com/Alexl-git/tree-sitter-delphi13"
+authors = ["Alexander Liberov"]
+languages = ["languages/delphi", "languages/dfm"]
+
+# Zed fetches each grammar from GitHub at the pinned revision and compiles it to
+# WASM itself. Both revisions below are pushed to origin/master.
+#
+# WHEN YOU RELEASE A NEW GRAMMAR VERSION: bump `rev` here, bump `version` above,
+# then reinstall the dev extension. Zed caches compiled grammars by rev.
+
+[grammars.delphi13]
+repository = "https://github.com/Alexl-git/tree-sitter-delphi13"
+rev = "ede98fd2c038cf178afd4510c6ec504c02d537db"
+
+[grammars.dfm]
+repository = "https://github.com/Alexl-git/tree-sitter-dfm"
+rev = "14be276d1102e1f9cd6edb403de5c599a43fb552"
