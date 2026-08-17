@@ -10,6 +10,47 @@ Living list of follow-up work. Items move from here to commits or to FUTURE.md a
 
 - [ ] **Include-file resolution beyond same directory.** Some `{$I X.inc}` references live in sibling directories; need a search-path option per project.
 
+## Editor integration follow-ups (opened 2026-08-17)
+
+Context: `queries/` was empty in BOTH grammar repos until 2026-08-09 — the grammars
+delivered a working parse tree and **zero highlighting** to every tree-sitter consumer.
+Queries are now written, validated (`tree-sitter query`, exit 0) and committed:
+tree-sitter-delphi13 `003c46d`, tree-sitter-dfm `14de148`. Zed extension + public docs
+live in `editors/`. See `INBOX-draglint-editor-integration-and-lsp-proxy.md`.
+
+- [ ] **RELEASE — npm consumers currently get NO queries.** This is the priority item.
+  Both `package.json` files correctly list `queries/*` in `files[]`, but
+  `tree-sitter-delphi13@1.2.2` (published 2026-07-17) and `tree-sitter-dfm@1.0.0` were
+  packed while `queries/` was still empty, and a glob over an empty directory includes
+  nothing. The packaging is right; the *published artifacts* predate the content.
+  Needs a patch bump + republish on both (1.2.3 / 1.0.1) before anyone installing from
+  npm sees highlighting. **Nothing else on this list matters until this ships.**
+
+- [ ] **`outline.scm` for tree-sitter-dfm.** Delphi has one; DFM does not. Higher value
+  for DFM than for Delphi — a form is a nested component tree, and an outline of it is
+  exactly what you want when navigating a large `.dfm`. Node shapes are known:
+  `object` exposes `class:` and `name:` fields, nests via `object`/`property` children.
+
+- [ ] **Remaining query files, both grammars.** `indents.scm`, `injections.scm`,
+  `brackets.scm`, `locals.scm`. None exist. `indents.scm` is the one users notice
+  (auto-indent on `begin`/`end`, `case`, `try`). `injections.scm` could highlight SQL
+  string literals and embedded asm.
+
+- [ ] **VS Code TextMate grammar (`.tmLanguage.json`).** VS Code **cannot** consume
+  tree-sitter for highlighting — it uses TextMate, and tree-sitter is not exposed to
+  extensions. This is architectural, not a missing setting. Delivering VS Code
+  highlighting means authoring a separate TextMate artifact. Tracked here because it is
+  grammar-side work, not drag-lint's.
+
+- [ ] **Re-copy queries into `editors/zed/` on every query change.** Zed loads queries
+  from the *extension*, not the grammar repo, so the two copies must be kept in sync.
+  Also bump `rev` in `editors/zed/extension.toml` — Zed caches compiled grammars by
+  revision, so forgetting it means the change silently does not appear.
+
+**Not ours:** the Zed *language-server* extension (needs Rust → `wasm32-wasip1`; no
+toolchain here) and the VS Code LSP client are handed to the drag-lint team.
+`drag-lint lsp` itself needs no changes — verified working as a stock stdio LSP server.
+
 ## Statement-level grammar gaps (found 2026-07-06 via Delphi-RAG-lint indexing)
 
 Surfaced while indexing `Delphi-RAG-lint/src/cli/DRagLint.CLI.pas` (a real, compiler-clean
