@@ -44,8 +44,10 @@ live in `editors/`. See `INBOX-draglint-editor-integration-and-lsp-proxy.md`.
 
 - [ ] **Re-copy queries into `editors/zed/` on every query change.** Zed loads queries
   from the *extension*, not the grammar repo, so the two copies must be kept in sync.
-  Also bump `rev` in `editors/zed/extension.toml` — Zed caches compiled grammars by
-  revision, so forgetting it means the change silently does not appear.
+  **Do NOT bump `rev` for a query-only change** — `rev` pins the *grammar* Zed fetches
+  and compiles; queries ride along in the extension and refresh when the dev extension
+  is reinstalled. Bump `rev` only when `grammar.js` / `src/` actually change. (An
+  earlier version of this entry said to bump it every time; that was wrong.)
 
 **Not ours:** the Zed *language-server* extension (needs Rust → `wasm32-wasip1`; no
 toolchain here) and the VS Code LSP client are handed to the drag-lint team.

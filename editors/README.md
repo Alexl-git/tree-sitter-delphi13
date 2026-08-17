@@ -76,7 +76,12 @@ and other tree-sitter consumers read.
 5. Reinstall the dev extension in Zed.
 
 Zed caches compiled grammars by revision, so step 2 is what actually triggers a
-rebuild. Forgetting it means your change silently does not appear.
+grammar rebuild. Forgetting it means a grammar change silently does not appear.
+
+**Query-only changes are different.** Queries are loaded from the extension, not
+from the fetched grammar, so editing a `.scm` needs steps 4 and 5 only — re-copy and
+reinstall. Bumping `rev` for a query change is unnecessary (and misleading, since it
+implies the grammar moved).
 
 ---
 
