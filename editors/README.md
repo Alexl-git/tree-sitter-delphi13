@@ -151,7 +151,7 @@ Requires a built index. See the drag-lint documentation for `drag-lint index`.
 | DFM highlighting queries | Done -- validated with `tree-sitter query` |
 | Delphi outline queries | Done -- validated |
 | Zed extension (grammars + languages) | Done |
-| Zed language-server registration | **Blocked.** Zed requires an extension with `[lib] kind = "Rust"` compiled to `wasm32-wasip1`; no Rust toolchain on the build machine. |
+| Zed language-server registration | **Built, not yet run in Zed.** `editors/zed/src/delphi13.rs` registers `drag-lint`; compiles clean for `wasm32-wasip2` -- NOT `wasm32-wasip1`, which this row previously claimed. Verify with [ZED-TESTING.md](ZED-TESTING.md). |
 | VS Code LSP client extension | **Not started.** Node is available, so this is buildable -- it needs `vscode-languageclient` and a small activation shim. |
 | VS Code TextMate grammar | **Not started.** Separate artifact, see above. |
 
