@@ -21,3 +21,20 @@ tree-sitter.exe
 
 # WASM build output: shipped via npm iles + GitHub Releases, not committed
 *.wasm
+
+# Local Claude Code project settings -- contains machine-specific absolute paths.
+.claude/
+
+# npm pack output
+*.tgz
+
+# Native prebuilds: shipped via the package.json `files` allowlist and attached
+# to GitHub Releases, rebuilt by CI. Never committed (3+ MB of binaries).
+prebuilds/
+**/prebuilds/
+
+# More corpus/work scratch (the dashed variants were already covered)
+**/work/manifest.txt
+**/work/*.bak
+**/work/sample*.txt
+**/work/one-*.txt

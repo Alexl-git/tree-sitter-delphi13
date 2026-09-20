@@ -1,4 +1,112 @@
-# RESUME — tree-sitter-delphi13
+# RESUME - tree-sitter-delphi13
+
+## >>> RESUME HERE - 2026-09-20: v1.3.0 SHIPPED; ZED AWAITS A MANUAL TEST
+
+**NEXT ACTION (blocked on the user, expected Wed/Thu 2026-09-24 or 25):**
+run `editors/ZED-TESTING.md` end to end in Zed. Nothing else in the Zed track
+moves until that is done, because Zed's registry requires the extension to be
+tested manually at the commit being submitted.
+
+**When the test passes, file BOTH of these as a pair (do not send one alone --
+the second discloses the first, and is false until the first exists):**
+1. `ZED-SUBMISSION.md` -- PR to `zed-industries/extensions` (submodule +
+   `extensions.toml` entry with `path = "editors/zed"`, then `pnpm sort-extensions`).
+2. `ZED-PASCAL-OUTREACH.md` -- issue on `ChemisTechlabs/zed-pascal`.
+
+Then, in order: Cursor forum post (**user only** -- web login, I cannot reach it;
+text is in `UPSTREAM-vscode-tree-sitter-wasm.md`), the VS Code PR (same file;
+needs the user's Microsoft CLA signature, lowest-confidence item), and finally a
+VS Code extension, which is the only real path to Delphi support there.
+
+### What shipped today
+
+* **npm published and round-trip verified** (installed from the registry and
+  loaded through `web-tree-sitter`, not merely packed):
+  `tree-sitter-delphi13` **1.3.0**, `tree-sitter-delphi13-pure` **1.3.0**,
+  `tree-sitter-dfm` **1.1.0**. `delphi13-preprocessor` unchanged at 1.1.0.
+* **WASM ships** in all three (ABI 14). Emscripten must be pinned to **3.1.64**;
+  `emsdk install latest` yields glue code that fails at load time, not build
+  time. See `WASM-BUILD.md`.
+* **Query set complete**: 18 files. New this session: `tags.scm`, `folds.scm`,
+  `brackets.scm`, `textobjects.scm`, plus Neovim and Helix indent variants.
+* **CI added and green** in both repos; builds the WASM and compiles every query
+  against it.
+* **GitHub Releases** created for both, with prebuilds + `.wasm` attached.
+* **`release.yml` fixed** -- see Gotchas.
+* **`editors/INSTALL.md`** -- Neovim, Helix, Zed, Emacs, VS Code/Cursor, drag-lint.
+* **Zed extension now registers drag-lint as a language server**
+  (`editors/zed/src/delphi13.rs`). Compiles clean for `wasm32-wasip2`.
+  **Never run inside Zed.**
+* **Isopod outreach letter sent by the user** to `Isopod/tree-sitter-pascal`.
+
+### Coverage, settled
+
+Measured on the 2,218 `.pas` of the RAD Studio 37.0 tree, same manifest both ways
+(`work/results-embarc-master.jsonl`, `work/results-embarc-orch.jsonl`):
+
+| Path | ok / readable | rate |
+|---|---|---|
+| Master grammar alone | 2183 / 2217 | 98.47% |
+| preprocessor -> pure | 2217 / 2217 | **100.000%** |
+
+Exactly one master-path failure survives the pipeline and it is
+`FMX.WebBrowser.Win.pas`, scored `template_placeholder` -- an excluded category,
+not a parse failure.
+
+**Which number applies depends on the consumer, and this matters in every pitch:**
+a stock editor (Zed, Neovim, Helix) loads ONE grammar and gets 98.47%. Only a
+consumer that can run the preprocessor first reaches 100%. `delphi13-preprocessor`
+is pure JS and the pure grammar ships as WASM, so the 100% pipeline DOES run in an
+Electron host -- which is the strongest argument available for VS Code and Cursor,
+and is NOT available to Zed. Do not promise Zed 100%.
+
+DFM: 9,681 files scanned, 705 binary/resource-form (out of scope), 8,976 text,
+**99.18%**, and all 74 failures traced to malformed input. Zero grammar defects.
+
+### Gotchas that will bite a cold start
+
+* **No inline regex flags in `.scm`.** Native tree-sitter uses the Rust regex
+  crate; `web-tree-sitter` uses JavaScript `RegExp`, which rejects `(?i)` and
+  takes the WHOLE query file down silently. `injections.scm` shipped that way for
+  three releases and the CLI never complained. Always
+  `npm run build-wasm && npm run validate-queries`.
+* **`tree-sitter query` picks the grammar from the sample file's EXTENSION**, not
+  the working directory -- so it will validate `pure/queries` against the full
+  grammar and report success. Only `tools/validate-queries.js` is trustworthy.
+* **Indent queries are not portable.** Zed `@indent/@start/@end`; Neovim
+  `@indent.begin/.end/.branch`; Helix `@indent/@outdent`. The top-level
+  `indents.scm` is Zed's -- it is a silent no-op in Neovim. Variants live in
+  `queries/nvim/` and `queries/helix/`.
+* **`macos-13` is retired and starves.** It hung the v1.2.2 and v1.3.0 release
+  runs until the 24h ceiling cancelled them, which is why neither produced a
+  Release automatically. Removed from the matrix; darwin-x64 is now
+  cross-compiled on `macos-latest` via `prebuildify --arch x64`. **That path has
+  never actually run** -- watch the next tagged release.
+* **darwin-x64 is missing from the v1.3.0 GitHub Release** (built by hand from
+  artifacts rescued off the cancelled run). Stated in the release notes.
+* **`npm install --ignore-scripts` breaks the tree-sitter CLI**: the package ships
+  only a downloader in its install script, so no binary appears. CI does
+  `npm rebuild tree-sitter-cli` -- and `pure/` needs its own.
+* **Three pp_block corpus tests fail** and are pre-existing; `tree-sitter test` is
+  therefore not wired into CI.
+* **Rust 1.98.1 + `wasm32-wasip2`** installed 2026-09-20 under `~/.cargo`
+  (`--no-modify-path`). Needed for Zed to build the extension. The old note
+  saying wasip1 was wrong.
+
+### Uncommitted, deliberately
+
+* `ISOPOD-OUTREACH-DRAFT.md` -- the user's own edits (signature + a P.S.) made
+  after posting it. Worth committing.
+* `tree-sitter-DFM/RELEASE-NOTES-v1.0.0.md` -- a stale edit from an earlier
+  session, not from this work.
+
+### Security follow-up
+
+An npm **granular token with Bypass 2FA** was created to publish and is in
+`~/.npmrc` and in PowerShell history. It was meant to be revoked at
+https://www.npmjs.com/settings/alexanderl2/tokens -- **confirm this happened.**
+
+---
 
 ## >>> v1.2.2 FULLY PUBLISHED — DONE 2026-07-17 #5
 
