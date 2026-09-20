@@ -67,6 +67,10 @@ Splitting preprocessing from parsing was a 5+ percentage-point win over the best
 
 ## Install
 
+**Using this in an editor?** See **[editors/INSTALL.md](editors/INSTALL.md)** for copy-paste
+setup for Neovim, Helix, Zed and Emacs, plus the drag-lint language server.
+Neovim and Helix work today with no upstream approval needed.
+
 ```sh
 npm install tree-sitter-delphi13 tree-sitter
 ```

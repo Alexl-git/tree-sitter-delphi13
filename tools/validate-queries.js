@@ -43,6 +43,18 @@ const TARGETS = [
     samples: ['examples/smoke.pas'],
   },
   {
+    id: 'tree-sitter-delphi13 (neovim indents)',
+    wasm: 'tree-sitter-delphi13.wasm',
+    queries: 'queries/nvim',
+    samples: ['examples/smoke.pas'],
+  },
+  {
+    id: 'tree-sitter-delphi13 (helix indents)',
+    wasm: 'tree-sitter-delphi13.wasm',
+    queries: 'queries/helix',
+    samples: ['examples/smoke.pas'],
+  },
+  {
     id: 'tree-sitter-delphi13-pure',
     wasm: 'pure/tree-sitter-delphi13_pure.wasm',
     queries: 'pure/queries',

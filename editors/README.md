@@ -1,5 +1,9 @@
 # Delphi in Zed and VS Code
 
+> **Looking for install instructions?** They now live in [INSTALL.md](INSTALL.md),
+> which covers Neovim, Helix, Zed, Emacs, VS Code/Cursor and the drag-lint
+> language server. This page is the design and status notes behind them.
+
 This directory provides Delphi 13 (Object Pascal) and DFM/FMX support for editors
 outside RAD Studio, built on two tree-sitter grammars plus an optional language
 server.
