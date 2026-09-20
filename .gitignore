@@ -18,3 +18,6 @@ tree-sitter.exe
 **/work/smoke-*.txt
 **/work/probe-*
 **/work/dump.txt
+
+# WASM build output: shipped via npm iles + GitHub Releases, not committed
+*.wasm

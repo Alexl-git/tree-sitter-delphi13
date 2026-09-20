@@ -141,6 +141,41 @@ npm install --ignore-scripts
 node-gyp rebuild
 ```
 
+## WASM and editor queries
+
+Each package ships a prebuilt **tree-sitter ABI 14** `.wasm` alongside the native
+binding, so browser and Electron hosts (`web-tree-sitter`) can load the parser with
+no toolchain:
+
+```js
+const Parser = require('web-tree-sitter');
+await Parser.init();
+const L = await Parser.Language.load('node_modules/tree-sitter-delphi13/tree-sitter-delphi13.wasm');
+```
+
+Rebuilding it needs a pinned Emscripten -- see [WASM-BUILD.md](WASM-BUILD.md).
+
+The full standard query set lives in `queries/`:
+
+| File | Used for |
+|---|---|
+| `highlights.scm` | syntax highlighting |
+| `injections.scm` | SQL-in-string and inline `asm` embedding |
+| `indents.scm` | auto-indent |
+| `folds.scm` | code folding |
+| `outline.scm` | outline / breadcrumb panel |
+| `tags.scm` | symbol extraction for codebase indexers (GitHub, Cursor, Sourcegraph) |
+
+Validate them after any edit -- against the **WASM**, because the native CLI and the
+WASM host do not run the same regex engine and a query can compile in one and throw
+in the other:
+
+```sh
+npm run build-wasm
+npm run validate-queries
+```
+
+See [DISTRIBUTION.md](DISTRIBUTION.md) for the state of editor integrations.
 ## Known limitations
 
 - **Inline `asm` blocks** treated as opaque text by design. Not tree-sitter-asm.
