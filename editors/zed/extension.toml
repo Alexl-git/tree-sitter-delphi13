@@ -1,17 +1,23 @@
 id = "delphi13"
 name = "Delphi 13"
-version = "0.2.0"
+version = "0.3.0"
 schema_version = 1
-description = "Delphi 13 (Object Pascal) and DFM/FMX form support, powered by tree-sitter-delphi13 and tree-sitter-dfm."
+description = "Delphi 13 (Object Pascal) and DFM/FMX form support, powered by tree-sitter-delphi13 and tree-sitter-dfm, with optional drag-lint language server."
 repository = "https://github.com/Alexl-git/tree-sitter-delphi13"
 authors = ["Alexander Liberov"]
 languages = ["languages/delphi", "languages/dfm"]
 
 # Zed fetches each grammar from GitHub at the pinned revision and compiles it to
-# WASM itself. Both revisions below are pushed to origin/master.
+# WASM itself. Both revisions below are pushed to origin/master and tagged.
 #
 # WHEN YOU RELEASE A NEW GRAMMAR VERSION: bump `rev` here, bump `version` above,
 # then reinstall the dev extension. Zed caches compiled grammars by rev.
+#
+# Query-only changes are different: Zed loads queries from THIS extension, not
+# from the fetched grammar, so editing a .scm under languages/ needs only a
+# reinstall. Bumping `rev` for a query change is unnecessary and misleading.
+#
+# (`rev` is the documented key; Zed also accepts `commit` as a serde alias.)
 
 [grammars.delphi13]
 repository = "https://github.com/Alexl-git/tree-sitter-delphi13"
@@ -20,3 +26,15 @@ rev = "a820b9ba045a6df48e83cc72139043096142e97c"
 [grammars.dfm]
 repository = "https://github.com/Alexl-git/tree-sitter-dfm"
 rev = "3ef478383fdef4163ab60e06c7dceb4ac28187d4"
+
+# Optional language server: drag-lint (https://github.com/Alexl-git/Delphi-RAG-Lint).
+# Registering it is the only reason this extension carries a Rust crate -- Zed
+# has to ask the compiled extension where the server binary lives. See
+# src/delphi13.rs.
+#
+# `languages` (plural) is the current field; the singular `language` is
+# deprecated in Zed's manifest. The name must match `name` in
+# languages/delphi/config.toml.
+[language_servers.drag-lint]
+name = "drag-lint"
+languages = ["Delphi"]
