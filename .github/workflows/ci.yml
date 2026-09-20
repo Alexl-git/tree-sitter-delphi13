@@ -42,8 +42,13 @@ jobs:
           node-version: 22
 
       - name: Install deps
+        # --ignore-scripts keeps node-gyp from building the native binding we do
+        # not need here, but it also suppresses tree-sitter-cli's postinstall,
+        # which is what downloads the actual `tree-sitter` executable. Rebuild
+        # just that package to fetch it.
         run: |
           npm install --ignore-scripts
+          npm rebuild tree-sitter-cli
           (cd pure && npm install --ignore-scripts)
 
       # `tree-sitter build --wasm` needs emcc, docker or podman on PATH.
