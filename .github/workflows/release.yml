@@ -44,6 +44,16 @@ jobs:
           for t in test-tolerance test-include-modes test-include-resolve test-bom test-asm-quotes test-serve; do
             echo "== $t"; node "preprocessor/$t.js"
           done
+      - name: Query gate (build WASM, compile every query against it)
+        # tree-sitter-cli ships only a downloader in its install script, so the
+        # --ignore-scripts install above left no 	ree-sitter binary; rebuild
+        # just that package. The WASM build itself uses the docker image the CLI
+        # pins (emscripten/emsdk:3.1.64), so no emsdk setup is needed here.
+        run: |
+          npm rebuild tree-sitter-cli
+          npm run build-wasm
+          (cd pure && npm install --ignore-scripts && npm rebuild tree-sitter-cli && npm run build-wasm)
+          npm run validate-queries
       - name: Build root binding (prebuildify)
         run: npm run prebuildify
       - name: Parse smoke test
@@ -64,8 +74,14 @@ jobs:
       matrix:
         # windows-2022 pinned: the Server 2025 image behind windows-latest
         # breaks node-gyp's Visual Studio detection (observed 2026-07-16).
-        # macos-13 = darwin-x64, macos-latest = darwin-arm64.
-        os: [ubuntu-latest, windows-2022, macos-13, macos-latest]
+        #
+        # macos-13 (the last Intel image) was REMOVED on 2026-09-20: GitHub is
+        # retiring it and the job never got a runner. It starved the v1.2.2 and
+        # v1.3.0 releases -- each sat queued until the 24h ceiling cancelled the
+        # whole run, so no GitHub Release was ever produced. darwin-x64 is now
+        # cross-compiled from macos-latest (prebuildify --arch x64), which Xcode
+        # on Apple Silicon supports.
+        os: [ubuntu-latest, windows-2022, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -81,6 +97,13 @@ jobs:
         run: |
           npm install --ignore-scripts
           npm run prebuildify
+      # macos-latest is arm64. Build the Intel slice here too, so retiring the
+      # macos-13 runner does not silently drop darwin-x64 for consumers.
+      - name: Prebuild darwin-x64 (cross, macOS only)
+        if: runner.os == 'macOS'
+        run: |
+          npx prebuildify --napi --strip --arch x64
+          (cd pure && npx prebuildify --napi --strip --arch x64)
       - uses: actions/upload-artifact@v4
         with:
           name: prebuilds-${{ matrix.os }}
@@ -112,6 +135,14 @@ jobs:
           # pure/prebuilds/…), so merging into the workspace root restores both
           # trees with every platform side by side.
           path: .
+      - name: Build WASM for the release assets
+        # The .wasm files are gitignored (shipped via npm), so the GitHub
+        # Release is the only place to get them without an npm install.
+        run: |
+          npm install --ignore-scripts
+          npm rebuild tree-sitter-cli
+          npm run build-wasm
+          (cd pure && npm install --ignore-scripts && npm rebuild tree-sitter-cli && npm run build-wasm)
       - name: Pack release assets
         run: |
           ls -R prebuilds pure/prebuilds
@@ -129,6 +160,8 @@ jobs:
           gh release upload "$TAG" \
             "tree-sitter-delphi13-prebuilds-$TAG.tar.gz" \
             "tree-sitter-delphi13-pure-prebuilds-$TAG.tar.gz" \
+            tree-sitter-delphi13.wasm \
+            pure/tree-sitter-delphi13_pure.wasm \
             --clobber
       - name: Publish to npm (skipped until the NPM_TOKEN secret is set)
         env:
