@@ -102,19 +102,22 @@ DFM: 9,681 files scanned, 705 binary/resource-form (out of scope), 8,976 text,
 
 ### Security follow-up
 
-**STILL LIVE AS OF 2026-09-20 -- the user confirmed it was NOT revoked.** An npm
-**granular access token with "Bypass 2FA" enabled**, read+write on the three
-`tree-sitter-*` packages, was created to publish v1.3.0. It sits in plaintext in
-`~/.npmrc` AND in PowerShell history
+**CLOSED 2026-09-20.** The release token (granular, Bypass 2FA, read+write on the
+three `tree-sitter-*` packages) was revoked by the user and the dead copy removed
+from `~/.npmrc`, which no longer exists. Verified: `npm whoami` went 401 (revoked
+but still present) and then `ENEEDAUTH` (gone). One unrelated token, `NPMTREE`,
+remains on the account by the user's choice.
+
+**Consequence for the next publish:** there is no npm credential on this machine.
+`npm publish` will fail with `ENEEDAUTH` until `npm login` is run, or a fresh
+granular token is set. If the publish needs to run unattended, the token must have
+**Bypass 2FA** ticked -- the account enforces 2FA on writes, so an interactive
+login alone still triggers an `EOTP` prompt that a non-interactive session cannot
+answer.
+
+A dead copy of the old token remains in PowerShell history
 (`%APPDATA%\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt`).
-
-Bypass 2FA means anyone holding it can publish to those packages without an OTP.
-Revoke at https://www.npmjs.com/settings/alexanderl2/tokens (delete the
-`release-2026-09*` entries). Only revocation on the website invalidates it --
-deleting the local copy reduces exposure but the token stays valid.
-
-If it expired on its own (a 7-day expiry was suggested at creation), confirm that
-on the same page rather than assuming.
+Harmless now that it is revoked; clear it if you want the file tidy.
 
 ---
 
