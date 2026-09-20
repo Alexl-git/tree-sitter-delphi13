@@ -1,6 +1,6 @@
 id = "delphi13"
 name = "Delphi 13"
-version = "0.1.0"
+version = "0.2.0"
 schema_version = 1
 description = "Delphi 13 (Object Pascal) and DFM/FMX form support, powered by tree-sitter-delphi13 and tree-sitter-dfm."
 repository = "https://github.com/Alexl-git/tree-sitter-delphi13"
@@ -15,8 +15,8 @@ languages = ["languages/delphi", "languages/dfm"]
 
 [grammars.delphi13]
 repository = "https://github.com/Alexl-git/tree-sitter-delphi13"
-rev = "ede98fd2c038cf178afd4510c6ec504c02d537db"
+rev = "a820b9ba045a6df48e83cc72139043096142e97c"
 
 [grammars.dfm]
 repository = "https://github.com/Alexl-git/tree-sitter-dfm"
-rev = "14be276d1102e1f9cd6edb403de5c599a43fb552"
+rev = "3ef478383fdef4163ab60e06c7dceb4ac28187d4"
