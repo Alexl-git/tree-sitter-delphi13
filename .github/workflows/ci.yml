@@ -1,0 +1,79 @@
+# CI: the gate that protects the WASM artifact and the query files.
+#
+# This exists because `tree-sitter query` CANNOT catch two real classes of bug,
+# both of which shipped to users undetected:
+#
+#   1. Engine parity. Native tree-sitter evaluates #match? with the Rust regex
+#      crate; web-tree-sitter uses JavaScript RegExp. An inline (?i) flag is
+#      valid in the former and a hard error in the latter, and a query that
+#      throws on compile takes the WHOLE file down -- silently, only in WASM
+#      hosts (VS Code, Cursor, browsers). queries/injections.scm shipped that
+#      way for three releases.
+#   2. Grammar selection. `tree-sitter query` picks the grammar from the sample
+#      file's extension, not the working directory, so validating pure/queries
+#      with it silently tests the FULL grammar instead.
+#
+# tools/validate-queries.js compiles every .scm against the actual built .wasm,
+# which is the only check that sees either problem.
+#
+# NOTE: `tree-sitter test` is deliberately not run here. Three pp_block
+# external-scanner corpus tests are documented pre-existing failures; see
+# RESUME.md. Wire it in once those are resolved.
+
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  queries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install deps
+        run: |
+          npm install --ignore-scripts
+          (cd pure && npm install --ignore-scripts)
+
+      # `tree-sitter build --wasm` needs emcc, docker or podman on PATH.
+      # Ubuntu runners ship docker, and the CLI pins the emscripten image it
+      # uses, so this stays reproducible without installing emsdk by hand.
+      # Locally the pinned toolchain is emscripten 3.1.64 -- see WASM-BUILD.md.
+      - name: Build WASM (both grammars)
+        run: |
+          npm run build-wasm
+          (cd pure && npm run build-wasm)
+
+      - name: Verify ABI and a clean parse of the shipped artifacts
+        run: |
+          node -e "
+            const Parser = require('web-tree-sitter');
+            const fs = require('fs');
+            (async () => {
+              await Parser.init();
+              for (const w of ['tree-sitter-delphi13.wasm','pure/tree-sitter-delphi13_pure.wasm']) {
+                const L = await Parser.Language.load(w);
+                const p = new Parser(); p.setLanguage(L);
+                const t = p.parse(fs.readFileSync('examples/smoke.pas','utf8'));
+                let e = 0;
+                (function walk(n){ if (n.type==='ERROR'||n.isMissing) e++; for (let i=0;i<n.childCount;i++) walk(n.child(i)); })(t.rootNode);
+                console.log(w, 'ABI=' + L.version, 'errors=' + e);
+                if (L.version !== 14) { console.error('unexpected ABI'); process.exit(1); }
+                if (e) { console.error('parse errors in smoke.pas'); process.exit(1); }
+              }
+            })().catch(err => { console.error(err); process.exit(1); });
+          "
+
+      - name: Compile every query against the built WASM
+        run: npm run validate-queries
