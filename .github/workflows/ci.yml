@@ -49,7 +49,7 @@ jobs:
         run: |
           npm install --ignore-scripts
           npm rebuild tree-sitter-cli
-          (cd pure && npm install --ignore-scripts)
+          (cd pure && npm install --ignore-scripts && npm rebuild tree-sitter-cli)
 
       # `tree-sitter build --wasm` needs emcc, docker or podman on PATH.
       # Ubuntu runners ship docker, and the CLI pins the emscripten image it
