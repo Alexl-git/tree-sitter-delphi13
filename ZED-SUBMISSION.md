@@ -25,7 +25,13 @@ opened.
 * Submodule URL must be **HTTPS, not SSH**.
 * Extension ID must be unique, kebab-case, and must not contain `zed` or
   `extension` -- ours is `delphi13`.
-* An accepted license -- MIT.
+* An accepted license -- MIT. **The file must sit INSIDE the extension
+  directory** (`editors/zed/LICENSE`), not only at the repo root. Zed's
+  `package-extensions.js` computes `extensionPath = submodule + path` and does a
+  NON-recursive `readdir` of exactly that folder, so a root `LICENSE` is
+  invisible to it. This failed CI on 2026-09-22 with "No license was found."
+  even though the repo had been MIT-licensed all along. Any filename whose stem
+  starts with `license` or `licence` counts.
 * "Test your extension within Zed manually at the submodule commit you are
   submitting." **Do this before opening the PR.** Install `editors/zed` as a dev
   extension, open a `.pas` and a `.dfm`, and confirm highlighting, the outline
