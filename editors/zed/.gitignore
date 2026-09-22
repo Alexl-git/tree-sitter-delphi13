@@ -1,3 +1,7 @@
 target/
 Cargo.lock
 extension.wasm
+
+# Zed's dev-extension build output: it clones each grammar repo in full and
+# leaves the compiled .wasm beside it (delphi13.wasm alone is 3.3 MB).
+grammars/

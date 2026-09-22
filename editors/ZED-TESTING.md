@@ -30,6 +30,8 @@ component compiles.
 
 * Zed 1.10.3 -- installed
 * Rust 1.98.1 + `wasm32-wasip2` -- installed today (`%USERPROFILE%\.cargo\bin`)
+* `%USERPROFILE%\.cargo\bin` -- on the **persisted user PATH** (added 2026-09-22;
+  rustup's own PATH edit had never landed, so Zed could not find `rustc`)
 * The extension's Rust component -- compiles clean (`cargo build --release --target wasm32-wasip2`)
 * drag-lint -- present at `C:\Projects\Delphi-RAG-lint\third_party\dll-win64\drag-lint.exe`
 
@@ -72,6 +74,20 @@ so do not move or delete that folder afterwards.
 **If it fails:** open the palette, type `open log`, pick **`zed: open log`**, and
 send me the last ~50 lines. Do not guess -- the log says exactly what broke.
 
+**Known trap -- `failed to compile Rust extension: failed to run rustc: program
+not found`.** This is a PATH problem, never a code problem. Zed shells out to the
+Rust toolchain and inherits its PATH *from the process that launched it*, so two
+things must both be true:
+
+1. `%USERPROFILE%\.cargo\bin` is on the persisted **user** PATH. Check with
+   `[Environment]::GetEnvironmentVariable('Path','User')` -- not `$env:PATH`,
+   which can be right in your shell while the registry value is wrong. That was
+   the actual failure on 2026-09-22: `rustc.exe` was on disk the whole time,
+   just invisible to anything Zed launched.
+2. Zed was **started after** that PATH entry existed. Editing the PATH does not
+   reach an already-running Zed. Quit it completely (close every window, and
+   confirm no `Zed` process survives) and relaunch.
+
 ---
 
 ## Part A -- grammars and queries
@@ -80,9 +96,9 @@ send me the last ~50 lines. Do not guess -- the log says exactly what broke.
 
 Open `uYADFMain.pas` (or any `.pas` in the project).
 
-- [ ] Keywords (`unit`, `interface`, `procedure`, `begin`, `end`) are coloured
-- [ ] Strings and comments are coloured differently from code
-- [ ] The whole file is **not** one flat colour -- that is what a failed grammar
+- [X] Keywords (`unit`, `interface`, `procedure`, `begin`, `end`) are coloured
+- [X] Strings and comments are coloured differently from code
+- [X] The whole file is **not** one flat colour -- that is what a failed grammar
       load looks like
 
 ### A2. SQL injection (the bug we fixed today)
@@ -91,35 +107,35 @@ Find a string literal containing SQL -- something like
 `'select ID from CUSTOMER where ...'`. If YADF has none, open
 `C:\Projects\tree-sitter-delphi13\examples\smoke.pas`, which contains two on purpose.
 
-- [ ] The SQL **inside the quotes** is highlighted as SQL -- keywords like
+- [X] The SQL **inside the quotes** is highlighted as SQL -- keywords like
       `select` / `from` picked out, distinct from a plain string
 
 This is the exact thing that was silently broken in WASM hosts before today. Zed
 uses the Rust regex engine so it was never affected, but it confirms the query
 loads.
 
-- [ ] A prose string like `'Select a file to continue'` is **not** treated as SQL
+- [X] A prose string like `'Select a file to continue'` is **not** treated as SQL
 
 ### A3. Outline
 
 Palette -> type `outline` -> pick the outline toggle.
 
-- [ ] Types, procedures, functions and properties are listed
-- [ ] Clicking one jumps to it
-- [ ] Entries are **not** duplicated (each routine appears once, not twice)
+- [X] Types, procedures, functions and properties are listed
+- [X] Clicking one jumps to it
+- [X] Entries are **not** duplicated (each routine appears once, not twice)
 
 ### A4. Folding
 
-- [ ] The gutter shows fold arrows next to `begin`, `type`, `class`, `try`
-- [ ] Folding a `begin ... end` collapses the whole block
+- [X] The gutter shows fold arrows next to `begin`, `type`, `class`, `try`
+- [X] Folding a `begin ... end` collapses the whole block
 
 ### A5. Brackets and indent (new today)
 
-- [ ] Put the cursor on a `begin` -- its matching `end` highlights.
+- [X] Put the cursor on a `begin` -- its matching `end` highlights.
       This is `brackets.scm`, written today. Pascal's real delimiters are
       keywords, so `begin`/`end` matching is the thing to check, not `()`.
-- [ ] Press Enter after a `begin` -- the new line indents one level
-- [ ] Type `end` -- the line dedents to match its `begin`
+- [X] Press Enter after a `begin` -- the new line indents one level
+- [X] Type `end` -- the line dedents to match its `begin`
 
 ### A6. Text objects (new today)
 
@@ -132,10 +148,10 @@ you do not use vim mode** -- it is not worth turning on just to test.
 
 Open a `.dfm` file in the project.
 
-- [ ] `object` / `end` and property names are coloured
-- [ ] The outline shows the component tree, nested (a form containing panels
+- [X] `object` / `end` and property names are coloured
+- [X] The outline shows the component tree, nested (a form containing panels
       containing buttons)
-- [ ] `object ... end` blocks fold
+- [X] `object ... end` blocks fold
 
 ---
 
@@ -175,8 +191,23 @@ Save, then reload: palette -> `reload` -> **`zed: reload`** (or just restart Zed
 
 Palette -> type `language server logs` -> open them.
 
-- [ ] `drag-lint` appears in the list
-- [ ] Its log shows an `initialize` exchange, not an immediate crash
+- [X] `drag-lint` appears in the list
+- [X] Its log shows an `initialize` exchange, not an immediate crash
+
+**Look at RPC Messages, not Server Logs.** The pane opens on whichever server was
+last selected (usually `json-language-server`) and shows that server's *stderr*.
+drag-lint writes nothing to stderr, so "Server Logs" is legitimately EMPTY even
+when the server is healthy -- that read cost an hour on 2026-09-22. Pick
+`drag-lint` in the dropdown, switch to **RPC Messages**, and you want to see
+request/response pairs:
+
+```
+// Send:    {"id":50,"method":"textDocument/codeAction", ...}
+// Receive (took 2.9ms):  {"id":50,"result":[]}
+```
+
+A `// Receive` line is the proof of life. Also keep a `.pas` file focused --
+Zed only lists a server for the ACTIVE buffer's language.
 
 If it is absent, the server never launched -- usually a wrong path in B1. If it
 started and died, the log will say why.
@@ -186,9 +217,20 @@ started and died, the log will say why.
 In a `.pas` file, put the cursor on a call to a routine defined elsewhere in the
 project.
 
-- [ ] **Go to definition** (palette -> `go to definition`, or F12) jumps to it
-- [ ] **Find all references** lists the call sites
-- [ ] Hovering a symbol shows a signature
+- [X] **Go to definition** (palette -> `go to definition`, or F12) jumps to it
+- [X] **Find all references** lists the call sites
+- [X] Hovering a symbol shows a signature
+
+A known-good target, if you need one: `YadfMain.pas:436`, the cursor on
+`FormatSource` in `WriteStdoutRaw(FormatSource(Source, AOpts, Declined));`. It is
+declared in a DIFFERENT unit (`YADF.Layout.pas`), so it exercises the cross-unit
+path, and it has a second call site at `YADF.Layout.pas:6447` for find-references.
+
+**Where these answers come from: the index, not a model.** drag-lint parsed the
+project with this repo's grammar and stored symbols + call edges in
+`_D-RAG\YADF.sqlite`; F12 / references / hover are SQL lookups over that table.
+Nothing is inferred and nothing leaves the machine -- which is also why a stale
+index gives wrong answers rather than no answers.
 
 Worth knowing what you are seeing: Embarcadero's own `DelphiLSP.exe` advertises
 **neither** `referencesProvider` **nor** `workspaceSymbolProvider`. Find-references
