@@ -45,12 +45,22 @@ Add to `extensions.toml`, keeping the file sorted:
 [delphi13]
 submodule = "extensions/delphi13"
 path = "editors/zed"
-version = "0.2.0"
+version = "0.3.0"
 ```
 
 `path` is required because the extension lives in a subdirectory of the grammar
 repo rather than at its root. `version` must match `version` in
-`editors/zed/extension.toml`.
+`editors/zed/extension.toml` -- **re-read that file, do not trust the number
+above.** It said 0.2.0 here until 2026-09-22 while `extension.toml` had already
+moved to 0.3.0 for the language-server registration, and a mismatch is an
+immediate reviewer bounce. `agnix` is the precedent for this submodule+`path`
+shape if you need one to copy.
+
+Both `extensions.toml` and `.gitmodules` are kept in **sorted** order, and
+`git submodule add` appends its stanza to the END of `.gitmodules` -- move it
+into place. `pnpm sort-extensions` does this for you, but it needs the repo's
+dependencies installed; without them `node src/sort-extensions.js` dies with
+`ERR_MODULE_NOT_FOUND` and silently leaves both files unsorted.
 
 ```bash
 pnpm sort-extensions      # sorts extensions.toml and .gitmodules
