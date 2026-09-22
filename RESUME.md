@@ -1,17 +1,27 @@
 # RESUME - tree-sitter-delphi13
 
-## >>> RESUME HERE - 2026-09-22: ZED TESTED AND SUBMITTED; PR BLOCKED ON THE CLA
+## >>> RESUME HERE - 2026-09-22: ZED SUBMITTED, ALL CHECKS GREEN, AWAITING REVIEW
 
-**NEXT ACTION (user only, nobody else can do it):** sign
-<https://zed.dev/cla> **signed in as `Alexl-git`**, then post a comment
-`@cla-bot check` on the PR. The `verification/cla-signed` check does NOT re-run
-by itself, so the PR sits there until both halves happen.
+**NEXT ACTION: nothing on our side.** PR #7710 is `MERGEABLE` / `CLEAN` with all
+four checks passing (`verification/cla-signed`, `CI/package`, `danger`, Danger).
+It is queued for a Zed reviewer. Do not push to it without reason -- any new
+commit re-runs `package` and re-opens the review clock.
 
 **Both filings are OUT, as a pair:**
-* PR **zed-industries/extensions#7710** -- OPEN, MERGEABLE, 10 insertions across
-  `.gitmodules` / `extensions.toml` / `extensions/delphi13`. Danger passed ("All
-  green"). Submodule pinned at **`ef779ca`**, which is precisely the commit that
-  was manually tested, as the registry rule requires.
+* PR **zed-industries/extensions#7710** -- OPEN, MERGEABLE, all checks green,
+  10 insertions across `.gitmodules` / `extensions.toml` / `extensions/delphi13`.
+  Head `110fa57d`, submodule pinned at **`4d28a4f`**. Fork branch
+  `Alexl-git/extensions@add-delphi13`.
+  Three things it took to get green, all now fixed in `ZED-SUBMISSION.md`:
+  1. `extensions.toml` version must equal `extension.toml` (0.2.0 vs 0.3.0).
+  2. A `LICENSE` must sit INSIDE `editors/zed/` -- the validator does a
+     non-recursive readdir of submodule+`path`, so the root one is invisible.
+  3. The commit AUTHOR's email decides which GitHub account cla-bot checks. The
+     gmail resolved to a stray `alexanderliberov-dotcom`; the author is now
+     `66756513+Alexl-git@users.noreply.github.com`.
+  Also: cla-bot never re-checks on its own and pushes do not trigger it -- only
+  an `@cla-bot check` comment does, and it must come AFTER the signature is
+  recorded (ours missed by 69 seconds and looked like a wrong-account failure).
 * Issue **ChemisTechlabs/zed-pascal#6** -- OPEN. It discloses the PR, so the two
   are only truthful together. (They were briefly out of sync on 2026-09-22 when
   the issue filed and the PR command failed -- if that ever recurs, fix the PR
