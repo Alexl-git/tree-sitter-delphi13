@@ -1,24 +1,49 @@
 # RESUME - tree-sitter-delphi13
 
-## >>> RESUME HERE - 2026-09-20: v1.3.0 SHIPPED; ZED AWAITS A MANUAL TEST
+## >>> RESUME HERE - 2026-09-22: ZED TESTED AND SUBMITTED; PR BLOCKED ON THE CLA
 
-**NEXT ACTION (blocked on the user, expected Wed/Thu 2026-09-24 or 25):**
-run `editors/ZED-TESTING.md` end to end in Zed. Nothing else in the Zed track
-moves until that is done, because Zed's registry requires the extension to be
-tested manually at the commit being submitted.
+**NEXT ACTION (user only, nobody else can do it):** sign
+<https://zed.dev/cla> **signed in as `Alexl-git`**, then post a comment
+`@cla-bot check` on the PR. The `verification/cla-signed` check does NOT re-run
+by itself, so the PR sits there until both halves happen.
 
-**When the test passes, file BOTH of these as a pair (do not send one alone --
-the second discloses the first, and is false until the first exists):**
-1. `ZED-SUBMISSION.md` -- PR to `zed-industries/extensions` (submodule +
-   `extensions.toml` entry with `path = "editors/zed"`, then `pnpm sort-extensions`).
-2. `ZED-PASCAL-OUTREACH.md` -- issue on `ChemisTechlabs/zed-pascal`.
+**Both filings are OUT, as a pair:**
+* PR **zed-industries/extensions#7710** -- OPEN, MERGEABLE, 10 insertions across
+  `.gitmodules` / `extensions.toml` / `extensions/delphi13`. Danger passed ("All
+  green"). Submodule pinned at **`ef779ca`**, which is precisely the commit that
+  was manually tested, as the registry rule requires.
+* Issue **ChemisTechlabs/zed-pascal#6** -- OPEN. It discloses the PR, so the two
+  are only truthful together. (They were briefly out of sync on 2026-09-22 when
+  the issue filed and the PR command failed -- if that ever recurs, fix the PR
+  first, not the issue.)
 
-Then, in order: Cursor forum post (**user only** -- web login, I cannot reach it;
-text is in `UPSTREAM-vscode-tree-sitter-wasm.md`), the VS Code PR (same file;
-needs the user's Microsoft CLA signature, lowest-confidence item), and finally a
-VS Code extension, which is the only real path to Delphi support there.
+**ZED-TESTING.md PASSED** in Zed 1.10.3 against `C:\Projects\YADF`: Part A
+(A1-A5, A7; A6 is vim-only and skipped) and Part B (B1-B3, drag-lint answering
+go-to-definition, find-references and hover across units). Two traps cost an
+hour and are now written into that doc -- read them before re-testing:
+1. `failed to run rustc: program not found` is PATH, never code. rustup's PATH
+   edit had never landed; `%USERPROFILE%\.cargo\bin` was added to the persisted
+   user PATH on 2026-09-22. Zed must also be launched AFTER that exists.
+2. An EMPTY language-server log is not a dead server -- that pane shows stderr.
+   Use **RPC Messages**; a `// Receive` line is the proof of life.
 
-### What shipped today
+Local state: `ceebb0e` may still be unpushed (the 0.2.0 -> 0.3.0 fix to
+`ZED-SUBMISSION.md`; that doc told you to file a version that no longer
+existed). The prepared registry clone lived in a session scratchpad and is
+disposable -- the durable copy is the `Alexl-git/extensions` fork, branch
+`add-delphi13`, commit `e84cdf74`.
+
+**After the CLA clears, in order:** Cursor forum post (**user only** -- web
+login, I cannot reach it; text is in `UPSTREAM-vscode-tree-sitter-wasm.md`), the
+VS Code PR (same file; needs the user's Microsoft CLA signature, lowest-
+confidence item), and finally a VS Code extension, which is the only real path
+to Delphi support there.
+
+**If Zed rejects the Delphi half as duplicative**, `ZED-SUBMISSION.md` has the
+fallback: resubmit **DFM-only**. Nothing in the registry covers form files, so
+that half cannot be called a duplicate.
+
+### What shipped 2026-09-20
 
 * **npm published and round-trip verified** (installed from the registry and
   loaded through `web-tree-sitter`, not merely packed):
