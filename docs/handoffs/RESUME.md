@@ -1,0 +1,5 @@
+# Handoffs -- newest first
+
+- 2026-11-01 | release | v1.4.0 SHIPPED (GitHub + npm); tree-sitter article handed to www; only user one-liners left (branch -D ext-dirword) | closed | [HANDOFF-2026-11-01-release-v140-shipped-article](HANDOFF-2026-11-01-release-v140-shipped-article.md)
+- 2026-10-31 | release | v1.4.0 gates GREEN (0 per-file regressions), SHIPPED 2026-11-01: master 12088ad + tag pushed, release.yml green, GitHub Release v1.4.0 (Latest, 4 assets), npm tree-sitter-delphi13 + -pure 1.4.0 live and install-tested from the registry. Engine notified (integrates in its next release); INBOXes closed. Open only: delete superseded gaps/ext-dirword branch + worktree (needs OK). Do NOT follow this file's step 2 (staging into drag-lint dll-win64) or its FPC notes (FPC does have {$IFDEF}) | push pending | [HANDOFF-2026-10-31-NEXT-RELEASE-GATES](HANDOFF-2026-10-31-NEXT-RELEASE-GATES.md)
+- 2026-10-31 | grammar | dirword-scanner: 3 grammar fixes + matrix corpus COMPLETE + tests passing (87/90, 3 pre-existing); ready for gates | done | [HANDOFF-2026-10-31-grammar-dirword-multiline-release](HANDOFF-2026-10-31-grammar-dirword-multiline-release.md)
