@@ -27,6 +27,9 @@
 enum TokenType {
     CHAR_LITERAL,
     TRAILING_DOT_FLOAT,
+    DIRWORD_NAME,        // directive word followed by `:` or `,` -> var/field name
+    DIRWORD_CONST_NAME,  // directive word followed by `=` or `:` -> const name
+    ERROR_SENTINEL,      // never in a rule; valid only in error recovery
 };
 
 void *tree_sitter_delphi13_pure_external_scanner_create(void) { return NULL; }
@@ -89,6 +92,120 @@ static bool scan_trailing_dot_float(TSLexer *lexer) {
     return true;
 }
 
+// ---- dirword_name / dirword_const_name ----
+//
+// Directive words are not reserved in Delphi, so `Platform`, `Static`,
+// `Stdcall` ... are legal field / var / const names. With `word: identifier`
+// tree-sitter lexes such a word as its kX keyword wherever kX is valid, and
+// in a name position after `;` (or right after `record`) a directive slot is
+// usually valid too. The grammar offers these tokens ONLY in name positions;
+// here a directive word becomes a name when the next significant char is
+//   DIRWORD_NAME:       `:` (not `:=`) or `,`
+//   DIRWORD_CONST_NAME: `=` or `:` (not `:=`)
+// A real directive is followed by `;`, an expression, or another directive,
+// never by those. The `=` case is const-only: `var F: procedure; stdcall
+// = nil;` puts a real callconv before `=`. Any other word is refused, so the
+// internal lexer produces the plain identifier / keyword as before.
+//
+// Reserved words and visibility words (`public:` in a class body is a
+// section start) are deliberately absent.
+
+static const char *const DIRWORDS[] = {
+    "absolute", "abstract", "alias", "align", "assembler", "at", "cdecl",
+    "constref", "contains", "cppdecl", "cvar", "default", "delayed",
+    "dependency", "deprecated", "dispid", "dynamic", "experimental",
+    "export", "external", "far", "final", "forward", "generic", "hardfloat",
+    "helper", "implements", "index", "inline", "interrupt", "iocheck",
+    "library", "local", "message", "mwpascal", "name", "near", "nodefault",
+    "noreturn", "nostackframe", "operator", "out", "overload", "override",
+    "package", "pascal", "platform", "read", "readonly", "reference",
+    "register", "reintroduce", "requires", "safecall", "saveregisters",
+    "sealed", "softfloat", "specialize", "static", "stdcall", "stored",
+    "unimplemented", "unsafe", "varargs", "vectorcall", "virtual", "winapi",
+    "write", "writeonly",
+};
+
+static bool is_dirword(const char *w) {
+    for (unsigned i = 0; i < sizeof(DIRWORDS) / sizeof(DIRWORDS[0]); i++) {
+        const char *a = DIRWORDS[i];
+        const char *b = w;
+        while (*a && *a == *b) { a++; b++; }
+        if (*a == 0 && *b == 0) return true;
+    }
+    return false;
+}
+
+// Skips whitespace and `{...}` / `(*...*)` / `//` comments after the word.
+// Returns false on a `{$` directive or an unterminated comment (refuse).
+static bool skip_name_trivia(TSLexer *lexer) {
+    for (;;) {
+        int32_t c = lexer->lookahead;
+        if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
+            advance(lexer);
+        } else if (c == '{') {
+            advance(lexer);
+            if (lexer->lookahead == '$') return false;
+            while (lexer->lookahead != '}') {
+                if (lexer->eof(lexer)) return false;
+                advance(lexer);
+            }
+            advance(lexer);
+        } else if (c == '/') {
+            advance(lexer);
+            if (lexer->lookahead != '/') return false;
+            while (lexer->lookahead != '\n' && !lexer->eof(lexer)) advance(lexer);
+        } else if (c == '(') {
+            advance(lexer);
+            if (lexer->lookahead != '*') return false;
+            advance(lexer);
+            for (;;) {
+                if (lexer->eof(lexer)) return false;
+                if (lexer->lookahead == '*') {
+                    advance(lexer);
+                    if (lexer->lookahead == ')') { advance(lexer); break; }
+                } else {
+                    advance(lexer);
+                }
+            }
+        } else {
+            return true;
+        }
+    }
+}
+
+static bool scan_dirword_name(TSLexer *lexer, const bool *valid_symbols) {
+    char word[16];
+    unsigned n = 0;
+    while (is_ident_cont(lexer->lookahead)) {
+        int32_t c = lexer->lookahead;
+        if (c > 127 || n + 1 >= sizeof(word)) return false;
+        word[n++] = (char)((c >= 'A' && c <= 'Z') ? c + ('a' - 'A') : c);
+        advance(lexer);
+    }
+    word[n] = 0;
+    if (n == 0 || !is_dirword(word)) return false;
+    lexer->mark_end(lexer);
+
+    if (!skip_name_trivia(lexer)) return false;
+    int32_t c = lexer->lookahead;
+    if (c == ':') {
+        advance(lexer);
+        if (lexer->lookahead == '=') return false;
+        lexer->result_symbol = valid_symbols[DIRWORD_NAME]
+            ? DIRWORD_NAME : DIRWORD_CONST_NAME;
+        return true;
+    }
+    if (c == ',' && valid_symbols[DIRWORD_NAME]) {
+        lexer->result_symbol = DIRWORD_NAME;
+        return true;
+    }
+    if (c == '=' && valid_symbols[DIRWORD_CONST_NAME]) {
+        lexer->result_symbol = DIRWORD_CONST_NAME;
+        return true;
+    }
+    return false;
+}
+
 // ---- entry point ----
 
 bool tree_sitter_delphi13_pure_external_scanner_scan(
@@ -101,6 +218,12 @@ bool tree_sitter_delphi13_pure_external_scanner_scan(
         skip(lexer);
     }
 
+    if ((valid_symbols[DIRWORD_NAME] || valid_symbols[DIRWORD_CONST_NAME])
+        && !valid_symbols[ERROR_SENTINEL]
+        && ((lexer->lookahead >= 'a' && lexer->lookahead <= 'z')
+            || (lexer->lookahead >= 'A' && lexer->lookahead <= 'Z'))) {
+        return scan_dirword_name(lexer, valid_symbols);
+    }
     if (valid_symbols[CHAR_LITERAL] && lexer->lookahead == '^') {
         if (scan_char_literal(lexer)) return true;
     }

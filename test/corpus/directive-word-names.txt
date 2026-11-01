@@ -1,0 +1,811 @@
+==================
+directive word names: record first field named Platform (LSP repro)
+==================
+
+unit A;
+interface
+type
+  TProjectContext = record Platform, Config: string; end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (identifier)
+                (type
+                  (declString
+                    (kString))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: var and const named after directives
+==================
+
+unit A;
+interface
+var
+  A0: Integer;
+  Static: Integer;
+  Far: Integer;
+  External: Integer;
+  Library: Integer;
+const
+  A1 = 1;
+  Virtual = 2;
+  Deprecated = 3;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)))))
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: real hints and post-semicolon deprecated still parse
+==================
+
+unit A;
+interface
+const X1 = 1 platform; X2 = 2 deprecated 'z';
+type
+  TR1 = record A: Integer platform; end;
+  TR2 = record A: Integer; end deprecated 'x';
+var
+  V1: Integer platform;
+  G: Integer = 0; deprecated;
+  VP: procedure(A: Integer); stdcall;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber))
+          (kPlatform))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber))
+          (kDeprecated)
+          (literalString)))
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier)
+                    (kPlatform))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd)
+              (kDeprecated)
+              (literalString)))))
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)
+              (kPlatform))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)))
+          (defaultValue
+            (kEq)
+            (literalNumber))
+          (procAttribute
+            (kDeprecated)))
+        (declVar
+          (identifier)
+          (type
+            (declProcRef
+              (kProcedure)
+              (declArgs
+                (declArg
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))))
+          (procAttribute
+            (kStdcall)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: first field named Abstract/Sealed/Helper/Deprecated/Experimental/Library
+==================
+
+unit A;
+interface
+type
+  T1 = record Abstract: Integer; end;
+  T2 = record Sealed: Integer; end;
+  T3 = record Helper: Integer; end;
+  T4 = record Deprecated: Integer; end;
+  T5 = record Experimental: Integer; end;
+  T6 = record Library: Integer; end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: later record fields named after calling conventions
+==================
+
+unit A;
+interface
+type
+  T1 = record
+    A: Integer;
+    Stdcall: Integer;
+    Cdecl: Integer;
+    Safecall: Integer;
+    Pascal: Integer;
+    Winapi: Integer;
+    Inline: Integer;
+    Varargs: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: later vars named after calling conventions
+==================
+
+unit A;
+interface
+var
+  A: Integer;
+  Stdcall: Integer;
+  Cdecl: Integer;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: first class field after bare class and class(TBase)
+==================
+
+unit A;
+interface
+type
+  TC = class Abstract: Integer; end;
+  TD = class(TObject) Sealed: Integer; end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (typeref
+                (identifier))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: comments between the name and the colon or comma
+==================
+
+unit A;
+interface
+type
+  T1 = record Platform { c } : string; Config (* d *), Deprecated: string; end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (comment)
+                (type
+                  (declString
+                    (kString))))
+              (declField
+                (identifier)
+                (comment)
+                (identifier)
+                (type
+                  (declString
+                    (kString))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: later vars Dynamic/Virtual and a typed const named Static
+==================
+
+unit A;
+interface
+var
+  A0: Integer;
+  Dynamic: Boolean;
+  Virtual: Boolean;
+const
+  A1 = 1;
+  Static: Integer = 4;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)))))
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (type
+            (typeref
+              (identifier)))
+          (defaultValue
+            (kEq)
+            (literalNumber)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: controls -- real directives keep their keyword (callconv default, method directives, property default)
+==================
+
+unit A;
+interface
+const X3 = 3 platform deprecated;
+type
+  TC = class
+    FX: Integer;
+    procedure Foo; virtual; abstract;
+    procedure Bar; stdcall;
+    property X: Integer read FX; default;
+  end;
+var
+  VQ: procedure; stdcall = nil;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber))
+          (kPlatform)
+          (kDeprecated)))
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declProc
+                (kProcedure)
+                (identifier)
+                (procAttribute
+                  (kVirtual))
+                (procAttribute
+                  (kAbstract)))
+              (declProc
+                (kProcedure)
+                (identifier)
+                (procAttribute
+                  (kStdcall)))
+              (declProp
+                (kProperty)
+                (identifier)
+                (type
+                  (typeref
+                    (identifier)))
+                (kRead)
+                (identifier)
+                (procAttribute
+                  (kDefault)))
+              (kEnd)))))
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (declProcRef
+              (kProcedure)))
+          (kStdcall)
+          (kNil))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: Out as a parameter name, out as a modifier still works
+==================
+
+unit A;
+interface
+procedure P(Out: Integer);
+procedure Q(A: Integer; Out, B: Integer);
+procedure R(out X: Integer; out Y);
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (kOut)
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (kOut)
+            (identifier)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word names: library hint on a var before the semicolon
+==================
+
+unit A;
+interface
+var A: Integer platform; B: Integer deprecated 'x'; C: Integer library;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)
+              (kPlatform))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)
+              (kDeprecated)
+              (literalString))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)))
+          (kLibrary))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

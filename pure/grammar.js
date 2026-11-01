@@ -334,6 +334,14 @@ module.exports = grammar({
 		// Trailing-dot float literal `100.` — disambiguated from `100..N`
 		// (int + range op) by scanner-level lookahead at the char after `.`.
 		$.trailing_dot_float,
+		// Directive words used as NAMES -- ported from root 2026-10-31; see the
+		// root grammar's externals for the full rationale. A directive word
+		// followed by `:` (not `:=`) or `,` is a var/field name; followed by
+		// `=` or `:` a const name. Valid only in name positions.
+		$.dirword_name,
+		$.dirword_const_name,
+		// Never used in a rule: valid only during error recovery.
+		$._error_sentinel,
 		// (DROPPED: pp_block, pp_open, pp_else_tail, pp_end_only — the
 		// preprocessor resolves all directives before this grammar sees the
 		// input, so directive tokens are unnecessary here.)
@@ -1284,6 +1292,8 @@ module.exports = grammar({
 				// Ported from root 2026-07-16: `dispid` is a property/method
 				// directive — same trap (System.Win.ObjComAuto, Vcl.OleCtrls).
 				alias($.kDispId,       $.identifier),
+				// 2026-10-31: every other directive word via the scanner.
+				$._dirName,
 			))),
 			':',
 			// Phase 3b iter 36: declVar type may be a subrange:
@@ -1297,10 +1307,12 @@ module.exports = grammar({
 			// Phase 3b iter 14: declaration hints on module-level vars:
 			//   CmdShow: Integer platform;
 			//   SupportsAnimateWindow: Boolean = False deprecated 'msg';
+			// 2026-10-31: + legacy `library` hint (`C: Integer library;`).
 			optional(choice(
 				seq($.kDeprecated, optional($._expr)),
 				$.kPlatform,
-				$.kExperimental
+				$.kExperimental,
+				$.kLibrary,
 			)),
 			';',
 			// Phase 3b iter 13: function-typed module-level vars with
@@ -1335,6 +1347,8 @@ module.exports = grammar({
 				alias($.kRead,      $.identifier),
 				alias($.kWrite,     $.identifier),
 				alias($.kReference, $.identifier),
+				// 2026-10-31: `Virtual = 2;` after a prior const.
+				$._dirConstName,
 			)),
 			// Phase 3b iter 31: declConst type may be a subrange:
 			//   const allocatedCount : 0..MaxAllocEntries = 0;
@@ -1519,7 +1533,7 @@ module.exports = grammar({
 		),
 		declFieldNoSemi: $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			field('name', delimited1($.identifier)),
+			field('name', delimited1(choice($.identifier, $._dirName))),
 			':',
 			// Narrower type set than declField. Excludes declString with the
 			// `[N]` short-string size spec — that conflicts with declFieldNoSemi
@@ -1558,6 +1572,8 @@ module.exports = grammar({
 				// `Operator` as a FIELD NAME (JVCL JvXmlDatabase). Mirrors the
 				// root full grammar's fix (2026-07-17).
 				alias($.kOperator, $.identifier),
+				// 2026-10-31: `record Platform, Config: string;`, later Stdcall/Cdecl.
+				$._dirName,
 			))),
 			':',
 			// Ported from root v1.1.x: field type may be a subrange
@@ -1727,7 +1743,7 @@ module.exports = grammar({
 				optional($.rttiAttributes),
 				// Ported from root v1.1.x: per-name param attribute in a shared
 				// group (`const [REF] A, [REF] B: T`, Datasnap.DSIntf).
-				field('name', delimited1(seq(optional($.rttiAttributes), $.identifier))),
+				field('name', delimited1(seq(optional($.rttiAttributes), choice($.identifier, $._dirName)))),
 				optional(seq(
 					':', field('type', $.type),
 					field('defaultValue', optional($.defaultValue))
@@ -1738,7 +1754,9 @@ module.exports = grammar({
 				// before arg name without a leading modifier keyword. Win API
 				// D3D11 wrappers use `[Ref] ppConstantBuffers: ID3D11Buffer`.
 				optional($.rttiAttributes),
-				field('name', delimited1($.identifier)), ':',
+				// 2026-10-31: procedure P(A: Integer; Out: Integer) -- a directive
+				// word followed by `:` / `,` is a name (scanner); `out X` is unaffected.
+				field('name', delimited1(choice($.identifier, $._dirName))), ':',
 				field('type', $.type),
 				field('defaultValue', optional($.defaultValue))
 			)
@@ -2067,6 +2085,11 @@ module.exports = grammar({
 		// any letter/digit/underscore including the Unicode-letter range
 		// U+0080+ (Latin-1 Supplement onwards). Excludes ASCII punctuation
 		// so structural tokens stay intact.
+		// Scanner-decided directive-word names (see externals), shown as plain
+		// identifiers so the CST matches any other name.
+		_dirName:          $ => alias($.dirword_name, $.identifier),
+		_dirConstName:     $ => alias($.dirword_const_name, $.identifier),
+
 		identifier:        $ => /&{0,2}[a-zA-Z_-￿][0-9_a-zA-Z-￿]*/,
 
 		// Classic Pascal treats every control char <= #31 as a token

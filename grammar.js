@@ -361,6 +361,21 @@ module.exports = grammar({
 		$.pp_open,        // {$IF X} / {$IFDEF X} / {$IFNDEF X} / {$IFOPT ...}
 		$.pp_else_tail,   // {$ELSE} ... opaque ... {$ENDIF | $IFEND}
 		$.pp_end_only,    // {$ENDIF} / {$IFEND}   (no preceding else branch)
+
+		// Directive words used as NAMES (`record Platform, Config: string;`,
+		// `var A: Integer; Static: Integer;`, `const A = 1; Virtual = 2;`).
+		// Keyword extraction lexes a directive word as its kX keyword wherever
+		// kX is valid -- and a post-`;` directive slot or a bodiless-record hint
+		// is valid exactly where the next name starts. The scanner decides by
+		// the NEXT token instead: a directive word followed by `:` (not `:=`)
+		// or `,` is a var/field name; followed by `=` or `:` a const name.
+		// Valid only in name positions (_dirName / _dirConstName), so no
+		// directive slot changes and no conflict entries are needed.
+		$.dirword_name,
+		$.dirword_const_name,
+		// Never used in a rule: valid only during error recovery (when every
+		// external is valid), so the scanner can refuse the two tokens above.
+		$._error_sentinel,
 	],
 
 	word: $ => $.identifier,
@@ -1388,6 +1403,9 @@ module.exports = grammar({
 				// `var Foo: Integer; DispID: Integer;` hit the same trap.
 				// (System.Win.ObjComAuto L341, Vcl.OleCtrls L2143.)
 				alias($.kDispId,       $.identifier),
+				// 2026-10-31: every other directive word (Static, Virtual,
+				// Dynamic, Stdcall, Far, External, ...) via the scanner.
+				$._dirName,
 			))),
 			':',
 			// Phase 3b iter 36: declVar type may be a subrange:
@@ -1401,10 +1419,12 @@ module.exports = grammar({
 			// Phase 3b iter 14: declaration hints on module-level vars:
 			//   CmdShow: Integer platform;
 			//   SupportsAnimateWindow: Boolean = False deprecated 'msg';
+			// 2026-10-31: + legacy `library` hint (`C: Integer library;`).
 			optional(choice(
 				seq($.kDeprecated, optional($._expr)),
 				$.kPlatform,
-				$.kExperimental
+				$.kExperimental,
+				$.kLibrary,
 			)),
 			';',
 			// Phase 3b iter 13: function-typed module-level vars with
@@ -1439,6 +1459,8 @@ module.exports = grammar({
 				alias($.kRead,      $.identifier),
 				alias($.kWrite,     $.identifier),
 				alias($.kReference, $.identifier),
+				// 2026-10-31: `Virtual = 2;`, `Deprecated = 3;` after a prior const.
+				$._dirConstName,
 			)),
 			// Phase 3b iter 31: declConst type may be a subrange:
 			//   const allocatedCount : 0..MaxAllocEntries = 0;
@@ -1624,7 +1646,7 @@ module.exports = grammar({
 		),
 		declFieldNoSemi: $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			field('name', delimited1($.identifier)),
+			field('name', delimited1(choice($.identifier, $._dirName))),
 			':',
 			// Narrower type set than declField. Excludes declString with the
 			// `[N]` short-string size spec — that conflicts with declFieldNoSemi
@@ -1685,6 +1707,9 @@ module.exports = grammar({
 				// on the follow token (`:` -> field, operator-name -> class
 				// operator). Same narrow one-keyword alias as kRegister above.
 				alias($.kOperator, $.identifier),
+				// 2026-10-31: `record Platform, Config: string;`, a first field
+				// named Abstract/Sealed/Helper, a later one named Stdcall/Cdecl.
+				$._dirName,
 			))),
 			':',
 			// Iter 2026-07-06: a record/class field type may be a subrange, same
@@ -1869,7 +1894,7 @@ module.exports = grammar({
 				// A parameter attribute (`[ref]`/`[weak]`/`[unsafe]`) may repeat
 				// before EACH name in a comma-shared group, not just once for the
 				// group: `const [REF] CLSID, [REF] IID: TGUID` (Datasnap.DSIntf).
-				field('name', delimited1(seq(optional($.rttiAttributes), $.identifier))),
+				field('name', delimited1(seq(optional($.rttiAttributes), choice($.identifier, $._dirName)))),
 				optional(seq(
 					':', field('type', $.type),
 					field('defaultValue', optional($.defaultValue))
@@ -1880,7 +1905,9 @@ module.exports = grammar({
 				// before arg name without a leading modifier keyword. Win API
 				// D3D11 wrappers use `[Ref] ppConstantBuffers: ID3D11Buffer`.
 				optional($.rttiAttributes),
-				field('name', delimited1($.identifier)), ':',
+				// 2026-10-31: procedure P(A: Integer; Out: Integer) -- a directive
+				// word followed by `:` / `,` is a name (scanner); `out X` is unaffected.
+				field('name', delimited1(choice($.identifier, $._dirName))), ':',
 				field('type', $.type),
 				field('defaultValue', optional($.defaultValue))
 			)
@@ -2209,6 +2236,11 @@ module.exports = grammar({
 		// any letter/digit/underscore including the Unicode-letter range
 		// U+0080+ (Latin-1 Supplement onwards). Excludes ASCII punctuation
 		// so structural tokens stay intact.
+		// Scanner-decided directive-word names (see externals), shown as plain
+		// identifiers so the CST matches any other name.
+		_dirName:          $ => alias($.dirword_name, $.identifier),
+		_dirConstName:     $ => alias($.dirword_const_name, $.identifier),
+
 		identifier:        $ => /&{0,2}[a-zA-Z_-￿][0-9_a-zA-Z-￿]*/,
 
 		// Classic Pascal treats every control char <= #31 as a token
