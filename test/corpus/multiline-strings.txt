@@ -1,0 +1,194 @@
+==================
+multiline string: apostrophe in the body (drag-lint inbox repro 1)
+==================
+
+unit uV;
+interface
+implementation
+function Page: string;
+begin
+  Result := '''
+    it's here
+    ''';
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kFunction)
+          (identifier)
+          (typeref
+            (identifier)))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalString))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+multiline string: five-quote delimiter holds a triple quote (repro 2)
+==================
+
+unit uV;
+interface
+implementation
+function Page: string;
+begin
+  Result := '''''
+    holds ''' inside
+    ''''';
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kFunction)
+          (identifier)
+          (typeref
+            (identifier)))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalString))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+multiline string: quoted word in the body, two literals in one expression
+==================
+
+unit uV;
+interface
+implementation
+function Page: string;
+begin
+  Result := '''
+    a 'b' c
+    ''' + 'x' + '''
+    plain
+    ''';
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kFunction)
+          (identifier)
+          (typeref
+            (identifier)))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (exprBinary
+              (exprBinary
+                (literalString)
+                (kAdd)
+                (literalString))
+              (kAdd)
+              (literalString)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+multiline string: controls -- ordinary strings with quote runs stay ordinary
+==================
+
+unit uV;
+interface
+const
+  A = '''';
+  B = '''x''';
+  C = 'Can''t';
+  D = '' + 'x';
+  E = '''
+    plain body
+    ''';
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalString)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalString)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalString)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (exprBinary
+              (literalString)
+              (kAdd)
+              (literalString))))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalString)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

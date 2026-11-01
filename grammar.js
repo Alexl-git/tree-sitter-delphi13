@@ -373,6 +373,11 @@ module.exports = grammar({
 		// directive slot changes and no conflict entries are needed.
 		$.dirword_name,
 		$.dirword_const_name,
+		// Delphi 12+ multi-line string: an odd run of N >= 3 quotes then end of
+		// line opens it; the first later line starting with exactly N quotes
+		// closes it; the body is verbatim. Needs the scanner -- `'''` may sit
+		// inside a `'''''` literal, and apostrophes are plain text.
+		$._multiline_string,
 		// Never used in a rule: valid only during error recovery (when every
 		// external is valid), so the scanner can refuse the two tokens above.
 		$._error_sentinel,
@@ -1073,11 +1078,13 @@ module.exports = grammar({
 			// Delphi 12+ triple-quoted multi-line string. prec(2) so the
 			// regex engine prefers this over the single-quoted form when
 			// three quotes start the literal.
-			token(prec(2, /'''[\s\S]*?'''/)),
+			$._multiline_string,
 			// Single-quoted string. `''` (doubled single-quote) is Delphi's
 			// escape for one literal apostrophe — `'Can''t'` is "Can't".
 			// Body alternation: any non-quote char, OR a doubled quote.
-			token(/'([^']|'')*'/),
+			// No line breaks: an ordinary string cannot span lines, and allowing
+			// them let `'''<EOL> it'` win over a multi-line literal (2026-10-31).
+			token(/'([^'\r\n]|'')*'/),
 			$.literalChar
 		),
 		// Char literal: `#NN` decimal/hex char code, OR `^X` control char

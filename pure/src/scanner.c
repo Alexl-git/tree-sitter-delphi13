@@ -29,6 +29,7 @@ enum TokenType {
     TRAILING_DOT_FLOAT,
     DIRWORD_NAME,        // directive word followed by `:` or `,` -> var/field name
     DIRWORD_CONST_NAME,  // directive word followed by `=` or `:` -> const name
+    MULTILINE_STRING,    // Delphi 12+ '''...''' literal (odd N >= 3 quotes)
     ERROR_SENTINEL,      // never in a rule; valid only in error recovery
 };
 
@@ -206,6 +207,42 @@ static bool scan_dirword_name(TSLexer *lexer, const bool *valid_symbols) {
     return false;
 }
 
+// ---- multiline_string ----
+//
+// Delphi 12+ multi-line string literal. Opener: an ODD run of N >= 3 quotes
+// followed only by blanks to the end of the line. Closer: the first later line
+// whose first non-blank characters are exactly N quotes. The body is verbatim
+// (apostrophes and shorter quote runs are plain text), so a regex cannot match
+// it: `'''` may appear inside a `'''''` literal. Anything else is refused, so
+// `''''` (one apostrophe) and `'''x'` still lex as ordinary strings.
+static unsigned count_quotes(TSLexer *lexer) {
+    unsigned n = 0;
+    while (lexer->lookahead == '\'') { advance(lexer); n++; }
+    return n;
+}
+
+static bool scan_multiline_string(TSLexer *lexer) {
+    unsigned n = count_quotes(lexer);
+    if (n < 3 || n % 2 == 0) return false;
+    while (lexer->lookahead == ' ' || lexer->lookahead == '\t') advance(lexer);
+    if (lexer->lookahead != '\r' && lexer->lookahead != '\n') return false;
+    for (;;) {
+        // at a line break: consume it
+        while (lexer->lookahead == '\r' || lexer->lookahead == '\n') advance(lexer);
+        if (lexer->eof(lexer)) return false;
+        while (lexer->lookahead == ' ' || lexer->lookahead == '\t') advance(lexer);
+        if (lexer->lookahead == '\'' && count_quotes(lexer) == n) {
+            lexer->result_symbol = MULTILINE_STRING;
+            lexer->mark_end(lexer);
+            return true;
+        }
+        while (lexer->lookahead != '\r' && lexer->lookahead != '\n') {
+            if (lexer->eof(lexer)) return false;
+            advance(lexer);
+        }
+    }
+}
+
 // ---- entry point ----
 
 bool tree_sitter_delphi13_pure_external_scanner_scan(
@@ -223,6 +260,9 @@ bool tree_sitter_delphi13_pure_external_scanner_scan(
         && ((lexer->lookahead >= 'a' && lexer->lookahead <= 'z')
             || (lexer->lookahead >= 'A' && lexer->lookahead <= 'Z'))) {
         return scan_dirword_name(lexer, valid_symbols);
+    }
+    if (valid_symbols[MULTILINE_STRING] && lexer->lookahead == '\'') {
+        return scan_multiline_string(lexer);
     }
     if (valid_symbols[CHAR_LITERAL] && lexer->lookahead == '^') {
         if (scan_char_literal(lexer)) return true;
