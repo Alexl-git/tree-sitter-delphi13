@@ -1,5 +1,21 @@
 # RESUME - tree-sitter-delphi13
 
+## >>> 2026-10-31: v1.4.0 TAGGED -- directive-word names + multi-line strings
+
+Both grammars, `RELEASE-NOTES-v1.4.0.md`. Gates (file-by-file, 0 regressions):
+matrix 1506 err 122 -> 0; RTL raw 2222 full 34 / pure 276 unchanged; ORM3 786
+full 1 / pure 6 unchanged; CorpusScanDelphi on `work\manifest-baseline.txt`
+15979/50/1052 vs same-day master DLL: 0 worse, 2 better (YADF `multiline.pas`;
+its remaining error is invalid Delphi in the snippet itself); preprocessor ->
+pure on `work\manifest-embarc-2026-09-19.txt` 2217/2217, 0 per-file changes.
+NOTE: the recorded 16376/51/654 harness baseline no longer reproduces on this
+machine (+398 skips = files gone from disk); always diff against a same-day
+master-DLL run. Gate scripts: old session scratchpad `...\ef982f8c-...\gates\`.
+
+**Open:** npm publish (no token here -- user decides: NPM_TOKEN secret, or
+`npm publish --auth-type=web` in root and `pure\`); notify drag-lint
+(extractor version bump + re-parse; retire `NeutralizeMultilineStrings`).
+
 ## >>> RESUME HERE - 2026-09-22: ZED SUBMITTED, ALL CHECKS GREEN, AWAITING REVIEW
 
 **NEXT ACTION: nothing on our side.** PR #7710 is `MERGEABLE` / `CLEAN` with all
