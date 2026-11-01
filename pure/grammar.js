@@ -1162,7 +1162,9 @@ module.exports = grammar({
 			// FPC-only; lazutils uses it heavily. Accepting in Delphi mode is
 			// harmless because real Delphi code never uses `generic` here.
 			optional($.kGeneric),
-			field('name', $._genericName), $.kEq,
+			// 2026-10-31: TA = Integer; Platform = Integer; -- the post-; directive
+			// slot made the next type name a keyword; the scanner decides by `=`.
+			field('name', choice($._genericName, $._dirConstName)), $.kEq,
 			field('type',
 				choice(
 					seq(optional($.kType), $.type),

@@ -6819,8 +6819,17 @@
           "type": "FIELD",
           "name": "name",
           "content": {
-            "type": "SYMBOL",
-            "name": "_genericName"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_genericName"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_dirConstName"
+              }
+            ]
           }
         },
         {

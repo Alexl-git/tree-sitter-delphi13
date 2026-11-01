@@ -1,0 +1,5930 @@
+==================
+directive word matrix: every directive word as a later global var
+==================
+
+unit A;
+interface
+var
+  A0: Integer;
+  Absolute: Integer;
+  Abstract: Integer;
+  Alias: Integer;
+  Align: Integer;
+  Assembler: Integer;
+  At: Integer;
+  Cdecl: Integer;
+  Constref: Integer;
+  Contains: Integer;
+  Cppdecl: Integer;
+  Cvar: Integer;
+  Default: Integer;
+  Delayed: Integer;
+  Dependency: Integer;
+  Deprecated: Integer;
+  Dispid: Integer;
+  Dynamic: Integer;
+  Experimental: Integer;
+  Export: Integer;
+  External: Integer;
+  Far: Integer;
+  Final: Integer;
+  Forward: Integer;
+  Generic: Integer;
+  Hardfloat: Integer;
+  Helper: Integer;
+  Implements: Integer;
+  Index: Integer;
+  Inline: Integer;
+  Interrupt: Integer;
+  Iocheck: Integer;
+  Library: Integer;
+  Local: Integer;
+  Message: Integer;
+  Mwpascal: Integer;
+  Name: Integer;
+  Near: Integer;
+  Nodefault: Integer;
+  Noreturn: Integer;
+  Nostackframe: Integer;
+  Operator: Integer;
+  Out: Integer;
+  Overload: Integer;
+  Override: Integer;
+  Package: Integer;
+  Pascal: Integer;
+  Platform: Integer;
+  Read: Integer;
+  Readonly: Integer;
+  Reference: Integer;
+  Register: Integer;
+  Reintroduce: Integer;
+  Requires: Integer;
+  Safecall: Integer;
+  Saveregisters: Integer;
+  Sealed: Integer;
+  Softfloat: Integer;
+  Specialize: Integer;
+  Static: Integer;
+  Stdcall: Integer;
+  Stored: Integer;
+  Unimplemented: Integer;
+  Unsafe: Integer;
+  Varargs: Integer;
+  Vectorcall: Integer;
+  Virtual: Integer;
+  Winapi: Integer;
+  Write: Integer;
+  Writeonly: Integer;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as a later local var
+==================
+
+unit A;
+interface
+implementation
+procedure P;
+var
+  A0: Integer;
+  Absolute: Integer;
+  Abstract: Integer;
+  Alias: Integer;
+  Align: Integer;
+  Assembler: Integer;
+  At: Integer;
+  Cdecl: Integer;
+  Constref: Integer;
+  Contains: Integer;
+  Cppdecl: Integer;
+  Cvar: Integer;
+  Default: Integer;
+  Delayed: Integer;
+  Dependency: Integer;
+  Deprecated: Integer;
+  Dispid: Integer;
+  Dynamic: Integer;
+  Experimental: Integer;
+  Export: Integer;
+  External: Integer;
+  Far: Integer;
+  Final: Integer;
+  Forward: Integer;
+  Generic: Integer;
+  Hardfloat: Integer;
+  Helper: Integer;
+  Implements: Integer;
+  Index: Integer;
+  Inline: Integer;
+  Interrupt: Integer;
+  Iocheck: Integer;
+  Library: Integer;
+  Local: Integer;
+  Message: Integer;
+  Mwpascal: Integer;
+  Name: Integer;
+  Near: Integer;
+  Nodefault: Integer;
+  Noreturn: Integer;
+  Nostackframe: Integer;
+  Operator: Integer;
+  Out: Integer;
+  Overload: Integer;
+  Override: Integer;
+  Package: Integer;
+  Pascal: Integer;
+  Platform: Integer;
+  Read: Integer;
+  Readonly: Integer;
+  Reference: Integer;
+  Register: Integer;
+  Reintroduce: Integer;
+  Requires: Integer;
+  Safecall: Integer;
+  Saveregisters: Integer;
+  Sealed: Integer;
+  Softfloat: Integer;
+  Specialize: Integer;
+  Static: Integer;
+  Stdcall: Integer;
+  Stored: Integer;
+  Unimplemented: Integer;
+  Unsafe: Integer;
+  Varargs: Integer;
+  Vectorcall: Integer;
+  Virtual: Integer;
+  Winapi: Integer;
+  Write: Integer;
+  Writeonly: Integer;
+begin
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (declVars
+          (kVar)
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier)))))
+        (block
+          (kBegin)
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as a later record field
+==================
+
+unit A;
+interface
+type
+  TR = record
+    A0: Integer;
+    Absolute: Integer;
+    Abstract: Integer;
+    Alias: Integer;
+    Align: Integer;
+    Assembler: Integer;
+    At: Integer;
+    Cdecl: Integer;
+    Constref: Integer;
+    Contains: Integer;
+    Cppdecl: Integer;
+    Cvar: Integer;
+    Default: Integer;
+    Delayed: Integer;
+    Dependency: Integer;
+    Deprecated: Integer;
+    Dispid: Integer;
+    Dynamic: Integer;
+    Experimental: Integer;
+    Export: Integer;
+    External: Integer;
+    Far: Integer;
+    Final: Integer;
+    Forward: Integer;
+    Generic: Integer;
+    Hardfloat: Integer;
+    Helper: Integer;
+    Implements: Integer;
+    Index: Integer;
+    Inline: Integer;
+    Interrupt: Integer;
+    Iocheck: Integer;
+    Library: Integer;
+    Local: Integer;
+    Message: Integer;
+    Mwpascal: Integer;
+    Name: Integer;
+    Near: Integer;
+    Nodefault: Integer;
+    Noreturn: Integer;
+    Nostackframe: Integer;
+    Operator: Integer;
+    Out: Integer;
+    Overload: Integer;
+    Override: Integer;
+    Package: Integer;
+    Pascal: Integer;
+    Platform: Integer;
+    Read: Integer;
+    Readonly: Integer;
+    Reference: Integer;
+    Register: Integer;
+    Reintroduce: Integer;
+    Requires: Integer;
+    Safecall: Integer;
+    Saveregisters: Integer;
+    Sealed: Integer;
+    Softfloat: Integer;
+    Specialize: Integer;
+    Static: Integer;
+    Stdcall: Integer;
+    Stored: Integer;
+    Unimplemented: Integer;
+    Unsafe: Integer;
+    Varargs: Integer;
+    Vectorcall: Integer;
+    Virtual: Integer;
+    Winapi: Integer;
+    Write: Integer;
+    Writeonly: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as a later class field
+==================
+
+unit A;
+interface
+type
+  TC = class
+    A0: Integer;
+    Absolute: Integer;
+    Abstract: Integer;
+    Alias: Integer;
+    Align: Integer;
+    Assembler: Integer;
+    At: Integer;
+    Cdecl: Integer;
+    Constref: Integer;
+    Contains: Integer;
+    Cppdecl: Integer;
+    Cvar: Integer;
+    Default: Integer;
+    Delayed: Integer;
+    Dependency: Integer;
+    Deprecated: Integer;
+    Dispid: Integer;
+    Dynamic: Integer;
+    Experimental: Integer;
+    Export: Integer;
+    External: Integer;
+    Far: Integer;
+    Final: Integer;
+    Forward: Integer;
+    Generic: Integer;
+    Hardfloat: Integer;
+    Helper: Integer;
+    Implements: Integer;
+    Index: Integer;
+    Inline: Integer;
+    Interrupt: Integer;
+    Iocheck: Integer;
+    Library: Integer;
+    Local: Integer;
+    Message: Integer;
+    Mwpascal: Integer;
+    Name: Integer;
+    Near: Integer;
+    Nodefault: Integer;
+    Noreturn: Integer;
+    Nostackframe: Integer;
+    Operator: Integer;
+    Out: Integer;
+    Overload: Integer;
+    Override: Integer;
+    Package: Integer;
+    Pascal: Integer;
+    Platform: Integer;
+    Read: Integer;
+    Readonly: Integer;
+    Reference: Integer;
+    Register: Integer;
+    Reintroduce: Integer;
+    Requires: Integer;
+    Safecall: Integer;
+    Saveregisters: Integer;
+    Sealed: Integer;
+    Softfloat: Integer;
+    Specialize: Integer;
+    Static: Integer;
+    Stdcall: Integer;
+    Stored: Integer;
+    Unimplemented: Integer;
+    Unsafe: Integer;
+    Varargs: Integer;
+    Vectorcall: Integer;
+    Virtual: Integer;
+    Winapi: Integer;
+    Write: Integer;
+    Writeonly: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as a later const
+==================
+
+unit A;
+interface
+const
+  A0 = 0;
+  Absolute = 1;
+  Abstract = 1;
+  Alias = 1;
+  Align = 1;
+  Assembler = 1;
+  At = 1;
+  Cdecl = 1;
+  Constref = 1;
+  Contains = 1;
+  Cppdecl = 1;
+  Cvar = 1;
+  Default = 1;
+  Delayed = 1;
+  Dependency = 1;
+  Deprecated = 1;
+  Dispid = 1;
+  Dynamic = 1;
+  Experimental = 1;
+  Export = 1;
+  External = 1;
+  Far = 1;
+  Final = 1;
+  Forward = 1;
+  Generic = 1;
+  Hardfloat = 1;
+  Helper = 1;
+  Implements = 1;
+  Index = 1;
+  Inline = 1;
+  Interrupt = 1;
+  Iocheck = 1;
+  Library = 1;
+  Local = 1;
+  Message = 1;
+  Mwpascal = 1;
+  Name = 1;
+  Near = 1;
+  Nodefault = 1;
+  Noreturn = 1;
+  Nostackframe = 1;
+  Operator = 1;
+  Out = 1;
+  Overload = 1;
+  Override = 1;
+  Package = 1;
+  Pascal = 1;
+  Platform = 1;
+  Read = 1;
+  Readonly = 1;
+  Reference = 1;
+  Register = 1;
+  Reintroduce = 1;
+  Requires = 1;
+  Safecall = 1;
+  Saveregisters = 1;
+  Sealed = 1;
+  Softfloat = 1;
+  Specialize = 1;
+  Static = 1;
+  Stdcall = 1;
+  Stored = 1;
+  Unimplemented = 1;
+  Unsafe = 1;
+  Varargs = 1;
+  Vectorcall = 1;
+  Virtual = 1;
+  Winapi = 1;
+  Write = 1;
+  Writeonly = 1;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))
+        (declConst
+          (identifier)
+          (defaultValue
+            (kEq)
+            (literalNumber)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as a later type name
+==================
+
+unit A;
+interface
+type
+  TA = Integer;
+  Absolute = Integer;
+  Abstract = Integer;
+  Alias = Integer;
+  Align = Integer;
+  Assembler = Integer;
+  At = Integer;
+  Cdecl = Integer;
+  Constref = Integer;
+  Contains = Integer;
+  Cppdecl = Integer;
+  Cvar = Integer;
+  Default = Integer;
+  Delayed = Integer;
+  Dependency = Integer;
+  Deprecated = Integer;
+  Dispid = Integer;
+  Dynamic = Integer;
+  Experimental = Integer;
+  Export = Integer;
+  External = Integer;
+  Far = Integer;
+  Final = Integer;
+  Forward = Integer;
+  Generic = Integer;
+  Hardfloat = Integer;
+  Helper = Integer;
+  Implements = Integer;
+  Index = Integer;
+  Inline = Integer;
+  Interrupt = Integer;
+  Iocheck = Integer;
+  Library = Integer;
+  Local = Integer;
+  Message = Integer;
+  Mwpascal = Integer;
+  Name = Integer;
+  Near = Integer;
+  Nodefault = Integer;
+  Noreturn = Integer;
+  Nostackframe = Integer;
+  Operator = Integer;
+  Out = Integer;
+  Overload = Integer;
+  Override = Integer;
+  Package = Integer;
+  Pascal = Integer;
+  Platform = Integer;
+  Read = Integer;
+  Readonly = Integer;
+  Reference = Integer;
+  Register = Integer;
+  Reintroduce = Integer;
+  Requires = Integer;
+  Safecall = Integer;
+  Saveregisters = Integer;
+  Sealed = Integer;
+  Softfloat = Integer;
+  Specialize = Integer;
+  Static = Integer;
+  Stdcall = Integer;
+  Stored = Integer;
+  Unimplemented = Integer;
+  Unsafe = Integer;
+  Varargs = Integer;
+  Vectorcall = Integer;
+  Virtual = Integer;
+  Winapi = Integer;
+  Write = Integer;
+  Writeonly = Integer;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as a later parameter
+==================
+
+unit A;
+interface
+procedure PAbsolute(A: Integer; Absolute: Integer);
+procedure PAbstract(A: Integer; Abstract: Integer);
+procedure PAlias(A: Integer; Alias: Integer);
+procedure PAlign(A: Integer; Align: Integer);
+procedure PAssembler(A: Integer; Assembler: Integer);
+procedure PAt(A: Integer; At: Integer);
+procedure PCdecl(A: Integer; Cdecl: Integer);
+procedure PConstref(A: Integer; Constref: Integer);
+procedure PContains(A: Integer; Contains: Integer);
+procedure PCppdecl(A: Integer; Cppdecl: Integer);
+procedure PCvar(A: Integer; Cvar: Integer);
+procedure PDefault(A: Integer; Default: Integer);
+procedure PDelayed(A: Integer; Delayed: Integer);
+procedure PDependency(A: Integer; Dependency: Integer);
+procedure PDeprecated(A: Integer; Deprecated: Integer);
+procedure PDispid(A: Integer; Dispid: Integer);
+procedure PDynamic(A: Integer; Dynamic: Integer);
+procedure PExperimental(A: Integer; Experimental: Integer);
+procedure PExport(A: Integer; Export: Integer);
+procedure PExternal(A: Integer; External: Integer);
+procedure PFar(A: Integer; Far: Integer);
+procedure PFinal(A: Integer; Final: Integer);
+procedure PForward(A: Integer; Forward: Integer);
+procedure PGeneric(A: Integer; Generic: Integer);
+procedure PHardfloat(A: Integer; Hardfloat: Integer);
+procedure PHelper(A: Integer; Helper: Integer);
+procedure PImplements(A: Integer; Implements: Integer);
+procedure PIndex(A: Integer; Index: Integer);
+procedure PInline(A: Integer; Inline: Integer);
+procedure PInterrupt(A: Integer; Interrupt: Integer);
+procedure PIocheck(A: Integer; Iocheck: Integer);
+procedure PLibrary(A: Integer; Library: Integer);
+procedure PLocal(A: Integer; Local: Integer);
+procedure PMessage(A: Integer; Message: Integer);
+procedure PMwpascal(A: Integer; Mwpascal: Integer);
+procedure PName(A: Integer; Name: Integer);
+procedure PNear(A: Integer; Near: Integer);
+procedure PNodefault(A: Integer; Nodefault: Integer);
+procedure PNoreturn(A: Integer; Noreturn: Integer);
+procedure PNostackframe(A: Integer; Nostackframe: Integer);
+procedure POperator(A: Integer; Operator: Integer);
+procedure POut(A: Integer; Out: Integer);
+procedure POverload(A: Integer; Overload: Integer);
+procedure POverride(A: Integer; Override: Integer);
+procedure PPackage(A: Integer; Package: Integer);
+procedure PPascal(A: Integer; Pascal: Integer);
+procedure PPlatform(A: Integer; Platform: Integer);
+procedure PRead(A: Integer; Read: Integer);
+procedure PReadonly(A: Integer; Readonly: Integer);
+procedure PReference(A: Integer; Reference: Integer);
+procedure PRegister(A: Integer; Register: Integer);
+procedure PReintroduce(A: Integer; Reintroduce: Integer);
+procedure PRequires(A: Integer; Requires: Integer);
+procedure PSafecall(A: Integer; Safecall: Integer);
+procedure PSaveregisters(A: Integer; Saveregisters: Integer);
+procedure PSealed(A: Integer; Sealed: Integer);
+procedure PSoftfloat(A: Integer; Softfloat: Integer);
+procedure PSpecialize(A: Integer; Specialize: Integer);
+procedure PStatic(A: Integer; Static: Integer);
+procedure PStdcall(A: Integer; Stdcall: Integer);
+procedure PStored(A: Integer; Stored: Integer);
+procedure PUnimplemented(A: Integer; Unimplemented: Integer);
+procedure PUnsafe(A: Integer; Unsafe: Integer);
+procedure PVarargs(A: Integer; Varargs: Integer);
+procedure PVectorcall(A: Integer; Vectorcall: Integer);
+procedure PVirtual(A: Integer; Virtual: Integer);
+procedure PWinapi(A: Integer; Winapi: Integer);
+procedure PWrite(A: Integer; Write: Integer);
+procedure PWriteonly(A: Integer; Writeonly: Integer);
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (declArgs
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (declArg
+            (identifier)
+            (type
+              (typeref
+                (identifier)))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as the first record field
+==================
+
+unit A;
+interface
+type
+  TAbsolute = record Absolute: Integer; end;
+  TAbstract = record Abstract: Integer; end;
+  TAlias = record Alias: Integer; end;
+  TAlign = record Align: Integer; end;
+  TAssembler = record Assembler: Integer; end;
+  TAt = record At: Integer; end;
+  TCdecl = record Cdecl: Integer; end;
+  TConstref = record Constref: Integer; end;
+  TContains = record Contains: Integer; end;
+  TCppdecl = record Cppdecl: Integer; end;
+  TCvar = record Cvar: Integer; end;
+  TDefault = record Default: Integer; end;
+  TDelayed = record Delayed: Integer; end;
+  TDependency = record Dependency: Integer; end;
+  TDeprecated = record Deprecated: Integer; end;
+  TDispid = record Dispid: Integer; end;
+  TDynamic = record Dynamic: Integer; end;
+  TExperimental = record Experimental: Integer; end;
+  TExport = record Export: Integer; end;
+  TExternal = record External: Integer; end;
+  TFar = record Far: Integer; end;
+  TFinal = record Final: Integer; end;
+  TForward = record Forward: Integer; end;
+  TGeneric = record Generic: Integer; end;
+  THardfloat = record Hardfloat: Integer; end;
+  THelper = record Helper: Integer; end;
+  TImplements = record Implements: Integer; end;
+  TIndex = record Index: Integer; end;
+  TInline = record Inline: Integer; end;
+  TInterrupt = record Interrupt: Integer; end;
+  TIocheck = record Iocheck: Integer; end;
+  TLibrary = record Library: Integer; end;
+  TLocal = record Local: Integer; end;
+  TMessage = record Message: Integer; end;
+  TMwpascal = record Mwpascal: Integer; end;
+  TName = record Name: Integer; end;
+  TNear = record Near: Integer; end;
+  TNodefault = record Nodefault: Integer; end;
+  TNoreturn = record Noreturn: Integer; end;
+  TNostackframe = record Nostackframe: Integer; end;
+  TOperator = record Operator: Integer; end;
+  TOut = record Out: Integer; end;
+  TOverload = record Overload: Integer; end;
+  TOverride = record Override: Integer; end;
+  TPackage = record Package: Integer; end;
+  TPascal = record Pascal: Integer; end;
+  TPlatform = record Platform: Integer; end;
+  TRead = record Read: Integer; end;
+  TReadonly = record Readonly: Integer; end;
+  TReference = record Reference: Integer; end;
+  TRegister = record Register: Integer; end;
+  TReintroduce = record Reintroduce: Integer; end;
+  TRequires = record Requires: Integer; end;
+  TSafecall = record Safecall: Integer; end;
+  TSaveregisters = record Saveregisters: Integer; end;
+  TSealed = record Sealed: Integer; end;
+  TSoftfloat = record Softfloat: Integer; end;
+  TSpecialize = record Specialize: Integer; end;
+  TStatic = record Static: Integer; end;
+  TStdcall = record Stdcall: Integer; end;
+  TStored = record Stored: Integer; end;
+  TUnimplemented = record Unimplemented: Integer; end;
+  TUnsafe = record Unsafe: Integer; end;
+  TVarargs = record Varargs: Integer; end;
+  TVectorcall = record Vectorcall: Integer; end;
+  TVirtual = record Virtual: Integer; end;
+  TWinapi = record Winapi: Integer; end;
+  TWrite = record Write: Integer; end;
+  TWriteonly = record Writeonly: Integer; end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: every directive word as a later inline var
+==================
+
+unit A;
+interface
+implementation
+procedure P;
+begin
+  var A0: Integer := 0;
+  var Absolute: Integer := 1;
+  var Abstract: Integer := 1;
+  var Alias: Integer := 1;
+  var Align: Integer := 1;
+  var Assembler: Integer := 1;
+  var At: Integer := 1;
+  var Cdecl: Integer := 1;
+  var Constref: Integer := 1;
+  var Contains: Integer := 1;
+  var Cppdecl: Integer := 1;
+  var Cvar: Integer := 1;
+  var Default: Integer := 1;
+  var Delayed: Integer := 1;
+  var Dependency: Integer := 1;
+  var Deprecated: Integer := 1;
+  var Dispid: Integer := 1;
+  var Dynamic: Integer := 1;
+  var Experimental: Integer := 1;
+  var Export: Integer := 1;
+  var External: Integer := 1;
+  var Far: Integer := 1;
+  var Final: Integer := 1;
+  var Forward: Integer := 1;
+  var Generic: Integer := 1;
+  var Hardfloat: Integer := 1;
+  var Helper: Integer := 1;
+  var Implements: Integer := 1;
+  var Index: Integer := 1;
+  var Inline: Integer := 1;
+  var Interrupt: Integer := 1;
+  var Iocheck: Integer := 1;
+  var Library: Integer := 1;
+  var Local: Integer := 1;
+  var Message: Integer := 1;
+  var Mwpascal: Integer := 1;
+  var Name: Integer := 1;
+  var Near: Integer := 1;
+  var Nodefault: Integer := 1;
+  var Noreturn: Integer := 1;
+  var Nostackframe: Integer := 1;
+  var Operator: Integer := 1;
+  var Out: Integer := 1;
+  var Overload: Integer := 1;
+  var Override: Integer := 1;
+  var Package: Integer := 1;
+  var Pascal: Integer := 1;
+  var Platform: Integer := 1;
+  var Read: Integer := 1;
+  var Readonly: Integer := 1;
+  var Reference: Integer := 1;
+  var Register: Integer := 1;
+  var Reintroduce: Integer := 1;
+  var Requires: Integer := 1;
+  var Safecall: Integer := 1;
+  var Saveregisters: Integer := 1;
+  var Sealed: Integer := 1;
+  var Softfloat: Integer := 1;
+  var Specialize: Integer := 1;
+  var Static: Integer := 1;
+  var Stdcall: Integer := 1;
+  var Stored: Integer := 1;
+  var Unimplemented: Integer := 1;
+  var Unsafe: Integer := 1;
+  var Varargs: Integer := 1;
+  var Vectorcall: Integer := 1;
+  var Virtual: Integer := 1;
+  var Winapi: Integer := 1;
+  var Write: Integer := 1;
+  var Writeonly: Integer := 1;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: probe p1_inlinevar
+==================
+
+unit A;
+interface
+implementation
+procedure P;
+begin
+  var X: Integer := 1;
+  var Static: Integer := 2;
+  var Platform := 3;
+  for var Dynamic := 0 to 1 do ;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier))
+            (kAssign)
+            (literalNumber))
+          (for
+            (kFor)
+            (assignment
+              (varAssignDef
+                (kVar)
+                (identifier))
+              (kAssign)
+              (literalNumber))
+            (kTo)
+            (literalNumber)
+            (kDo))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: probe p2_typename
+==================
+
+unit A;
+interface
+type
+  TA = Integer;
+  Platform = Integer;
+  Static = record A: Integer; end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (typeref
+              (identifier))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: probe p3_methods
+==================
+
+unit A;
+interface
+type
+  TC = class
+    procedure Abstract;
+    function Platform: Integer;
+    property Static: Integer read FS;
+    property Deprecated: Integer read FD write FD;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (declProc
+                (kProcedure)
+                (identifier))
+              (declProc
+                (kFunction)
+                (identifier)
+                (typeref
+                  (identifier)))
+              (declProp
+                (kProperty)
+                (identifier)
+                (type
+                  (typeref
+                    (identifier)))
+                (kRead)
+                (identifier))
+              (declProp
+                (kProperty)
+                (identifier)
+                (type
+                  (typeref
+                    (identifier)))
+                (kRead)
+                (identifier)
+                (kWrite)
+                (identifier))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: probe p4_enum_label
+==================
+
+unit A;
+interface
+type
+  TE = (Static, Dynamic, Virtual, Platform);
+implementation
+procedure P;
+label Far;
+begin
+  Far: ;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declEnum
+              (declEnumValue
+                (identifier))
+              (declEnumValue
+                (identifier))
+              (declEnumValue
+                (identifier))
+              (declEnumValue
+                (identifier)))))))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (declLabels
+          (kLabel)
+          (declLabel
+            (identifier)))
+        (block
+          (kBegin)
+          (label
+            (identifier))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: probe p5_stmts
+==================
+
+unit A;
+interface
+implementation
+procedure P;
+var R: TR;
+begin
+  R.Platform := 1;
+  Static := Virtual + Dynamic;
+  with R do Platform := 2;
+  Deprecated(1);
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (declVars
+          (kVar)
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier)))))
+        (block
+          (kBegin)
+          (assignment
+            (exprDot
+              (identifier)
+              (kDot)
+              (identifier))
+            (kAssign)
+            (literalNumber))
+          (assignment
+            (identifier)
+            (kAssign)
+            (exprBinary
+              (identifier)
+              (kAdd)
+              (identifier)))
+          (with
+            (kWith)
+            (identifier)
+            (kDo)
+            (assignment
+              (identifier)
+              (kAssign)
+              (literalNumber)))
+          (statement
+            (exprCall
+              (identifier)
+              (exprArgs
+                (literalNumber))))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: probe p6_variant
+==================
+
+unit A;
+interface
+type
+  TV = record
+    case Integer of
+      0: (Platform: Integer);
+      1: (Static, Stdcall: Byte);
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declVariant
+                (kCase)
+                (typeref
+                  (identifier))
+                (kOf)
+                (declVariantClause
+                  (caseLabel
+                    (literalNumber))
+                  (declField
+                    (identifier)
+                    (type
+                      (typeref
+                        (identifier)))))
+                (declVariantClause
+                  (caseLabel
+                    (literalNumber))
+                  (declField
+                    (identifier)
+                    (identifier)
+                    (type
+                      (typeref
+                        (identifier))))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+directive word matrix: probe p7_classvar
+==================
+
+unit A;
+interface
+type
+  TC = class
+  public
+    Platform: Integer;
+    class var Static: Integer;
+  strict private
+    Stdcall: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (declSection
+                (kPublic)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier))))
+                (declVars
+                  (kClass)
+                  (kVar)
+                  (declVar
+                    (identifier)
+                    (type
+                      (typeref
+                        (identifier))))))
+              (declSection
+                (kStrict)
+                (kPrivate)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
