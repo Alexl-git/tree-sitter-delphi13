@@ -430,6 +430,10 @@ module.exports = grammar({
 		// Phase 3b iter 11: declFieldNoSemi uses a narrower type set; conflicts
 		// with the full `type` rule's choices.
 		[$.type, $.declFieldNoSemi],
+		// 2026-11-03 GRAMMAR-LASTFIELD: the no-semi array form shares its prefix with
+		// declArray; the GLR splits on the token after the element (`;` vs `end`).
+		[$.type, $._arrayElemNoSemi],
+		[$.declArray, $._declArrayNoSemi],
 		// Iter 2026-07-06: an anonymous enum `(a, b, c)` in an array index slot is
 		// ambiguous with a parenthesized expression `_ref` (both start `(`). GLR
 		// resolves by what follows: `(a,b,c)]` in index position -> declEnum.
@@ -1684,17 +1688,39 @@ module.exports = grammar({
 				// Bare `string`/`ShortString` has no such tail, so it is
 				// unambiguous here.
 				$.kString,
-				// NOTE: `array[...] of T` as a last-field-no-`;` is intentionally
-				// NOT here. Adding declArray fixes SHX/MongoDBCli/ShlObj (+3) but
-				// regresses OoMisc/Z19b5 (-2/3): `array[0..4] of String[1];` (a
-				// short-string element, WITH a trailing `;`) becomes ambiguous with
-				// the no-semi array form and mis-parses. The GLR can't split them
-				// (the `[N]` overlap is lexical). Needs a constrained array element
-				// (exclude declString) to do safely — deferred; not worth the
-				// parser-table cost for ~1 net file. See TODO.
+				// 2026-11-03 (v1.4.1, GRAMMAR-LASTFIELD): `array[...] of T` as the
+				// last field with no `;` (FireDAC.Phys.MongoDBCli `padding: array
+				// [0 .. 83] of Byte end`, Winapi.ShlObj `szInsert: packed
+				// array[0..MAX_PATH-1] of WCHAR end`). The full declArray is NOT
+				// used: its element `type` includes declString, whose `[N]` made
+				// `array[0..4] of String[1];` (OoMisc/Z19b5, WITH a trailing `;`)
+				// ambiguous with the no-semi form. _declArrayNoSemi is the
+				// constrained form: its element excludes every string type, so a
+				// string element only ever parses through declField. Aliased to
+				// declArray (element aliased to type) so the tree has the same
+				// shape as the `;` form.
+				alias($._declArrayNoSemi, $.declArray),
 				prec(-1, $.pp_block),
 			)),
 			field('defaultValue', optional($.defaultValue)),
+		),
+		// Constrained `array [..] of T` for declFieldNoSemi only (see there).
+		// Same index forms as declArray; the element excludes declString and
+		// kString so `of String[N]` can never end a no-semi field.
+		_declArrayNoSemi: $ => seq(
+			optional($.kPacked),
+			$.kArray,
+			optional(seq('[', delimited(choice($.range, $.declEnum, $._expr)), ']')),
+			$.kOf,
+			choice(alias($._arrayElemNoSemi, $.type), $.subrangeType),
+		),
+		_arrayElemNoSemi: $ => choice(
+			$.typeref,
+			$.declMetaClass,
+			$.declEnum,
+			$.declSet,
+			$.declProcRef,
+			$.declClass,
 		),
 
 		declField:       $ =>  seq(

@@ -423,6 +423,10 @@ module.exports = grammar({
 		// Phase 3b iter 11: declFieldNoSemi uses a narrower type set; conflicts
 		// with the full `type` rule's choices.
 		[$.type, $.declFieldNoSemi],
+		// 2026-11-03 GRAMMAR-LASTFIELD: the no-semi array form shares its prefix with
+		// declArray; the GLR splits on the token after the element (`;` vs `end`).
+		[$.type, $._arrayElemNoSemi],
+		[$.declArray, $._declArrayNoSemi],
 		// Ported from root v1.1.x: anon enum in array index vs paren expr.
 		[$._ref, $.declEnumValue],
 		// Ported from root v1.1.x: per-name param attributes in a shared group.
@@ -1564,10 +1568,30 @@ module.exports = grammar({
 				// without re-introducing the iPLANLIST `string[30]` regression
 				// (declField with `;` is preferred when `[N]` follows).
 				alias($.kString, $.typeref),
-				// (Tried adding $.declArray for Win API records — broke ORM3
-				// Z19b5.pas `Array[0..4] of String[1]` pattern. Skipped.)
+				// 2026-11-03 (v1.4.1, GRAMMAR-LASTFIELD): `array[...] of T` as the
+				// last field with no `;` (MongoDBCli, ShlObj). The full declArray
+				// broke ORM3 Z19b5.pas `Array[0..4] of String[1];`; the
+				// constrained _declArrayNoSemi excludes string elements, aliased
+				// to declArray so the tree matches the `;` form. Same as root.
+				alias($._declArrayNoSemi, $.declArray),
 			)),
 			field('defaultValue', optional($.defaultValue)),
+		),
+		// Constrained `array [..] of T` for declFieldNoSemi only (see there).
+		_declArrayNoSemi: $ => seq(
+			optional($.kPacked),
+			$.kArray,
+			optional(seq('[', delimited(choice($.range, $.declEnum, $._expr)), ']')),
+			$.kOf,
+			choice(alias($._arrayElemNoSemi, $.type), $.subrangeType),
+		),
+		_arrayElemNoSemi: $ => choice(
+			$.typeref,
+			$.declMetaClass,
+			$.declEnum,
+			$.declSet,
+			$.declProcRef,
+			$.declClass,
 		),
 
 		declField:       $ =>  seq(

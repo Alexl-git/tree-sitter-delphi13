@@ -9671,6 +9671,15 @@
                 "name": "kString"
               },
               {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_declArrayNoSemi"
+                },
+                "named": true,
+                "value": "declArray"
+              },
+              {
                 "type": "PREC",
                 "value": -1,
                 "content": {
@@ -9696,6 +9705,170 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "_declArrayNoSemi": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kPacked"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kArray"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "["
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "REPEAT1",
+                              "content": {
+                                "type": "PREC",
+                                "value": 0,
+                                "content": {
+                                  "type": "SEQ",
+                                  "members": [
+                                    {
+                                      "type": "CHOICE",
+                                      "members": [
+                                        {
+                                          "type": "SYMBOL",
+                                          "name": "range"
+                                        },
+                                        {
+                                          "type": "SYMBOL",
+                                          "name": "declEnum"
+                                        },
+                                        {
+                                          "type": "SYMBOL",
+                                          "name": "_expr"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "STRING",
+                                      "value": ","
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "type": "BLANK"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "range"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "declEnum"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "_expr"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": "]"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kOf"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_arrayElemNoSemi"
+              },
+              "named": true,
+              "value": "type"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "subrangeType"
+            }
+          ]
+        }
+      ]
+    },
+    "_arrayElemNoSemi": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "typeref"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declMetaClass"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declEnum"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declSet"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declProcRef"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declClass"
         }
       ]
     },
@@ -13219,6 +13392,14 @@
     [
       "type",
       "declFieldNoSemi"
+    ],
+    [
+      "type",
+      "_arrayElemNoSemi"
+    ],
+    [
+      "declArray",
+      "_declArrayNoSemi"
     ],
     [
       "_ref",

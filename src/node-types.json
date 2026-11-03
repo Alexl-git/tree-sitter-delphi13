@@ -2020,6 +2020,10 @@
         "required": true,
         "types": [
           {
+            "type": "declArray",
+            "named": true
+          },
+          {
             "type": "declClass",
             "named": true
           },

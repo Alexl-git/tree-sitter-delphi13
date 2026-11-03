@@ -1,0 +1,155 @@
+==================
+record: array field last with no trailing semicolon (GRAMMAR-LASTFIELD, MongoDBCli)
+==================
+
+type
+  R = record
+    A: Integer;
+    B: array [0 .. 83] of Byte
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier))))
+          (declFieldNoSemi
+            name: (identifier)
+            type: (declArray
+              (kArray)
+              (range
+                (literalNumber)
+                (literalNumber))
+              (kOf)
+              (type
+                (typeref
+                  (identifier)))))
+          (kEnd))))))
+
+==================
+record: packed array field last with no trailing semicolon (GRAMMAR-LASTFIELD, ShlObj)
+==================
+
+type
+  R = record
+    A: Integer;
+    B: packed array [0..MAX_PATH-1] of Char
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier))))
+          (declFieldNoSemi
+            name: (identifier)
+            type: (declArray
+              (kPacked)
+              (kArray)
+              (range
+                (literalNumber)
+                (exprBinary
+                  lhs: (identifier)
+                  operator: (kSub)
+                  rhs: (literalNumber)))
+              (kOf)
+              (type
+                (typeref
+                  (identifier)))))
+          (kEnd))))))
+
+==================
+record: short-string array element keeps trailing semicolon (regression guard, Z19b5)
+==================
+
+type
+  R = record
+    A: Integer;
+    B: array [0..4] of String[1];
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (type
+              (typeref
+                (identifier))))
+          (declField
+            name: (identifier)
+            type: (type
+              (declArray
+                (kArray)
+                (range
+                  (literalNumber)
+                  (literalNumber))
+                (kOf)
+                (type
+                  (declString
+                    (kString)
+                    (literalNumber))))))
+          (kEnd))))))
+
+==================
+record: first field named Platform (regression guard, ContextFile)
+==================
+
+type
+  R = record
+    Platform: string;
+    Config: string;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declClass
+          (kRecord)
+          (declField
+            name: (identifier)
+            type: (type
+              (declString
+                (kString))))
+          (declField
+            name: (identifier)
+            type: (type
+              (declString
+                (kString))))
+          (kEnd))))))
