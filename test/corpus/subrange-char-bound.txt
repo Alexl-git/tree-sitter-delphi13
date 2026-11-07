@@ -1,0 +1,43 @@
+==================
+character bounds in a set and a subrange
+==================
+
+unit U;
+interface
+type
+  TDigits = set of '0'..'9';
+  TLower = 'a'..'z';
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declSet
+              (kSet)
+              (kOf)
+              (subrangeType
+                (literalString)
+                (literalString)))))
+        (declType
+          (identifier)
+          (kEq)
+          (subrangeType
+            (literalString)
+            (literalString)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

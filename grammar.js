@@ -1318,6 +1318,9 @@ module.exports = grammar({
 			$._subrangeBound, '..', $._subrangeBound
 		),
 		_subrangeBound: $ => choice(
+			// A character bound: `TDigits = '0'..'9'`, `set of 'a'..'z'`.
+			// The quoted form only; `#65` is already an integer-like bound.
+			alias(token(/'([^'\r\n]|'')*'/), $.literalString),
 			$._literalInt,
 			$._literalFloat,
 			seq('-', $._literalInt),
