@@ -1,0 +1,72 @@
+==================
+the smallest program
+==================
+
+begin end.
+
+---
+
+(root
+  (program
+    (block
+      (kBegin)
+      (kEnd))
+    (kEndDot)))
+
+==================
+declarations and statements, no header
+==================
+
+uses System.SysUtils;
+var
+  X: Integer;
+begin
+  X := 1;
+end.
+
+---
+
+(root
+  (program
+    (declUses
+      (kUses)
+      (declUsesUnit
+        (moduleName
+          (identifier)
+          (kDot)
+          (identifier))))
+    (declVars
+      (kVar)
+      (declVar
+        (identifier)
+        (type
+          (typeref
+            (identifier)))))
+    (block
+      (kBegin)
+      (assignment
+        (identifier)
+        (kAssign)
+        (literalNumber))
+      (kEnd))
+    (kEndDot)))
+
+==================
+a header still parses
+==================
+
+program P;
+begin
+end.
+
+---
+
+(root
+  (program
+    (kProgram)
+    (moduleName
+      (identifier))
+    (block
+      (kBegin)
+      (kEnd))
+    (kEndDot)))

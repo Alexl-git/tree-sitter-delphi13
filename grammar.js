@@ -535,7 +535,8 @@ module.exports = grammar({
 		// HIGH LEVEL ----------------------------------------------------------
 
 		program:            $ => seq(
-			$.kProgram, $.moduleName, ';',
+			// The header is optional: `begin end.` is a whole program to dcc.
+			optional(seq($.kProgram, $.moduleName, ';')),
 			optional($._definitions),
 			// Phase 3b iter 34: CIL/.NET attribute on program entry (`[STAThread]`).
 			// (UnitTests4Net.dpr Delphi.NET pattern.)
