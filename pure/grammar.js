@@ -347,6 +347,9 @@ module.exports = grammar({
 		// closes it; the body is verbatim. Needs the scanner -- `'''` may sit
 		// inside a `'''''` literal, and apostrophes are plain text.
 		$._multiline_string,
+		// The `<` that opens a generic's type arguments in an expression, decided
+		// by the scanner looking ahead for the closing `>`.
+		$.kLtTpl,
 		// Never used in a rule: valid only during error recovery.
 		$._error_sentinel,
 		// (DROPPED: pp_block, pp_open, pp_else_tail, pp_end_only — the
@@ -810,7 +813,10 @@ module.exports = grammar({
 		// `TDictionary<string, TBar>` etc. (real generic instantiation).
 		// Constant generic args (rare in Delphi corpus) lose structural parsing
 		// but the program-as-a-whole parses cleanly.
-		exprTpl:         $ => op.args(5, $._ref, $.kLt, delimited1($.typeref, ',', 5),  $.kGt),
+		exprTpl:         $ => op.args(5, $._ref, alias($.kLtTpl, $.kLt), delimited1($.typeref, ',', 5),  $.kGt),
+		// A type's `<` where an expression could also stand (after `is`, in a
+		// cast): the scanner may have given the generic's token.
+		_kLtAny: $ => choice($.kLt, alias($.kLtTpl, $.kLt)),
 		exprSubscript:   $ => op.args(5, $._ref, '[',   $.exprArgs,  ']'  ),
 		exprCall:        $ => op.args(5, $._ref, '(',   optional($.exprArgs), ')'  ),
 
@@ -842,7 +848,6 @@ module.exports = grammar({
 
 		exprBinary:      $ => choice(
 			op.infix(1, $._expr, $.kLt,  $._expr),
-			op.infix(1, $._ref,  $.kLt,  $._expr),
 			op.infix(1, $._expr, $.kEq,  $._expr),
 			op.infix(1, $._expr, $.kNeq, $._expr),
 			op.infix(1, $._expr, $.kGt,  $._expr),
@@ -946,7 +951,7 @@ module.exports = grammar({
 		),
 
 		typerefDot:      $ => op.infix(1,$._typeref, $.kDot, $._typeref),
-		typerefTpl:      $ => op.args(1, $._typeref, $.kLt, $.typerefArgs, $.kGt),
+		typerefTpl:      $ => op.args(1, $._typeref, $._kLtAny, $.typerefArgs, $.kGt),
 		typerefPtr:      $ => op.prefix(1,$.kHat, $._typeref),
 		typerefArgs:     $ => delimited1($._typeref),
 

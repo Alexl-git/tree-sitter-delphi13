@@ -1,0 +1,194 @@
+==================
+less-than groups as the other comparisons do
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  if A + B < C then X;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (if
+            (kIf)
+            (exprBinary
+              (exprBinary
+                (identifier)
+                (kAdd)
+                (identifier))
+              (kLt)
+              (identifier))
+            (kThen)
+            (statement
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+a generic in an expression
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  L := TList<Integer>.Create;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (exprDot
+              (exprTpl
+                (identifier)
+                (kLt)
+                (typeref
+                  (identifier))
+                (kGt))
+              (kDot)
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+a comparison list is not a generic
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  F(a < b, c > d);
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (statement
+            (exprCall
+              (identifier)
+              (exprArgs
+                (exprBinary
+                  (identifier)
+                  (kLt)
+                  (identifier))
+                (exprBinary
+                  (identifier)
+                  (kGt)
+                  (identifier)))))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+a subscript after a generic
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  if V.AsType<T>[I].D <= 2 then X;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (if
+            (kIf)
+            (exprBinary
+              (exprDot
+                (exprSubscript
+                  (exprTpl
+                    (exprDot
+                      (identifier)
+                      (kDot)
+                      (identifier))
+                    (kLt)
+                    (typeref
+                      (identifier))
+                    (kGt))
+                  (exprArgs
+                    (identifier)))
+                (kDot)
+                (identifier))
+              (kLte)
+              (literalNumber))
+            (kThen)
+            (statement
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

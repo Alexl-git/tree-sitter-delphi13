@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <ctype.h>
+#include <string.h>
 
 enum TokenType {
     PP_BLOCK,
@@ -45,6 +46,7 @@ enum TokenType {
     DIRWORD_NAME,        // directive word followed by `:` or `,` -> var/field name
     DIRWORD_CONST_NAME,  // directive word followed by `=` or `:` -> const name
     MULTILINE_STRING,    // Delphi 12+ '''...''' literal (odd N >= 3 quotes)
+    LT_TPL,              // `<` opening a generic's type arguments
     ERROR_SENTINEL,      // never in a rule; valid only in error recovery
 };
 
@@ -620,9 +622,144 @@ static bool scan_multiline_string(TSLexer *lexer) {
 
 // ---- entry point ----
 
+// `<` after a name in an expression: a generic's type arguments, or less-than?
+// Called with the `<` consumed and the token's end marked; reads on without
+// consuming. A generic when a `>` closes what was opened, with only what type
+// arguments are made of between (names, dots, commas, nested `<...>`, `^`),
+// and what follows can follow a generic in an expression. A word
+// right after the `>` (`a < b, c > d`) or an operator word inside
+// (`a < b and c > d`) makes it a comparison. dcc decides `F(a < b, c > (d))` by
+// the declarations; this reads it as a generic.
+static bool lt_is_word_char(int32_t c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9') || c == '_' || c >= 0x80;
+}
+
+static void lt_skip_space(TSLexer *lexer) {
+    while (lexer->lookahead == ' ' || lexer->lookahead == '\t'
+        || lexer->lookahead == '\n' || lexer->lookahead == '\r')
+        lexer->advance(lexer, false);
+}
+
+static unsigned lt_read_word(TSLexer *lexer, char *buf, unsigned cap) {
+    unsigned n = 0;
+    while (lt_is_word_char(lexer->lookahead)) {
+        int32_t c = lexer->lookahead;
+        if (n + 1 < cap) buf[n] = (c < 0x80) ? (char)tolower((int)c) : '?';
+        n++;
+        lexer->advance(lexer, false);
+    }
+    buf[n + 1 < cap ? n : cap - 1] = 0;
+    return n;
+}
+
+static bool lt_opens_generic(TSLexer *lexer) {
+    static const char *ops[] = {"and", "or", "xor", "not", "div", "mod", "shl", "shr",
+                                "in", "is", "as", "then", "do", "else", "of", "to",
+                                "downto", "begin", "end", "if", 0};
+    int32_t c = lexer->lookahead;
+    if (c == '>' || c == '=') return false;             // `<>`, `<=`
+    int angle = 1;
+    bool any = false;
+    for (unsigned budget = 400; budget > 0 && !lexer->eof(lexer); budget--) {
+        c = lexer->lookahead;
+        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+            lexer->advance(lexer, false);
+        } else if (c == '{') {                           // a comment
+            while (!lexer->eof(lexer) && lexer->lookahead != '}') lexer->advance(lexer, false);
+            lexer->advance(lexer, false);
+        } else if (lt_is_word_char(c)) {
+            if (c >= '0' && c <= '9') return false;     // a number: not a type
+            char w[16];
+            lt_read_word(lexer, w, sizeof w);
+            for (const char **s = ops; *s; s++)
+                if (strcmp(w, *s) == 0) return false;
+            any = true;
+        } else if (c == '.' || c == ',' || c == '^') {
+            lexer->advance(lexer, false);
+        } else if (c == '<') {
+            angle++; lexer->advance(lexer, false);
+        } else if (c == '>') {
+            lexer->advance(lexer, false);
+            if (--angle > 0) continue;
+            if (!any) return false;
+            // past spaces, comments and directives: `TList{$IFDEF X}<TField>{$ENDIF}.Create`
+            // (JVCL, Indy, Spring4D); an {$ELSE} branch whole, as the parser reads it
+            // (mORMot's `NewList<THash128> {$else} NewPlainList<THash128> {$endif}`)
+            for (;;) {
+                lt_skip_space(lexer);
+                if (lexer->lookahead == '{') {
+                    char d[8];
+                    lexer->advance(lexer, false);
+                    bool directive = lexer->lookahead == '$';
+                    if (directive) lexer->advance(lexer, false);
+                    unsigned n = directive ? lt_read_word(lexer, d, sizeof d) : 0;
+                    while (!lexer->eof(lexer) && lexer->lookahead != '}') lexer->advance(lexer, false);
+                    lexer->advance(lexer, false);
+                    if (n && strcmp(d, "else") == 0) {
+                        int depth = 0;
+                        while (!lexer->eof(lexer)) {
+                            if (lexer->lookahead != '{') { lexer->advance(lexer, false); continue; }
+                            lexer->advance(lexer, false);
+                            if (lexer->lookahead != '$') continue;
+                            lexer->advance(lexer, false);
+                            lt_read_word(lexer, d, sizeof d);
+                            while (!lexer->eof(lexer) && lexer->lookahead != '}') lexer->advance(lexer, false);
+                            lexer->advance(lexer, false);
+                            if (strncmp(d, "if", 2) == 0 && strcmp(d, "ifend") != 0) depth++;
+                            else if (strcmp(d, "endif") == 0 || strcmp(d, "ifend") == 0) {
+                                if (depth == 0) break;
+                                depth--;
+                            }
+                        }
+                    }
+                } else if (lexer->lookahead == '/') {
+                    lexer->advance(lexer, false);
+                    if (lexer->lookahead != '/') return true;   // `/`, an operator
+                    while (!lexer->eof(lexer) && lexer->lookahead != '\n') lexer->advance(lexer, false);
+                } else break;
+            }
+            c = lexer->lookahead;
+            if (lexer->eof(lexer)) return true;
+            // a keyword can follow a generic (`if X.IsType<T> then`, System.Rtti);
+            // a name can't, so a name means `c > d`, the end of a comparison
+            if (lt_is_word_char(c)) {
+                static const char *after[] = {"then", "do", "else", "end", "of", "until",
+                                              "to", "downto", "except", "finally", "and",
+                                              "or", "xor", "div", "mod", "shl", "shr",
+                                              "in", "is", "as", 0};
+                char w[16];
+                lt_read_word(lexer, w, sizeof w);
+                for (const char **s = after; *s; s++)
+                    if (strcmp(w, *s) == 0) return true;
+                return false;
+            }
+            // `[` is a subscript: `V.AsType<T>[I]` (no set can follow `a < b >`)
+            return !(c == '\'' || c == '#' || c == '$' || c == '@' || c == '{');
+        } else {
+            return false;                               // `+`, `*`, `:`, `;`, `'`, `[` ...
+        }
+    }
+    return false;
+}
+
 bool tree_sitter_delphi13_external_scanner_scan(
     void *payload, TSLexer *lexer, const bool *valid_symbols)
 {
+    // A `<` that opens a generic's type arguments in an expression. Declining
+    // leaves it to the lexer: kLt, a comparison.
+    if (valid_symbols[LT_TPL] && !valid_symbols[ERROR_SENTINEL]) {
+        while (lexer->lookahead == ' ' || lexer->lookahead == '\t'
+            || lexer->lookahead == '\n' || lexer->lookahead == '\r')
+            lexer->advance(lexer, true);
+        if (lexer->lookahead == '<') {
+            lexer->advance(lexer, false);
+            lexer->mark_end(lexer);
+            lexer->result_symbol = LT_TPL;
+            return lt_opens_generic(lexer);
+        }
+    }
+
     (void)payload;
 
     // Skip leading whitespace before trying any external token.
