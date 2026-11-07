@@ -1,0 +1,32 @@
+==================
+code page a constant
+==================
+
+unit U;
+interface
+type
+  W = type AnsiString(CP_WINANSI);
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (kType)
+          (identifier)
+          (identifier))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

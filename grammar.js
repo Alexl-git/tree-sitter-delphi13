@@ -1292,6 +1292,9 @@ module.exports = grammar({
 					// and `RawByteString = type _AnsiString($ffff);`
 					// (System.pas RTL pattern).
 					seq($.kType, $.identifier, '(', $._literalInt, ')'),
+					// the code page a named constant: `type AnsiString(CP_WINANSI)`
+					// (mORMot's mormot.core.base)
+					seq($.kType, $.identifier, '(', $.identifier, ')'),
 				)
 			),
 			// Iter 2026-07-06: trailing hint directive on a type alias, before the
