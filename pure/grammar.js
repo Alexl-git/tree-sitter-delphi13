@@ -819,6 +819,27 @@ module.exports = grammar({
 
 		exprArgs:        $ => delimited1(seq($._expr, optional($.legacyFormat))),
 
+		// The right of `is` is a type, so `O is TObject and F` is
+		// `(O is TObject) and F`, as dcc reads it. Delphi also takes a class
+		// reference computed by an expression: `Comp is Items[i]`.
+		// Static precedence: the operand ends before a binary operator;
+		// dynamic -1: a plain dotted name stays a type, `X is A.B.C`.
+		_isType: $ => choice(
+			$._typeref,
+			alias($.isTypeTpl, $.typerefTpl),
+			alias($.isNotType, $.exprUnary),
+			prec.dynamic(-1, prec(10, choice(
+				$.exprSubscript,
+				$.exprCall,
+				$.exprDot,
+				alias($.exprDeref, $.exprUnary),
+			))),
+		),
+		isNotType: $ => seq(field('operator', $.kNot), field('operand', choice($._typeref, alias($.isTypeTpl, $.typerefTpl)))),
+		// `X is TList<Integer>`: after a type, `<` opens type arguments; this
+		// outranks typerefTpl, whose precedence is the `is` reduction's.
+		isTypeTpl: $ => op.args(4, $._typeref, $.kLt, $.typerefArgs, $.kGt),
+
 		exprBinary:      $ => choice(
 			op.infix(1, $._expr, $.kLt,  $._expr),
 			op.infix(1, $._ref,  $.kLt,  $._expr),
@@ -828,7 +849,7 @@ module.exports = grammar({
 			op.infix(1, $._expr, $.kLte, $._expr),
 			op.infix(1, $._expr, $.kGte, $._expr),
 			op.infix(1, $._expr, $.kIn,  $._expr),
-			op.infix(1, $._expr, $.kIs,  $._expr),
+			op.infix(1, $._expr, $.kIs,  $._isType),
 			// Ported from root v1.1.x: Delphi 13 `not in` operator (`is not` needs
 			// no production — it parses via `is` + unary `not` on the RHS).
 			op.infix(1, $._expr, seq($.kNot, $.kIn), $._expr),

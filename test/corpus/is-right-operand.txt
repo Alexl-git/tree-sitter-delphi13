@@ -1,0 +1,139 @@
+==================
+is binds tighter than and
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  if O is TObject and F then X;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (if
+            (kIf)
+            (exprBinary
+              (exprBinary
+                (identifier)
+                (kIs)
+                (identifier))
+              (kAnd)
+              (identifier))
+            (kThen)
+            (statement
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+is with a computed class reference
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  if Comp is Items[i] then X;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (if
+            (kIf)
+            (exprBinary
+              (identifier)
+              (kIs)
+              (exprSubscript
+                (identifier)
+                (exprArgs
+                  (identifier))))
+            (kThen)
+            (statement
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+is with a generic
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  if O is TList<Integer> then X;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (if
+            (kIf)
+            (exprBinary
+              (identifier)
+              (kIs)
+              (typerefTpl
+                (identifier)
+                (kLt)
+                (typerefArgs
+                  (identifier))
+                (kGt)))
+            (kThen)
+            (statement
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
