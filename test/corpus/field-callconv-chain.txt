@@ -1,0 +1,50 @@
+==================
+cdecl varargs on a field
+==================
+
+unit U;
+interface
+type
+  T = record
+    F: function(a: Integer): Integer; cdecl varargs;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (declProcRef
+                    (kFunction)
+                    (declArgs
+                      (declArg
+                        (identifier)
+                        (type
+                          (typeref
+                            (identifier)))))
+                    (typeref
+                      (identifier))))
+                (kCdecl)
+                (kVarargs))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

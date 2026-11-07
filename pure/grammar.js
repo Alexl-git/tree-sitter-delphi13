@@ -1643,11 +1643,13 @@ module.exports = grammar({
 			//   DispInvoke: procedure(Dest: PVarData; ...); cdecl;
 			//   VarArrayGet: function(...): Variant; cdecl;
 			// (System.pas TVarManager + similar Win API records.)
+			// Chained, as on a procedural type: `; cdecl varargs;` (mORMot's
+			// mormot.lib.curl).
 			optional(seq(
-				choice(
+				repeat1(choice(
 					$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
-					$.kRegister, $.kWinapi, $.kInline,
-				),
+					$.kRegister, $.kWinapi, $.kInline, $.kVarargs,
+				)),
 				';',
 			)),
 		),
