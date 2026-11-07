@@ -1,0 +1,227 @@
+================================================================================
+external name without semicolon before the next routine and before end
+================================================================================
+
+unit u;
+interface
+implementation
+function A; external lib name 'A1';
+function B; external lib name 'B1'
+function C; external lib name 'C1'
+procedure D; external lib name 'D1'
+
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (declProc
+        (kFunction)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kName)
+          (literalString)))
+      (declProc
+        (kFunction)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kName)
+          (literalString)))
+      (declProc
+        (kFunction)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kName)
+          (literalString)))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kName)
+          (literalString))))
+    (kEnd)
+    (kEndDot)))
+
+================================================================================
+external name without semicolon in the interface, string library, then a semicolon form
+================================================================================
+
+unit u;
+interface
+function A: Integer; stdcall; external 'k32' name 'GetA'
+procedure D; external 'k32' name 'GetD';
+implementation
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declProc
+        (kFunction)
+        (identifier)
+        (typeref
+          (identifier))
+        (procAttribute
+          (kStdcall))
+        (procExternal
+          (kExternal)
+          (literalString)
+          (kName)
+          (literalString)))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (literalString)
+          (kName)
+          (literalString))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+================================================================================
+external name without semicolon before an attribute on the next declaration
+================================================================================
+
+unit u;
+interface
+procedure A; external lib name 'A1'
+[Attr]
+procedure B;
+implementation
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kName)
+          (literalString)))
+      (declProc
+        (rttiAttributes
+          (identifier))
+        (kProcedure)
+        (identifier)))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+================================================================================
+external without semicolon: library only stays an error
+:error
+================================================================================
+
+unit u;
+interface
+implementation
+function B: Integer; external lib
+function C: Integer; external lib;
+end.
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+external without semicolon: index form stays an error
+:error
+================================================================================
+
+unit u;
+interface
+implementation
+function B: Integer; external lib index 5
+function C: Integer; external lib;
+end.
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+external without semicolon still cannot take a body
+:error
+================================================================================
+
+unit u;
+interface
+implementation
+procedure P; external lib name 'P1'
+begin
+end;
+end.
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+external name with a semicolon keeps its index expression on the string (control)
+================================================================================
+
+unit u;
+interface
+implementation
+procedure A; external 'a'[1] name 'A1';
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (exprSubscript
+            (literalString)
+            (exprArgs
+              (literalNumber)))
+          (kName)
+          (literalString))))
+    (kEnd)
+    (kEndDot)))

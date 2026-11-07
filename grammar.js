@@ -489,6 +489,9 @@ module.exports = grammar({
 			[$._declProc ], [ $._declOperator], [$.declConst], [$.declVar],
 			[$.declType], [$.declProp]
 		),
+		// `external L name 'x'` without `;` before `[`: an attribute on the next
+		// declaration, or an index on the string. One token too few; GLR decides.
+		[$._literal, $.procExternal],
 		// RTTI attributes clash with fpc declaration hints syntax since both
 		// are surrounded by brackets.
 		...enable_if(rtti,
@@ -2020,21 +2023,31 @@ module.exports = grammar({
 			'[', optional(seq($.identifier, ':')), delimited($._ref), ']'
 		)),
 
+		// The closing `;` may be omitted after `name '<string>'`: dcc accepts it and Borland
+		// shipped it (Delphi 5 shlobj.pas, five `function X; external shell32 name 'X'` lines
+		// before the next routine or `end.`). Deliberately only that form: an optional `;`
+		// after every clause puts ALL declaration starts in the follow set of `_expr` here
+		// and grows the parser by 16% states (measured). A `[` after the string forks (see conflicts).
 		procExternal:    $ => seq(
 			$.kExternal,
 			optional($._expr),
-			optional(seq(choice($.kName, $.kIndex), $._expr)),
-			...enable_if(delphi, optional($.kDelayed)),
-			// Phase 3b iter 17: native library dependency hint
-			//   function f; cdecl; external LIB name 'foo' dependency 'c++_static','c++abi';
-			// (Embarcadero FlatBox2D Android/iOS linker pattern.)
-			// Phase 3b iter 35: `dependency` clause may use identifier-name
-			// constants too: `dependency LibCPP, LibCPP_ABI` (FireDAC.Phys.IBCli).
-			optional(seq(
-				$.kDependency,
-				delimited1(choice($._literalString, $.identifier)),
-			)),
-			';'
+			choice(
+				seq(
+					optional(seq(choice($.kName, $.kIndex), $._expr)),
+					...enable_if(delphi, optional($.kDelayed)),
+					// Phase 3b iter 17: native library dependency hint
+					//   function f; cdecl; external LIB name 'foo' dependency 'c++_static','c++abi';
+					// (Embarcadero FlatBox2D Android/iOS linker pattern.)
+					// Phase 3b iter 35: `dependency` clause may use identifier-name
+					// constants too: `dependency LibCPP, LibCPP_ABI` (FireDAC.Phys.IBCli).
+					optional(seq(
+						$.kDependency,
+						delimited1(choice($._literalString, $.identifier)),
+					)),
+					';'
+				),
+				seq($.kName, $.literalString)
+			)
 		),
 
 		// INITIALIZERS --------------------------------------------------------
