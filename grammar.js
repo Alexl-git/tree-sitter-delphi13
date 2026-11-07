@@ -1447,7 +1447,8 @@ module.exports = grammar({
 			//   CmdShow: Integer platform;
 			//   SupportsAnimateWindow: Boolean = False deprecated 'msg';
 			// 2026-10-31: + legacy `library` hint (`C: Integer library;`).
-			optional(choice(
+			// several may follow: `= nil platform deprecated` (System.SysUtils)
+			repeat(choice(
 				seq($.kDeprecated, optional($._expr)),
 				$.kPlatform,
 				$.kExperimental,

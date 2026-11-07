@@ -1,0 +1,48 @@
+==================
+two hints on a variable
+==================
+
+unit U;
+interface
+var
+  H: procedure = nil platform deprecated;
+  N: Integer = 0 deprecated 'x' platform;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (declProcRef
+              (kProcedure)))
+          (defaultValue
+            (kEq)
+            (kNil))
+          (kPlatform)
+          (kDeprecated))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)))
+          (defaultValue
+            (kEq)
+            (literalNumber))
+          (kDeprecated)
+          (literalString)
+          (kPlatform))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
