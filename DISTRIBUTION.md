@@ -7,8 +7,8 @@ not assumed.
 
 | Package | Version | Artifacts |
 |---|---|---|
-| `tree-sitter-delphi13` | 1.4.2 | `.wasm` (ABI 14), `queries/{highlights,injections,indents,folds,outline,tags}.scm`, prebuilt `.node` |
-| `tree-sitter-delphi13-pure` | 1.4.2 | `.wasm` (ABI 14), same six query files |
+| `tree-sitter-delphi13` | 1.4.3 | `.wasm` (ABI 14), `queries/{highlights,injections,indents,folds,outline,tags}.scm`, prebuilt `.node` |
+| `tree-sitter-delphi13-pure` | 1.4.3 | `.wasm` (ABI 14), same six query files |
 | `tree-sitter-dfm` | 1.1.0 | `.wasm` (ABI 14), `queries/{highlights,indents,folds,outline,tags}.scm` |
 
 `folds.scm` and `tags.scm` are new in these versions; `tags.scm` is what codebase
