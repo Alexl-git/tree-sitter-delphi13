@@ -4311,6 +4311,10 @@
         "required": false,
         "types": [
           {
+            "type": "asm",
+            "named": true
+          },
+          {
             "type": "blockTr",
             "named": true
           },
@@ -7277,6 +7281,10 @@
       "required": true,
       "types": [
         {
+          "type": "asm",
+          "named": true
+        },
+        {
           "type": "blockTr",
           "named": true
         },
@@ -7563,6 +7571,10 @@
         "required": false,
         "types": [
           {
+            "type": "asm",
+            "named": true
+          },
+          {
             "type": "blockTr",
             "named": true
           },
@@ -7746,6 +7758,10 @@
       "required": true,
       "types": [
         {
+          "type": "asm",
+          "named": true
+        },
+        {
           "type": "block",
           "named": true
         },
@@ -7880,6 +7896,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "asm",
+          "named": true
+        },
         {
           "type": "blockTr",
           "named": true
@@ -8340,6 +8360,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "asm",
+          "named": true
+        },
         {
           "type": "block",
           "named": true
@@ -8876,6 +8900,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "asm",
+          "named": true
+        },
         {
           "type": "blockTr",
           "named": true

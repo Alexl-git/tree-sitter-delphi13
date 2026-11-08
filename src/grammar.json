@@ -6243,6 +6243,15 @@
             "type": "SYMBOL",
             "name": "blockTr"
           }
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "asmOrphan"
+          },
+          "named": true,
+          "value": "asm"
         }
       ]
     },
@@ -6312,6 +6321,39 @@
           {
             "type": "STRING",
             "value": "]"
+          }
+        ]
+      }
+    },
+    "asmOrphan": {
+      "type": "PREC",
+      "value": -1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "kAsm"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "asmBody"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "kEnd"
+          },
+          {
+            "type": "STRING",
+            "value": ";"
           }
         ]
       }
