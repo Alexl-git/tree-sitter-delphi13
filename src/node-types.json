@@ -1965,6 +1965,10 @@
           "named": true
         },
         {
+          "type": "kVarargs",
+          "named": true
+        },
+        {
           "type": "kWinapi",
           "named": true
         },
@@ -5036,6 +5040,18 @@
           {
             "type": "literalString",
             "named": true
+          },
+          {
+            "type": "typerefDot",
+            "named": true
+          },
+          {
+            "type": "typerefPtr",
+            "named": true
+          },
+          {
+            "type": "typerefTpl",
+            "named": true
           }
         ]
       }
@@ -5955,6 +5971,18 @@
           },
           {
             "type": "literalString",
+            "named": true
+          },
+          {
+            "type": "typerefDot",
+            "named": true
+          },
+          {
+            "type": "typerefPtr",
+            "named": true
+          },
+          {
+            "type": "typerefTpl",
             "named": true
           }
         ]
@@ -9178,6 +9206,10 @@
         },
         {
           "type": "kMod",
+          "named": true
+        },
+        {
+          "type": "literalString",
           "named": true
         }
       ]
