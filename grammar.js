@@ -1177,7 +1177,16 @@ module.exports = grammar({
 			$.declAssemblyAttribute,
 
 			// Not actually valid syntax, but helps the parser recover:
-			prec(-1,$.blockTr)
+			prec(-1,$.blockTr),
+			// An `asm ... end;` with no header: the second body of a routine whose
+			// first body sits in another {$IFDEF} (RTL System.Win.OleControls
+			// GetEventMethod: a PUREPASCAL begin..end, then a CPUX86 asm..end).
+			// Not valid syntax either; without it the asm text is an ERROR whose
+			// recovery is fragile (with the generic `<` external token it swallows
+			// the rest of the unit). prec(-1): a routine header followed by `asm`
+			// is always that routine's body: asmOrphan's prec(-1) makes `procedure P;
+			// asm..end;` reduce the body (asmTr) before this rule can shift its `;`.
+			alias($.asmOrphan, $.asm)
 		),
 
 		// A single bracketed attribute that applies to a module-level target
@@ -1186,6 +1195,10 @@ module.exports = grammar({
 		declAssemblyAttribute: $ => prec(1, seq(
 			'[', $.identifier, ':', delimited($._ref), ']'
 		)),
+
+		// The orphan `asm ... end;` of _definition (see there). Its own rule so the
+		// precedence sits on the reduce that competes with a routine body.
+		asmOrphan: $ => prec(-1, seq($.kAsm, optional($.asmBody), $.kEnd, ';')),
 
 		defProc:         $ => seq(
 			/*pp($,*/ field('header', $.declProc)/*)*/,

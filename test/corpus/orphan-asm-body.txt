@@ -1,0 +1,66 @@
+==================
+an asm body with no header after a routine (second body under another IFDEF)
+==================
+unit U;
+interface
+implementation
+procedure P;
+{$IFDEF PUREPASCAL}
+begin
+end;
+{$ENDIF}
+{$IFDEF CPUX86}
+asm
+        MOV     EAX,[EDX].TMethod.Code
+end;
+{$ENDIF CPUX86}
+procedure Q;
+begin
+end;
+end.
+---
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        header: (declProc (kProcedure) name: (identifier))
+        (pp_open)
+        body: (block (kBegin) (kEnd)))
+      (pp_end_only)
+      (pp_open)
+      (asm (kAsm) (asmBody) (kEnd))
+      (pp_end_only)
+      (defProc
+        header: (declProc (kProcedure) name: (identifier))
+        body: (block (kBegin) (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+a routine whose body is asm keeps it as its body (control)
+==================
+unit U;
+interface
+implementation
+procedure P;
+asm
+        NOP
+end;
+end.
+---
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        header: (declProc (kProcedure) name: (identifier))
+        body: (asm (kAsm) (asmBody) (kEnd))))
+    (kEnd)
+    (kEndDot)))
