@@ -126,12 +126,14 @@ function statements(trailing) {
 
 		[rn('nestedIf'),    $ => prec(1,$.if)],
 
-		[rn('ifElse'),      $ => prec.right(1, seq(
+		// Dynamic precedence +1, as exprIf's is -1: where both read the same
+		// text, the statement wins (see exprIf).
+		[rn('ifElse'),      $ => prec.dynamic(1, prec.right(1, seq(
 			$.kIf, field('condition', $._expr), $.kThen,
 			field('then', optional(choice(tr($,'_statement'), $.if))),
 			$.kElse,
 			field('else', lastStatement($))
-		))],
+		)))],
 
 		[rn('while'),       $ => seq(
 			$.kWhile, field('condition', $._expr), $.kDo,
@@ -731,11 +733,17 @@ module.exports = grammar({
 		// the if-then-else STATEMENT (rn('ifElse')) — this one returns a value.
 		// Right-associative + lower precedence than binary operators so that
 		// `a + if c then x else y` groups as `a + (if c then x else y)`.
-		exprIf:          $ => prec.right(0, seq(
+		// Dynamic precedence -1: where an if STATEMENT reads the same text, it
+		// wins. Both branches may pass for expressions, as in `if Q then Foo
+		// else raise;` (a bare `raise` an identifier) or `if Q then Foo else
+		// N := 1;` (the whole if an assignment's target); dcc reads both as
+		// statements. Only an expression fits on the right of `:=` or in an
+		// argument, so those are unchanged.
+		exprIf:          $ => prec.dynamic(-1, prec.right(0, seq(
 			$.kIf, field('condition', $._expr),
 			$.kThen, field('then', $._expr),
 			$.kElse, field('else', $._expr),
-		)),
+		))),
 
 		_ref:            $ => choice(
 			...enable_if(templates && fpc,

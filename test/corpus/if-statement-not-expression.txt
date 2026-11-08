@@ -1,0 +1,166 @@
+==================
+if statement whose else is a bare raise
+==================
+
+program P;
+begin
+  if Q then Writeln('a') else raise;
+end.
+
+---
+
+(root
+  (program
+    (kProgram)
+    (moduleName
+      (identifier))
+    (block
+      (kBegin)
+      (ifElse
+        (kIf)
+        (identifier)
+        (kThen)
+        (statement
+          (exprCall
+            (identifier)
+            (exprArgs
+              (literalString))))
+        (kElse)
+        (raise
+          (kRaise)))
+      (kEnd))
+    (kEndDot)))
+
+==================
+if statement whose else is an assignment
+==================
+
+program P;
+begin
+  if Q then Writeln('a') else N := 1;
+end.
+
+---
+
+(root
+  (program
+    (kProgram)
+    (moduleName
+      (identifier))
+    (block
+      (kBegin)
+      (ifElse
+        (kIf)
+        (identifier)
+        (kThen)
+        (statement
+          (exprCall
+            (identifier)
+            (exprArgs
+              (literalString))))
+        (kElse)
+        (assignment
+          (identifier)
+          (kAssign)
+          (literalNumber)))
+      (kEnd))
+    (kEndDot)))
+
+==================
+the same in an exception handler, in a routine
+==================
+
+program P;
+procedure R;
+begin
+  try
+  except
+    on E: EConvertError do if Q then Writeln('a') else raise;
+  end;
+end;
+begin
+end.
+
+---
+
+(root
+  (program
+    (kProgram)
+    (moduleName
+      (identifier))
+    (defProc
+      (declProc
+        (kProcedure)
+        (identifier))
+      (block
+        (kBegin)
+        (try
+          (kTry)
+          (kExcept)
+          (exceptionHandler
+            (kOn)
+            (identifier)
+            (typeref
+              (identifier))
+            (kDo)
+            (ifElse
+              (kIf)
+              (identifier)
+              (kThen)
+              (statement
+                (exprCall
+                  (identifier)
+                  (exprArgs
+                    (literalString))))
+              (kElse)
+              (raise
+                (kRaise))))
+          (kEnd))
+        (kEnd)))
+    (block
+      (kBegin)
+      (kEnd))
+    (kEndDot)))
+
+==================
+if expressions are unchanged
+==================
+
+program P;
+begin
+  N := if Q then 1 else 2;
+  Writeln(if Q then 'y' else 'n');
+end.
+
+---
+
+(root
+  (program
+    (kProgram)
+    (moduleName
+      (identifier))
+    (block
+      (kBegin)
+      (assignment
+        (identifier)
+        (kAssign)
+        (exprIf
+          (kIf)
+          (identifier)
+          (kThen)
+          (literalNumber)
+          (kElse)
+          (literalNumber)))
+      (statement
+        (exprCall
+          (identifier)
+          (exprArgs
+            (exprIf
+              (kIf)
+              (identifier)
+              (kThen)
+              (literalString)
+              (kElse)
+              (literalString)))))
+      (kEnd))
+    (kEndDot)))
