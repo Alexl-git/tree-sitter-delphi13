@@ -537,86 +537,90 @@
       }
     },
     "ifElse": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_DYNAMIC",
       "value": 1,
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "kIf"
-          },
-          {
-            "type": "FIELD",
-            "name": "condition",
-            "content": {
+        "type": "PREC_RIGHT",
+        "value": 1,
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
               "type": "SYMBOL",
-              "name": "_expr"
-            }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kThen"
-          },
-          {
-            "type": "FIELD",
-            "name": "then",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "_statementTr"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "if"
-                    }
-                  ]
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kElse"
-          },
-          {
-            "type": "FIELD",
-            "name": "else",
-            "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "PREC_DYNAMIC",
-                      "value": -1,
-                      "content": {
+              "name": "kIf"
+            },
+            {
+              "type": "FIELD",
+              "name": "condition",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_expr"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kThen"
+            },
+            {
+              "type": "FIELD",
+              "name": "then",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
                         "type": "SYMBOL",
-                        "name": "label"
+                        "name": "_statementTr"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "if"
                       }
-                    },
-                    {
-                      "type": "BLANK"
-                    }
-                  ]
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "_statement"
-                }
-              ]
+                    ]
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kElse"
+            },
+            {
+              "type": "FIELD",
+              "name": "else",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "PREC_DYNAMIC",
+                        "value": -1,
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "label"
+                        }
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "_statement"
+                  }
+                ]
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     },
     "while": {
@@ -1776,94 +1780,98 @@
       }
     },
     "ifElseTr": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_DYNAMIC",
       "value": 1,
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "kIf"
-          },
-          {
-            "type": "FIELD",
-            "name": "condition",
-            "content": {
+        "type": "PREC_RIGHT",
+        "value": 1,
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
               "type": "SYMBOL",
-              "name": "_expr"
-            }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kThen"
-          },
-          {
-            "type": "FIELD",
-            "name": "then",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "_statementTr"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "if"
-                    }
-                  ]
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kElse"
-          },
-          {
-            "type": "FIELD",
-            "name": "else",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "CHOICE",
-                      "members": [
-                        {
-                          "type": "PREC_DYNAMIC",
-                          "value": -1,
-                          "content": {
-                            "type": "SYMBOL",
-                            "name": "label"
+              "name": "kIf"
+            },
+            {
+              "type": "FIELD",
+              "name": "condition",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_expr"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kThen"
+            },
+            {
+              "type": "FIELD",
+              "name": "then",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "_statementTr"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "if"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kElse"
+            },
+            {
+              "type": "FIELD",
+              "name": "else",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "PREC_DYNAMIC",
+                            "value": -1,
+                            "content": {
+                              "type": "SYMBOL",
+                              "name": "label"
+                            }
+                          },
+                          {
+                            "type": "BLANK"
                           }
-                        },
-                        {
-                          "type": "BLANK"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "_statementTr"
-                    }
-                  ]
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
+                        ]
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "_statementTr"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     },
     "whileTr": {
@@ -3407,48 +3415,52 @@
       ]
     },
     "exprIf": {
-      "type": "PREC_RIGHT",
-      "value": 0,
+      "type": "PREC_DYNAMIC",
+      "value": -1,
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "kIf"
-          },
-          {
-            "type": "FIELD",
-            "name": "condition",
-            "content": {
+        "type": "PREC_RIGHT",
+        "value": 0,
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
               "type": "SYMBOL",
-              "name": "_expr"
-            }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kThen"
-          },
-          {
-            "type": "FIELD",
-            "name": "then",
-            "content": {
+              "name": "kIf"
+            },
+            {
+              "type": "FIELD",
+              "name": "condition",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_expr"
+              }
+            },
+            {
               "type": "SYMBOL",
-              "name": "_expr"
-            }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kElse"
-          },
-          {
-            "type": "FIELD",
-            "name": "else",
-            "content": {
+              "name": "kThen"
+            },
+            {
+              "type": "FIELD",
+              "name": "then",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_expr"
+              }
+            },
+            {
               "type": "SYMBOL",
-              "name": "_expr"
+              "name": "kElse"
+            },
+            {
+              "type": "FIELD",
+              "name": "else",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_expr"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     },
     "_ref": {
