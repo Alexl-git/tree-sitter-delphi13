@@ -192,3 +192,82 @@ end.
           (kEnd))))
     (kEnd)
     (kEndDot)))
+
+==================
+a comment inside a generic's type arguments
+==================
+
+unit U;
+interface
+implementation
+procedure F;
+begin
+  L := TList<Integer (* the count *)>.Create;
+  D := TDictionary<string, // the key
+    Integer>.Create;
+  B := A < B (* c *) and C > D;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (exprDot
+              (exprTpl
+                (identifier)
+                (kLt)
+                (typeref
+                  (identifier))
+                (comment)
+                (kGt))
+              (kDot)
+              (identifier)))
+          (assignment
+            (identifier)
+            (kAssign)
+            (exprDot
+              (exprTpl
+                (identifier)
+                (kLt)
+                (typeref
+                  (identifier))
+                (comment)
+                (typeref
+                  (identifier))
+                (kGt))
+              (kDot)
+              (identifier)))
+          (assignment
+            (identifier)
+            (kAssign)
+            (exprBinary
+              (exprBinary
+                (identifier)
+                (kLt)
+                (exprBinary
+                  (identifier)
+                  (comment)
+                  (kAnd)
+                  (identifier)))
+              (kGt)
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
