@@ -645,7 +645,7 @@ static unsigned lt_read_word(TSLexer *lexer, char *buf, unsigned cap) {
     unsigned n = 0;
     while (lt_is_word_char(lexer->lookahead)) {
         int32_t c = lexer->lookahead;
-        if (n + 1 < cap) buf[n] = (c < 0x80) ? (char)tolower((int)c) : '?';
+        if (n + 1 < cap) buf[n] = (c < 0x80) ? (char)((c >= 'A' && c <= 'Z') ? (c + ('a' - 'A')) : c) : '?';
         n++;
         lexer->advance(lexer, false);
     }
