@@ -1,0 +1,96 @@
+==================
+call: Automation named arguments `Name := Value` (JvgExportComponents, JvDBGridExport)
+==================
+unit U;
+interface
+implementation
+procedure P;
+begin
+  Sheet.SetBackgroundPicture(FileName := BackgroundPicture);
+  lTable.AutoFormat(Format := WordFormat, 2);
+end;
+end.
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (statement
+            (exprCall
+              (exprDot
+                (identifier)
+                (kDot)
+                (identifier))
+              (exprArgs
+                (exprArgNamed
+                  (identifier)
+                  (kAssign)
+                  (identifier)))))
+          (statement
+            (exprCall
+              (exprDot
+                (identifier)
+                (kDot)
+                (identifier))
+              (exprArgs
+                (exprArgNamed
+                  (identifier)
+                  (kAssign)
+                  (identifier))
+                (literalNumber))))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+call: a positional argument list keeps its shape (control)
+==================
+unit U;
+interface
+implementation
+procedure P;
+begin
+  Sheet.SetBackgroundPicture(FileName, BackgroundPicture);
+end;
+end.
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (statement
+            (exprCall
+              (exprDot
+                (identifier)
+                (kDot)
+                (identifier))
+              (exprArgs
+                (identifier)
+                (identifier))))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

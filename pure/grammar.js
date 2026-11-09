@@ -834,7 +834,14 @@ module.exports = grammar({
 		// Pascal legacy string formatting for WriteLn(foo:4:3) etc.
 		legacyFormat:    $ => repeat1(seq(':', $._expr)),
 
-		exprArgs:        $ => delimited1(seq($._expr, optional($.legacyFormat))),
+		// An Automation (IDispatch) call may NAME its arguments -- Delphi's
+		// "positional parameters": `Sheet.SetBackgroundPicture(FileName := Path)`,
+		// `Table.AutoFormat(Format := WordFormat)` (JvgExportComponents,
+		// JvDBGridExport). Only `identifier :=` opens one; `:=` is never an
+		// expression token otherwise, so the plain argument shape is untouched.
+		exprArgNamed:    $ => seq(field('name', $.identifier), $.kAssign, field('value', $._expr)),
+
+		exprArgs:        $ => delimited1(choice($.exprArgNamed, seq($._expr, optional($.legacyFormat)))),
 
 		// The right of `is` is a type, so `O is TObject and F` is
 		// `(O is TObject) and F`, as dcc reads it. Delphi also takes a class
