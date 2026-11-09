@@ -294,6 +294,20 @@ static bool lt_opens_generic(TSLexer *lexer) {
         } else if (c == '{') {                           // a comment
             while (!lexer->eof(lexer) && lexer->lookahead != '}') lexer->advance(lexer, false);
             lexer->advance(lexer, false);
+        } else if (c == '(') {                           // a `(* … *)` comment, or not a type
+            lexer->advance(lexer, false);
+            if (lexer->lookahead != '*') return false;
+            lexer->advance(lexer, false);
+            for (int32_t prev = 0; !lexer->eof(lexer); ) {
+                int32_t d = lexer->lookahead;
+                lexer->advance(lexer, false);
+                if (prev == '*' && d == ')') break;
+                prev = d;
+            }
+        } else if (c == '/') {                           // a `//` comment, to the line's end
+            lexer->advance(lexer, false);
+            if (lexer->lookahead != '/') return false;  // `/`, an operator
+            while (!lexer->eof(lexer) && lexer->lookahead != '\n') lexer->advance(lexer, false);
         } else if (lt_is_word_char(c)) {
             if (c >= '0' && c <= '9') return false;     // a number: not a type
             char w[16];
