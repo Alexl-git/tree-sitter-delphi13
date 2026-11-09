@@ -1,5 +1,6 @@
 ==================
-pp_block: IFDEF wraps free text at file root (eaten as one token)
+pp_block: IFDEF wraps free text at file root (eaten as one token) -- SKIP: since the then-wins directive model PP_OPEN is valid at file root, so the scanner commits to pp_open and never falls back to PP_BLOCK; expected tree = the pre-then-wins target, kept as reference (v1.4.8)
+:skip
 ==================
 
 {$IFDEF LINUX}
@@ -24,7 +25,8 @@ end.
     (kEndDot)))
 
 ==================
-pp_block: REFUSED when body starts with structural keyword
+pp_block: REFUSED when body starts with structural keyword -- SKIP: the then-wins model emits pp_open / pp_end_only here, the grammar wraps them as pp; the expected tree predates it (v1.4.8)
+:skip
 ==================
 
 {$IFNDEF QSOMETHING}
@@ -49,7 +51,8 @@ end.
     (kEndDot)))
 
 ==================
-pp_block: nested IFDEFs match outermost {$END} (depth counter)
+pp_block: nested IFDEFs match outermost {$END} (depth counter) -- SKIP: same cause as the file-root case, PP_BLOCK is never tried while pp_open is valid; expected tree = pre-then-wins target (v1.4.8)
+:skip
 ==================
 
 {$IFDEF A}

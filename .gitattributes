@@ -1,0 +1,11 @@
+# tree-sitter generate writes LF; keep its output verbatim so a generate leaves a clean tree
+# (149 GR left EOL-only rewrites of src/tree_sitter/*.h; core.autocrlf=true on the build box).
+# Hand-written files (grammar.js, scanner.c, tests, docs) keep the default text handling.
+src/parser.c -text
+src/grammar.json -text
+src/node-types.json -text
+src/tree_sitter/*.h -text
+pure/src/parser.c -text
+pure/src/grammar.json -text
+pure/src/node-types.json -text
+pure/src/tree_sitter/*.h -text
