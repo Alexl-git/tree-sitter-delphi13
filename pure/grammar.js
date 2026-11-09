@@ -83,7 +83,11 @@ function pp($, ...rule) {
 				...rule,
 				repeat(seq(
 					alias(/\{\$else[^}]*\}/i, $.pp),
-					...rule
+					// An {$ELSE} branch may hold no code at all (RTL System.Math DivMod,
+					// GetExceptionMask: `{$ELSE OTHERCPU} {$MESSAGE Fatal ..} {$ENDIF}` after
+					// the last body); without optional() the whole routine was an ERROR
+					// and the pure parser never closed the unit (150 GR2).
+					optional(seq(...rule))
 				)),
 				alias(/\{\$end[^}]*\}/i, $.pp)
 			),
@@ -438,6 +442,8 @@ module.exports = grammar({
 		[$.rttiAttributes],
 		[$.declArg],
 		[$.declString, $.declFieldNoSemi],
+		// 150 GR2: the bare kString element of _arrayElemNoSemi vs declString (`array of string = ...`).
+		[$.declString, $._arrayElemNoSemi],
 		// The following conflict rules are only needed because "public" can be
 		// a visibility or an attribute. *sigh*
 		// TODO: We would probably avoid this by having separate decl* clauses
@@ -1664,6 +1670,10 @@ module.exports = grammar({
 			$.declSet,
 			$.declProcRef,
 			$.declClass,
+			// 150 GR2: bare `string` as the element of a no-`;` last array field
+			// (JVCL JvSIMDUtils `Names: array [0..3] of string end`); the bare
+			// keyword only, as in declFieldNoSemi -- `string[N]` keeps its `;` form.
+			$.kString,
 		),
 
 		declField:       $ =>  seq(

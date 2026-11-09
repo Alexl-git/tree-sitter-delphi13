@@ -70,3 +70,92 @@ end.
         body: (block (kBegin) (kEnd))))
     (kEnd)
     (kEndDot)))
+
+==================
+three bodies under IF / ELSEIF / ELSEIF and an empty ELSE branch holding only a directive (System.Math GetExceptionMask, pure grammar)
+==================
+unit U;
+interface
+implementation
+function G: Integer;
+{$IF Defined(A)}
+var
+  M: Integer;
+begin
+  Result := 1;
+end;
+{$ELSEIF Defined(B)}
+begin
+  Result := 2
+end;
+{$ELSEIF Defined(C)}
+begin
+  Result := 3
+end;
+{$ELSE OTHERCPU}
+  {$MESSAGE Fatal 'x'}
+{$ENDIF OTHERCPU}
+procedure After;
+begin
+end;
+end.
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kFunction)
+          (identifier)
+          (typeref
+            (identifier)))
+        (pp)
+        (declVars
+          (kVar)
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier)))))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalNumber))
+          (kEnd))
+        (pp)
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalNumber))
+          (kEnd))
+        (pp)
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalNumber))
+          (kEnd))
+        (pp)
+        (pp)
+        (pp))
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
