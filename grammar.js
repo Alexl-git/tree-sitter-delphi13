@@ -449,6 +449,8 @@ module.exports = grammar({
 		// the ambiguity so tree-sitter's GLR keeps both forks and resolves by
 		// which completes: `string end` -> no-semi, `string[N];` -> declField.
 		[$.declString, $.declFieldNoSemi],
+		// 150 GR2: the bare kString element of _arrayElemNoSemi vs declString (`array of string = ...`).
+		[$.declString, $._arrayElemNoSemi],
 		// Iter 2026-07-06: per-name param attributes in a comma-shared group
 		// (`const [REF] A, [REF] B: T`) make consecutive rttiAttributes runs and
 		// the two declArg branches ambiguous at the group boundary; let GLR resolve.
@@ -1786,6 +1788,10 @@ module.exports = grammar({
 			$.declSet,
 			$.declProcRef,
 			$.declClass,
+			// 150 GR2: bare `string` as the element of a no-`;` last array field
+			// (JVCL JvSIMDUtils `Names: array [0..3] of string end`); the bare
+			// keyword only, as in declFieldNoSemi -- `string[N]` keeps its `;` form.
+			$.kString,
 		),
 
 		declField:       $ =>  seq(

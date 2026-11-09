@@ -1,0 +1,102 @@
+==================
+record: the last field without `;` is an array of bare string (JvSIMDUtils)
+==================
+unit U;
+interface
+type
+  R = record
+    A: Integer;
+    B: array [0..3] of string
+  end;
+implementation
+end.
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declFieldNoSemi
+                (identifier)
+                (declArray
+                  (kArray)
+                  (range
+                    (literalNumber)
+                    (literalNumber))
+                  (kOf)
+                  (type
+                    (kString))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+record: an array of string[N] field keeps its `;` form (control)
+==================
+unit U;
+interface
+type
+  R = record
+    A: array [0..3] of string[10];
+    B: Integer;
+  end;
+implementation
+end.
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (declArray
+                    (kArray)
+                    (range
+                      (literalNumber)
+                      (literalNumber))
+                    (kOf)
+                    (type
+                      (declString
+                        (kString)
+                        (literalNumber))))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
