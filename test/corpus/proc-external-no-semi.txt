@@ -143,31 +143,168 @@ end.
     (kEndDot)))
 
 ================================================================================
-external without semicolon: library only stays an error
-:error
+external without semicolon: library only (identifier and string), before the next routine and before end
 ================================================================================
 
 unit u;
 interface
 implementation
 function B: Integer; external lib
-function C: Integer; external lib;
+function C: Integer; external 'k32'
+procedure D; external lib
+
 end.
 
 --------------------------------------------------------------------------------
 
-
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (declProc
+        (kFunction)
+        (identifier)
+        (typeref
+          (identifier))
+        (procExternal
+          (kExternal)
+          (identifier)))
+      (declProc
+        (kFunction)
+        (identifier)
+        (typeref
+          (identifier))
+        (procExternal
+          (kExternal)
+          (literalString)))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier))))
+    (kEnd)
+    (kEndDot)))
 
 ================================================================================
-external without semicolon: index form stays an error
-:error
+external without semicolon: index form, number and constant identifier
 ================================================================================
 
 unit u;
 interface
 implementation
 function B: Integer; external lib index 5
-function C: Integer; external lib;
+function C: Integer; external 'k32' index IdxC
+function D: Integer; external lib;
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (declProc
+        (kFunction)
+        (identifier)
+        (typeref
+          (identifier))
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kIndex)
+          (literalNumber)))
+      (declProc
+        (kFunction)
+        (identifier)
+        (typeref
+          (identifier))
+        (procExternal
+          (kExternal)
+          (literalString)
+          (kIndex)
+          (identifier)))
+      (declProc
+        (kFunction)
+        (identifier)
+        (typeref
+          (identifier))
+        (procExternal
+          (kExternal)
+          (identifier))))
+    (kEnd)
+    (kEndDot)))
+
+================================================================================
+external without semicolon: name given by a constant identifier
+================================================================================
+
+unit u;
+interface
+implementation
+procedure B; external lib name NameB
+procedure C; external 'k32' name NameC
+procedure D; external lib name 'D1';
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kName)
+          (identifier)))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (literalString)
+          (kName)
+          (identifier)))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procExternal
+          (kExternal)
+          (identifier)
+          (kName)
+          (literalString))))
+    (kEnd)
+    (kEndDot)))
+
+================================================================================
+external without semicolon: a bare external with no library still needs its semicolon
+:error
+================================================================================
+
+unit u;
+interface
+implementation
+procedure B; external
+procedure C; external;
 end.
 
 --------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-delphi13",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Tree-sitter grammar focused on Delphi 13 (RAD Studio 37.0)",
   "main": "bindings/node",
   "types": "bindings/node",
@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tree-sitter generate && node-gyp build",
     "build-wasm": "tree-sitter build --wasm -o tree-sitter-delphi13.wasm .",
-    "test": "tree-sitter test && tree-sitter parse examples/* --quiet --time",
+    "test": "node tools/check-corpus-tail.js && tree-sitter test && tree-sitter parse examples/* --quiet --time",
     "install": "node-gyp-build",
     "validate-queries": "node tools/validate-queries.js",
     "prebuildify": "prebuildify --napi --strip"

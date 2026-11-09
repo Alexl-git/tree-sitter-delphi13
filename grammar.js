@@ -494,13 +494,20 @@ module.exports = grammar({
 			[$._declProc ], [ $._declOperator], [$.declConst], [$.declVar],
 			[$.declType], [$.declProp]
 		),
-		// `external L name 'x'` without `;` before `[`: an attribute on the next
-		// declaration, or an index on the string. One token too few; GLR decides.
+		// `external L name 'x'` / `name Ident` / `index N` / `external L` without `;`
+		// before `[`: an attribute on the next declaration, or an index on the
+		// string / identifier / library expression. One token too few; GLR decides.
 		[$._literal, $.procExternal],
+		[$._ref, $.procExternal],
+		// `external L` without `;` in a var block or a class body, then a field named
+		// `Index` or `Name` (soft keywords): the lenient `index`/`name` clause or the next
+		// declaration -- `:` one token later decides.
+		[$.procExternal],
 		// RTTI attributes clash with fpc declaration hints syntax since both
-		// are surrounded by brackets.
+		// are surrounded by brackets. (`declProcFwd` left this list in v1.4.7:
+		// `tree-sitter generate` reported it as an unnecessary conflict since v1.4.3.)
 		...enable_if(rtti,
-			[ $.declProcFwd ], [ $.declVars], [ $.declConsts ], [ $.declTypes]
+			[ $.declVars], [ $.declConsts ], [ $.declTypes]
 		),
 		// `procedure (` could be a declaration of an anonymous procedure or
 		// the call of a function named "procedure" (which doesn't actually
@@ -2080,16 +2087,20 @@ module.exports = grammar({
 			'[', optional(seq($.identifier, ':')), delimited($._ref), ']'
 		)),
 
-		// The closing `;` may be omitted after `name '<string>'`: dcc accepts it and Borland
+		// The closing `;` may be omitted after the last clause: dcc accepts it and Borland
 		// shipped it (Delphi 5 shlobj.pas, five `function X; external shell32 name 'X'` lines
-		// before the next routine or `end.`). Deliberately only that form: an optional `;`
-		// after every clause puts ALL declaration starts in the follow set of `_expr` here
-		// and grows the parser by 16% states (measured). A `[` after the string forks (see conflicts).
+		// before the next routine or `end.`; v1.4.7 widens the lenient tail to `external L`,
+		// `external L index N` and `external L name Ident`). Deliberately narrow: the lenient
+		// `name`/`index` argument is ONE token (string, number or identifier), not `_expr` --
+		// an optional `;` after every clause puts ALL declaration starts in the follow set of
+		// `_expr` here and grows the parser by 16% states (measured, 146 b2). A `[` after the
+		// lenient tail forks: an attribute on the next declaration or an index on the
+		// argument (see conflicts).
 		procExternal:    $ => seq(
 			$.kExternal,
-			optional($._expr),
 			choice(
 				seq(
+					optional($._expr),
 					optional(seq(choice($.kName, $.kIndex), $._expr)),
 					...enable_if(delphi, optional($.kDelayed)),
 					// Phase 3b iter 17: native library dependency hint
@@ -2103,7 +2114,11 @@ module.exports = grammar({
 					)),
 					';'
 				),
-				seq($.kName, $.literalString)
+				// Lenient tails (no `;`): `name 'X'` (146 b2), `name Ident`, `index N` (149 GR).
+				seq(optional($._expr), choice($.kName, $.kIndex), choice($.literalString, $.literalNumber, $.identifier)),
+				// `external L` alone, no `;` (149 GR). Its own alternative (the library is
+				// required here) so a bare `external` with no library still needs its `;`.
+				$._expr
 			)
 		),
 

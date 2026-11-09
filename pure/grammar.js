@@ -450,10 +450,15 @@ module.exports = grammar({
 		// `external L name 'x'` without `;` before `[`: an attribute on the next
 		// declaration, or an index on the string. One token too few; GLR decides.
 		[$._literal, $.procExternal],
+		[$._ref, $.procExternal],
+		// `external L` without `;` in a var block or a class body, then a field named
+		// `Index` or `Name` (soft keywords): the lenient `index`/`name` clause or the next
+		// declaration -- `:` one token later decides.
+		[$.procExternal],
 		// RTTI attributes clash with fpc declaration hints syntax since both
 		// are surrounded by brackets.
 		...enable_if(rtti,
-			[ $.declProcFwd ], [ $.declVars], [ $.declConsts ], [ $.declTypes]
+			[ $.declVars], [ $.declConsts ], [ $.declTypes]
 		),
 		// `procedure (` could be a declaration of an anonymous procedure or
 		// the call of a function named "procedure" (which doesn't actually
@@ -1088,7 +1093,14 @@ module.exports = grammar({
 			// the rest of the unit). prec(-1): a routine header followed by `asm`
 			// is always that routine's body: asmOrphan's prec(-1) makes `procedure P;
 			// asm..end;` reduce the body (asmTr) before this rule can shift its `;`.
-			alias($.asmOrphan, $.asm)
+			alias($.asmOrphan, $.asm),
+			// A `begin ... end;` with no header, same origin (the second body of a
+			// routine under another {$IFDEF}; this grammar sees raw directives as
+			// comments, so RTL System.Math has dozens). The prec(-1) blockTr recovery
+			// above took the block but left its `;` as an ERROR (and the whole rest
+			// of the unit on System.Math). prec(-1) as for asmOrphan: after a routine
+			// header the body reduces (blockTr) before this rule can shift its `;`.
+			alias($.blockOrphan, $.block)
 		),
 
 		// A single bracketed attribute that applies to a module-level target
@@ -1101,6 +1113,8 @@ module.exports = grammar({
 		// The orphan `asm ... end;` of _definition (see there). Its own rule so the
 		// precedence sits on the reduce that competes with a routine body.
 		asmOrphan: $ => prec(-1, seq($.kAsm, optional($.asmBody), $.kEnd, ';')),
+		// The orphan `begin ... end;` of _definition (see there), pure grammar only.
+		blockOrphan: $ => prec(-1, seq($.kBegin, optional(tr($,'_statements')), $.kEnd, ';')),
 
 		defProc:         $ => seq(
 			/*pp($,*/ field('header', $.declProc)/*)*/,
@@ -1927,16 +1941,20 @@ module.exports = grammar({
 			'[', optional(seq($.identifier, ':')), delimited($._ref), ']'
 		)),
 
-		// The closing `;` may be omitted after `name '<string>'`: dcc accepts it and Borland
+		// The closing `;` may be omitted after the last clause: dcc accepts it and Borland
 		// shipped it (Delphi 5 shlobj.pas, five `function X; external shell32 name 'X'` lines
-		// before the next routine or `end.`). Deliberately only that form: an optional `;`
-		// after every clause puts ALL declaration starts in the follow set of `_expr` here
-		// and grows the parser by 16% states (measured). A `[` after the string forks (see conflicts).
+		// before the next routine or `end.`; v1.4.7 widens the lenient tail to `external L`,
+		// `external L index N` and `external L name Ident`). Deliberately narrow: the lenient
+		// `name`/`index` argument is ONE token (string, number or identifier), not `_expr` --
+		// an optional `;` after every clause puts ALL declaration starts in the follow set of
+		// `_expr` here and grows the parser by 16% states (measured, 146 b2). A `[` after the
+		// lenient tail forks: an attribute on the next declaration or an index on the
+		// argument (see conflicts).
 		procExternal:    $ => seq(
 			$.kExternal,
-			optional($._expr),
 			choice(
 				seq(
+					optional($._expr),
 					optional(seq(choice($.kName, $.kIndex), $._expr)),
 					...enable_if(delphi, optional($.kDelayed)),
 					// Phase 3b iter 17: native library dependency hint
@@ -1950,7 +1968,11 @@ module.exports = grammar({
 					)),
 					';'
 				),
-				seq($.kName, $.literalString)
+				// Lenient tails (no `;`): `name 'X'` (146 b2), `name Ident`, `index N` (149 GR).
+				seq(optional($._expr), choice($.kName, $.kIndex), choice($.literalString, $.literalNumber, $.identifier)),
+				// `external L` alone, no `;` (149 GR). Its own alternative (the library is
+				// required here) so a bare `external` with no library still needs its `;`.
+				$._expr
 			)
 		),
 

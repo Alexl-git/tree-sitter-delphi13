@@ -1,0 +1,72 @@
+==================
+a begin-end body with no header after a routine (third body under a further IFDEF, pure grammar)
+==================
+unit U;
+interface
+implementation
+procedure P;
+{$IFNDEF X86ASM}
+{$IFDEF EXTENDEDIS10BYTES}
+begin
+end;
+{$ELSE  EXTENDEDIS10BYTES}
+begin
+end;
+{$ENDIF EXTENDEDIS10BYTES}
+{$ELSE X86ASM}
+begin
+  Q;
+end;
+{$ENDIF X86ASM}
+procedure Q;
+begin
+end;
+end.
+---
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        header: (declProc (kProcedure) name: (identifier))
+        (pp)
+        (pp)
+        body: (block (kBegin) (kEnd))
+        (pp)
+        body: (block (kBegin) (kEnd))
+        (pp))
+      (pp)
+      (block (kBegin) (statement (identifier)) (kEnd))
+      (pp)
+      (defProc
+        header: (declProc (kProcedure) name: (identifier))
+        body: (block (kBegin) (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+a routine whose body is begin-end keeps it as its body (control)
+==================
+unit U;
+interface
+implementation
+procedure P;
+begin
+end;
+end.
+---
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        header: (declProc (kProcedure) name: (identifier))
+        body: (block (kBegin) (kEnd))))
+    (kEnd)
+    (kEndDot)))

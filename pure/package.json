@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-delphi13-pure",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Pure Delphi 13 tree-sitter sub-grammar — drops {$IFDEF}/pp_* tokens entirely and expects preprocessor-resolved source as input. Pairs with delphi13-preprocessor to reach 99%+ pass on real Delphi 13 corpora.",
   "main": "bindings/node",
   "types": "bindings/node",
@@ -30,6 +30,7 @@
   "scripts": {
     "build": "tree-sitter generate && node-gyp build",
     "build-wasm": "tree-sitter build --wasm -o tree-sitter-delphi13_pure.wasm .",
+    "test": "node ../tools/check-corpus-tail.js test/corpus && tree-sitter test",
     "install": "node-gyp-build",
     "prebuildify": "prebuildify --napi --strip"
   },
