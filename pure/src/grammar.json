@@ -5380,40 +5380,53 @@
                     "type": "CHOICE",
                     "members": [
                       {
-                        "type": "SYMBOL",
-                        "name": "typeref"
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "SYMBOL",
+                                "name": "typeref"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declMetaClass"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declEnum"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declSet"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declArray"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declFile"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declString"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declProcRef"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "declClass"
+                              }
+                            ]
+                          }
+                        ]
                       },
                       {
-                        "type": "SYMBOL",
-                        "name": "declMetaClass"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "declEnum"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "declSet"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "declArray"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "declFile"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "declString"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "declProcRef"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "declClass"
+                        "type": "BLANK"
                       }
                     ]
                   }
@@ -6516,51 +6529,64 @@
                         "value": "pp"
                       },
                       {
-                        "type": "FIELD",
-                        "name": "local",
-                        "content": {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "SYMBOL",
-                              "name": "_definitions"
-                            },
-                            {
-                              "type": "BLANK"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "FIELD",
-                        "name": "body",
-                        "content": {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "ALIAS",
-                              "content": {
-                                "type": "SYMBOL",
-                                "name": "blockTr"
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "FIELD",
+                                "name": "local",
+                                "content": {
+                                  "type": "CHOICE",
+                                  "members": [
+                                    {
+                                      "type": "SYMBOL",
+                                      "name": "_definitions"
+                                    },
+                                    {
+                                      "type": "BLANK"
+                                    }
+                                  ]
+                                }
                               },
-                              "named": true,
-                              "value": "block"
-                            },
-                            {
-                              "type": "ALIAS",
-                              "content": {
-                                "type": "SYMBOL",
-                                "name": "asmTr"
+                              {
+                                "type": "FIELD",
+                                "name": "body",
+                                "content": {
+                                  "type": "CHOICE",
+                                  "members": [
+                                    {
+                                      "type": "ALIAS",
+                                      "content": {
+                                        "type": "SYMBOL",
+                                        "name": "blockTr"
+                                      },
+                                      "named": true,
+                                      "value": "block"
+                                    },
+                                    {
+                                      "type": "ALIAS",
+                                      "content": {
+                                        "type": "SYMBOL",
+                                        "name": "asmTr"
+                                      },
+                                      "named": true,
+                                      "value": "asm"
+                                    }
+                                  ]
+                                }
                               },
-                              "named": true,
-                              "value": "asm"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "STRING",
-                        "value": ";"
+                              {
+                                "type": "STRING",
+                                "value": ";"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "BLANK"
+                          }
+                        ]
                       }
                     ]
                   }
@@ -10051,6 +10077,10 @@
         {
           "type": "SYMBOL",
           "name": "declClass"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kString"
         }
       ]
     },
@@ -13669,6 +13699,10 @@
     [
       "declString",
       "declFieldNoSemi"
+    ],
+    [
+      "declString",
+      "_arrayElemNoSemi"
     ],
     [
       "_literal",

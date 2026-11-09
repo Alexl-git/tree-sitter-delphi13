@@ -9354,6 +9354,10 @@
           "named": true
         },
         {
+          "type": "kString",
+          "named": true
+        },
+        {
           "type": "pp",
           "named": true
         },

@@ -10087,6 +10087,10 @@
         {
           "type": "SYMBOL",
           "name": "declClass"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kString"
         }
       ]
     },
@@ -13694,6 +13698,10 @@
     [
       "declString",
       "declFieldNoSemi"
+    ],
+    [
+      "declString",
+      "_arrayElemNoSemi"
     ],
     [
       "rttiAttributes"
