@@ -257,7 +257,7 @@ function statements(trailing) {
 			seq($._expr, ...semicolon),
 		)],
 
-		[rn('goto'),        $ => seq($.kGoto, $.identifier, ...semicolon)],
+		[rn('goto'),        $ => seq($.kGoto, choice($.identifier, $.literalNumber), ...semicolon)],
 
 		[rn('_statement'),   $ => choice(
 			...semicolon,
@@ -670,7 +670,9 @@ module.exports = grammar({
 			optional(seq(':', field('type', $.typeref))),
 			'=', field('value', $._expr)
 		),
-		label:           $ => seq($.identifier, ':'),
+		// A label is an identifier or, as in standard Pascal, a number:
+		// `label 99;` ... `goto 99;` ... `99:` (GExperts formatter tests).
+		label:           $ => seq(choice($.identifier, $.literalNumber), ':'),
 		caseLabel:       $ => seq(delimited1(choice($._expr, $.range)), ':'),
 
 		_statements:     $ => repeat1(choice($.varDef, $._statement,  $.label)),
@@ -1558,7 +1560,7 @@ module.exports = grammar({
 		),
 
 		declLabels:      $ => seq($.kLabel, delimited1($.declLabel), ';'),
-		declLabel:       $ => field('name', $.identifier),
+		declLabel:       $ => field('name', choice($.identifier, $.literalNumber)),
 
 		declExport:      $ => seq($._genericName, repeat(seq(choice($.kName, $.kIndex), $._expr))),
 
