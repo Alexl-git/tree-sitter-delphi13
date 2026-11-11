@@ -1,0 +1,83 @@
+==================
+code page string types: the string and its code page are one node (System.pas shapes)
+==================
+
+unit U;
+interface
+type
+  UTF8String = type _AnsiString(65001);
+  RawByteString = type _AnsiString($ffff);
+  W = type AnsiString(CP_WINANSI);
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (kType)
+          (declStringCodePage
+            (identifier)
+            (literalNumber)))
+        (declType
+          (identifier)
+          (kEq)
+          (kType)
+          (declStringCodePage
+            (identifier)
+            (literalNumber)))
+        (declType
+          (identifier)
+          (kEq)
+          (kType)
+          (declStringCodePage
+            (identifier)
+            (identifier)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+type string is unchanged (regression guard)
+==================
+
+unit U;
+interface
+type
+  TName = type string;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (kType)
+          (type
+            (declString
+              (kString))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

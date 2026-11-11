@@ -9,7 +9,6 @@
 
 ; Types:  type TFoo = class ... end;
 (declType
-  (kType)? @context
   name: [(identifier) (genericDot) (genericTpl)] @name) @item
 
 ; Routines in the interface section and standalone declarations:
