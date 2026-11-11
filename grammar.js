@@ -1537,8 +1537,24 @@ module.exports = grammar({
 			//   const allocatedCount : 0..MaxAllocEntries = 0;
 			//   const Element : 0..MaxSet absolute Value;
 			// (fibplus Zutil, Raize CodeSiteLogging patterns.)
-			optional(seq(':', field('type', choice($.type, $.subrangeType)))),
-			field('defaultValue', $.defaultValue),
+			choice(
+				seq(
+					optional(seq(':', field('type', choice($.type, $.subrangeType)))),
+					field('defaultValue', $.defaultValue),
+				),
+				// A procedural typed const with a calling convention before
+				// its `=`, as declVar's "Phase 3b iter 13" takes for a var:
+				//   adler32 : function(...): LongWord; cdecl = System.ZLib.adler32;
+				// (Indy 10.7 IdZLibHeaders.)
+				seq(
+					':', field('type', $.type), ';',
+					choice(
+						$.kStdcall, $.kCdecl, $.kSafecall, $.kPascal,
+						$.kRegister, $.kWinapi, $.kInline
+					),
+					field('defaultValue', $.defaultValue),
+				),
+			),
 			// Declaration hints before the terminating ';':
 			//   const X = 'foo' deprecated 'use Y instead';
 			//   const Y = 1 platform;
