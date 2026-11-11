@@ -1,0 +1,123 @@
+==================
+goto label straight before end (mORMot2 mormot.core.unicode PosExIPas shape)
+==================
+
+unit A;
+interface
+implementation
+function F(N: Integer): Integer;
+label quit;
+begin
+  Result := 1;
+  if N > 0 then
+    goto quit;
+  Result := 2;
+quit:
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kFunction)
+          (identifier)
+          (declArgs
+            (declArg
+              (identifier)
+              (type
+                (typeref
+                  (identifier)))))
+          (typeref
+            (identifier)))
+        (declLabels
+          (kLabel)
+          (declLabel
+            (identifier)))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalNumber))
+          (if
+            (kIf)
+            (exprBinary
+              (identifier)
+              (kGt)
+              (literalNumber))
+            (kThen)
+            (goto
+              (kGoto)
+              (identifier)))
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalNumber))
+          (label
+            (identifier))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+goto label straight before finally
+==================
+
+unit A;
+interface
+implementation
+procedure P;
+label done;
+begin
+  try
+    goto done;
+  done:
+  finally
+  end;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (declLabels
+          (kLabel)
+          (declLabel
+            (identifier)))
+        (block
+          (kBegin)
+          (try
+            (kTry)
+            (statements
+              (goto
+                (kGoto)
+                (identifier))
+              (label
+                (identifier)))
+            (kFinally)
+            (kEnd))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

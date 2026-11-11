@@ -676,7 +676,9 @@ module.exports = grammar({
 		_statements:     $ => repeat1(choice($.varDef, $._statement,  $.label)),
 		_statementsTr:   $ => seq(
 			repeat(choice($._statement, $.label)),
-			choice(tr($,'_statement'), $._statement)
+			// Trailing item may be a statement OR a bare label, as in pure:
+			//   quit: end;   (mORMot2 mormot.core.unicode PosExIPas)
+			choice(tr($,'_statement'), $._statement, $.label)
 		),
 
 		statements:      $ => $._statements,
