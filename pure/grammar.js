@@ -364,6 +364,10 @@ module.exports = grammar({
 	word: $ => $.identifier,
 
 	conflicts: $ => [
+		// 2026-11-11 (wave 152b O9): a visibility word right after a section
+		// start (`private Published: Word;`) may be a field NAME (follow `:`)
+		// or the next section start; GLR forks, the follow token decides.
+		[$.declSection],
 		// Phase 3 (pure): `package ... contains <units>; <defs> end.` has
 		// optional _definitions before AND after declContains. GLR forks
 		// on which slot absorbs a given definition.
@@ -1694,6 +1698,15 @@ module.exports = grammar({
 				// `Operator` as a FIELD NAME (JVCL JvXmlDatabase). Mirrors the
 				// root full grammar's fix (2026-07-17).
 				alias($.kOperator, $.identifier),
+				// 2026-11-11 (wave 152b O9): a visibility word as a FIELD NAME
+				// (D5 SysUtils TFileRec `Private: array[1..28] of Byte;`, legal before
+				// records had sections). The kX token otherwise opens a declSection;
+				// GLR splits on the follow token (`:` / `,` -> field). Same narrow
+				// one-keyword alias as kRegister / kOperator above.
+				alias($.kPrivate, $.identifier),
+				alias($.kProtected, $.identifier),
+				alias($.kPublic, $.identifier),
+				alias($.kPublished, $.identifier),
 				// 2026-10-31: `record Platform, Config: string;`, later Stdcall/Cdecl.
 				$._dirName,
 			))),

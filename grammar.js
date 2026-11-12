@@ -391,6 +391,10 @@ module.exports = grammar({
 	word: $ => $.identifier,
 
 	conflicts: $ => [
+		// 2026-11-11 (wave 152b O9): a visibility word right after a section
+		// start (`private Published: Word;`) may be a field NAME (follow `:`)
+		// or the next section start; GLR forks, the follow token decides.
+		[$.declSection],
 		// Anonymous record/class types in type position conflict with the
 		// type-declaration form (`type Foo = record ... end;`). Both reach
 		// declClass but at different parser states.
@@ -1820,6 +1824,15 @@ module.exports = grammar({
 				// on the follow token (`:` -> field, operator-name -> class
 				// operator). Same narrow one-keyword alias as kRegister above.
 				alias($.kOperator, $.identifier),
+				// 2026-11-11 (wave 152b O9): a visibility word as a FIELD NAME
+				// (D5 SysUtils TFileRec `Private: array[1..28] of Byte;`, legal before
+				// records had sections). The kX token otherwise opens a declSection;
+				// GLR splits on the follow token (`:` / `,` -> field). Same narrow
+				// one-keyword alias as kRegister / kOperator above.
+				alias($.kPrivate, $.identifier),
+				alias($.kProtected, $.identifier),
+				alias($.kPublic, $.identifier),
+				alias($.kPublished, $.identifier),
 				// 2026-10-31: `record Platform, Config: string;`, a first field
 				// named Abstract/Sealed/Helper, a later one named Stdcall/Cdecl.
 				$._dirName,

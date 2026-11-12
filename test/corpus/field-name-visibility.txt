@@ -1,0 +1,213 @@
+==================
+visibility word as a record field name after a prior field (D5 SysUtils TFileRec)
+==================
+
+unit A;
+interface
+type
+  TFileRec = packed record
+    Handle: Integer;
+    Private: array[1..28] of Byte;
+    UserData: array[1..32] of Byte;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kPacked)
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (declArray
+                    (kArray)
+                    (range
+                      (literalNumber)
+                      (literalNumber))
+                    (kOf)
+                    (type
+                      (typeref
+                        (identifier))))))
+              (declField
+                (identifier)
+                (type
+                  (declArray
+                    (kArray)
+                    (range
+                      (literalNumber)
+                      (literalNumber))
+                    (kOf)
+                    (type
+                      (typeref
+                        (identifier))))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+visibility words as record field names, first field and comma list
+==================
+
+unit A;
+interface
+type
+  TFirst = record
+    Private: Integer;
+    Public, Protected: Byte;
+    Published: Word;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+visibility sections still open sections; a field named Private inside a protected section (control)
+==================
+
+unit A;
+interface
+type
+  TCtl = record
+  private
+    F: Integer;
+  public
+    G: Integer;
+  end;
+  TObj = class
+  private
+    FPrivate: Integer;
+  protected
+    Private: Integer;
+  published
+    property P: Integer read FPrivate;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kRecord)
+              (declSection
+                (kPrivate)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (declSection
+                (kPublic)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (kEnd))))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (declSection
+                (kPrivate)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (declSection
+                (kProtected)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (declSection
+                (kPublished)
+                (declProp
+                  (kProperty)
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))
+                  (kRead)
+                  (identifier)))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
