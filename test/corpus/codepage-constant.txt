@@ -24,8 +24,9 @@ end.
           (identifier)
           (kEq)
           (kType)
-          (identifier)
-          (identifier))))
+          (declStringCodePage
+            (identifier)
+            (identifier)))))
     (implementation
       (kImplementation))
     (kEnd)

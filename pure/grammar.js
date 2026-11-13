@@ -1267,10 +1267,12 @@ module.exports = grammar({
 					// argument — `UTF8String = type _AnsiString(65001);`
 					// and `RawByteString = type _AnsiString($ffff);`
 					// (System.pas RTL pattern).
-					seq($.kType, $.identifier, '(', $._literalInt, ')'),
 					// the code page a named constant: `type AnsiString(CP_WINANSI)`
 					// (mORMot's mormot.core.base)
-					seq($.kType, $.identifier, '(', $.identifier, ')'),
+					// The string type and its code page are one node, as `type string`
+					// is `kType` then one `type`: before, the `type` field held the
+					// keyword, the name and both brackets, and the code page no node.
+					seq($.kType, $.declStringCodePage),
 				)
 			),
 			// Ported from root v1.1.x: trailing hint directive on a type alias,
@@ -1524,6 +1526,14 @@ module.exports = grammar({
 			$.kString,
 			optional(seq('[', choice($._expr), ']'))
 		)),
+		// A string type with a code page, after `type` in a type declaration:
+		// `AnsiString(65001)`, `_AnsiString($ffff)`, `AnsiString(CP_WINANSI)`.
+		declStringCodePage: $ => seq(
+			field('base', $.identifier),
+			'(',
+			field('codePage', choice(alias($._literalInt, $.literalNumber), $.identifier)),
+			')'
+		),
 
 		declProcRef:     $ => prec.right(1,seq(
 			optional(seq($.kReference, $.kTo)),
