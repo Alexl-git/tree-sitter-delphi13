@@ -1,0 +1,154 @@
+==================
+numeric labels (GExperts formatter testfile_label.pas shape)
+==================
+
+unit A;
+interface
+implementation
+procedure P(N: Integer);
+label 99, 7, Done;
+begin
+  if N > 1 then
+    goto 7;
+  if N > 0 then
+    goto 99;
+  goto Done;
+7: N := 3;
+Done:
+99: N := 4;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier)
+          (declArgs
+            (declArg
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))))
+        (declLabels
+          (kLabel)
+          (declLabel
+            (literalNumber))
+          (declLabel
+            (literalNumber))
+          (declLabel
+            (identifier)))
+        (block
+          (kBegin)
+          (if
+            (kIf)
+            (exprBinary
+              (identifier)
+              (kGt)
+              (literalNumber))
+            (kThen)
+            (goto
+              (kGoto)
+              (literalNumber)))
+          (if
+            (kIf)
+            (exprBinary
+              (identifier)
+              (kGt)
+              (literalNumber))
+            (kThen)
+            (goto
+              (kGoto)
+              (literalNumber)))
+          (goto
+            (kGoto)
+            (identifier))
+          (label
+            (literalNumber))
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalNumber))
+          (label
+            (identifier))
+          (label
+            (literalNumber))
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalNumber))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+case with numeric arm labels stays a case (regression guard)
+==================
+
+unit A;
+interface
+implementation
+procedure P(x: Integer);
+begin
+  case x of
+    1: x := 2;
+    2: x := 3;
+  end;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier)
+          (declArgs
+            (declArg
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))))
+        (block
+          (kBegin)
+          (case
+            (kCase)
+            (identifier)
+            (kOf)
+            (caseCase
+              (caseLabel
+                (literalNumber))
+              (assignment
+                (identifier)
+                (kAssign)
+                (literalNumber)))
+            (caseCase
+              (caseLabel
+                (literalNumber))
+              (assignment
+                (identifier)
+                (kAssign)
+                (literalNumber)))
+            (kEnd))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
