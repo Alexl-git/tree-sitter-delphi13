@@ -511,6 +511,10 @@ module.exports = grammar({
 		// `Index` or `Name` (soft keywords): the lenient `index`/`name` clause or the next
 		// declaration -- `:` one token later decides.
 		[$.procExternal],
+		// RINC2 (v1.4.12): a header at the include root is a defProc's header or a
+		// bare lenient header; the token after its `;` decides.
+		[$.declProc, $.declProcInc],
+		[$._declProc, $._declProcLenient],
 		// RTTI attributes clash with fpc declaration hints syntax since both
 		// are surrounded by brackets. (`declProcFwd` left this list in v1.4.7:
 		// `tree-sitter generate` reported it as an unnecessary conflict since v1.4.3.)
@@ -539,7 +543,18 @@ module.exports = grammar({
 				// low-precedence catch-all token; linters can flag the node.
 				optional($.trailingText),
 			),
-			$._definitions // For include files
+			$._incDefinitions // For include files
+		)),
+
+		// Include-file root (RINC2 / OQ17, v1.4.12). An include pasted into an
+		// INTERFACE section holds bare routine headers (`procedure P;`, no body,
+		// no forward/external): `_definition` has no such form, so the file was
+		// always an ERROR and recovery lost the last paramless header before EOF.
+		// Include root and headerless program only (not `_definition`, which also
+		// feeds a routine's local section), and prec(-1) so a header followed by a body stays a defProc.
+		_incDefinitions: $ => repeat1(choice(
+			$._definition,
+			prec(-1, alias($.declProcInc, $.declProc)),
 		)),
 
 		// Everything from the first non-blank char after the module's final
@@ -554,8 +569,14 @@ module.exports = grammar({
 
 		program:            $ => seq(
 			// The header is optional: `begin end.` is a whole program to dcc.
-			optional(seq($.kProgram, $.moduleName, ';')),
-			optional($._definitions),
+			// RINC2 (v1.4.12): without a header the definitions are the include root's
+			// `_incDefinitions` -- one symbol for both, so a headerless program and an
+			// include file share every state until `begin` (a separate symbol forked them
+			// from the first token and made error recovery on failing files worse).
+			choice(
+				seq($.kProgram, $.moduleName, ';', optional($._definitions)),
+				optional($._incDefinitions),
+			),
 			// Phase 3b iter 34: CIL/.NET attribute on program entry (`[STAThread]`).
 			// (UnitTests4Net.dpr Delphi.NET pattern.)
 			optional($.rttiAttributes),
@@ -1478,6 +1499,16 @@ module.exports = grammar({
 			...enable_if(rtti, optional($.rttiAttributes)),
 			choice($._declProcLenient, $._declOperator),
 		),
+
+		// The include-root bare header (RINC2, see _incDefinitions): declProcLenient with
+		// dynamic precedence -1, so when GLR keeps both readings any reading without a bare
+		// header wins (`procedure R; procedure Outer; procedure Inner; begin end; begin end;`
+		// is R + one defProc, not three headers and two orphan blocks). Its own multi-symbol
+		// rule: prec.dynamic on a one-symbol alias inside repeat1(choice) was not counted.
+		declProcInc: $ => prec.dynamic(-1, seq(
+			...enable_if(rtti, optional($.rttiAttributes)),
+			choice($._declProcLenient, $._declOperator),
+		)),
 
 		declVar:         $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),

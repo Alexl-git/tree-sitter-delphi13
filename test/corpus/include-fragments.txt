@@ -1,0 +1,184 @@
+================================================================================
+Include fragment: bare routine headers after a type section (RINC2)
+================================================================================
+type
+  TFoo = class
+  end;
+
+procedure P;
+function F: Integer;
+
+--------------------------------------------------------------------------------
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      (identifier)
+      (kEq)
+      (type
+        (declClass
+          (kClass)
+          (kEnd)))))
+  (declProc
+    (kProcedure)
+    (identifier))
+  (declProc
+    (kFunction)
+    (identifier)
+    (typeref
+      (identifier))))
+
+================================================================================
+Include fragment: the last paramless header before EOF is kept (RINC2)
+================================================================================
+type
+  TFoo = class
+  end;
+
+procedure P;
+
+--------------------------------------------------------------------------------
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      (identifier)
+      (kEq)
+      (type
+        (declClass
+          (kClass)
+          (kEnd)))))
+  (declProc
+    (kProcedure)
+    (identifier)))
+
+================================================================================
+Include fragment: bare headers with directives, args and a result (RINC2)
+================================================================================
+procedure P; stdcall;
+procedure Q(A: Integer); overload;
+function F: Integer;
+procedure Z;
+
+--------------------------------------------------------------------------------
+
+(root
+  (declProc
+    (kProcedure)
+    (identifier)
+    (procAttribute
+      (kStdcall)))
+  (declProc
+    (kProcedure)
+    (identifier)
+    (declArgs
+      (declArg
+        (identifier)
+        (type
+          (typeref
+            (identifier)))))
+    (procAttribute
+      (kOverload)))
+  (declProc
+    (kFunction)
+    (identifier)
+    (typeref
+      (identifier)))
+  (declProc
+    (kProcedure)
+    (identifier)))
+
+================================================================================
+Include fragment: a bare header before a routine with a nested routine (RINC2)
+================================================================================
+procedure R;
+procedure Outer;
+  procedure Inner;
+  begin end;
+begin end;
+
+--------------------------------------------------------------------------------
+
+(root
+  (declProc
+    (kProcedure)
+    (identifier))
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (defProc
+      (declProc
+        (kProcedure)
+        (identifier))
+      (block
+        (kBegin)
+        (kEnd)))
+    (block
+      (kBegin)
+      (kEnd))))
+
+================================================================================
+Include fragment control: a header with a body stays a defProc, forward stays forward
+================================================================================
+procedure P; begin end;
+procedure Q; forward;
+procedure R(A: Integer); external 'x.dll';
+
+--------------------------------------------------------------------------------
+
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (block
+      (kBegin)
+      (kEnd)))
+  (declProc
+    (kProcedure)
+    (identifier)
+    (kForward))
+  (declProc
+    (kProcedure)
+    (identifier)
+    (declArgs
+      (declArg
+        (identifier)
+        (type
+          (typeref
+            (identifier)))))
+    (procExternal
+      (kExternal)
+      (literalString))))
+
+================================================================================
+Include fragment control: a headerless program is still a program
+================================================================================
+procedure P;
+begin
+end;
+
+begin
+  P;
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (program
+    (defProc
+      (declProc
+        (kProcedure)
+        (identifier))
+      (block
+        (kBegin)
+        (kEnd)))
+    (block
+      (kBegin)
+      (statement
+        (identifier))
+      (kEnd))
+    (kEndDot)))
