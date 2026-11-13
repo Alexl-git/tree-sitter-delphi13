@@ -184,6 +184,15 @@ See [DISTRIBUTION.md](DISTRIBUTION.md) for the state of editor integrations.
 
 - **Inline `asm` blocks** treated as opaque text by design. Not tree-sitter-asm.
 - **`{$IF declared(SymName)}`** always evaluates to `false` — no symbol table. ~10 corpus files use this. A lightweight symbol pre-scan would address most cases.
+- **Conditional alternatives that are not interchangeable.** The master grammar reads the
+  `THEN` branch and skips `{$ELSE}`...`{$ENDIF}` as one `pp_else_tail` node, so a file whose
+  `THEN` branch does not fit the code after the directive has no single-grammar parse. One
+  shape is recovered: `{$IFDEF X} TFoo = class(TOther); {$ELSE} TFoo = class(TBase) {$ENDIF}`
+  followed by a body that starts with a visibility section (`protected ... end;`) gives the
+  short class of the `THEN` branch and the members as a sibling `classBodyOrphan` node, not
+  an `ERROR` -- the header they belong to is in the skipped branch. A body that starts with
+  a field or method, and other asymmetric alternatives, still need the preprocessor
+  pipeline, which resolves the directives for one define set before `-pure` parses.
 - **Include resolution** is nearest-first (same directory, its subdirectories, then
   up to 3 parent levels with their subdirectories — v1.1.0 of the preprocessor).
   Arbitrary project search paths still need the `includePaths` option.

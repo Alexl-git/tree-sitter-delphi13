@@ -1,0 +1,221 @@
+==================
+class body after conditional alternatives, the THEN one a complete short class (GExperts GX_IdeDock, issue 4)
+==================
+
+unit U;
+interface
+type
+{$IFDEF X}
+  TFoo = class(TOther);
+{$ELSE}
+  TFoo = class(TBase)
+{$ENDIF}
+  protected
+    FA: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (pp_open)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (typeref
+                (identifier)))))
+        (pp_else_tail)
+        (classBodyOrphan
+          (declSection
+            (kProtected)
+            (declField
+              (identifier)
+              (type
+                (typeref
+                  (identifier)))))
+          (kEnd))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+control: both alternatives are short classes, a real declaration follows
+==================
+
+unit U;
+interface
+type
+{$IFDEF X}
+  TFoo = class(TOther);
+{$ELSE}
+  TFoo = class(TBase);
+{$ENDIF}
+  TBar = class(TFoo)
+  protected
+    FA: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (pp_open)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (typeref
+                (identifier)))))
+        (pp_else_tail)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (typeref
+                (identifier))
+              (declSection
+                (kProtected)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+control: both alternatives open the body
+==================
+
+unit U;
+interface
+type
+{$IFDEF X}
+  TFoo = class(TOther)
+{$ELSE}
+  TFoo = class(TBase)
+{$ENDIF}
+  protected
+    FA: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (pp_open)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (typeref
+                (identifier))
+              (pp_else_tail)
+              (declSection
+                (kProtected)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+control: a type section nested in a class, then a visibility section
+==================
+
+unit U;
+interface
+type
+  TFoo = class
+  type
+    TInner = class(TObject);
+  private
+    FA: Integer;
+  end;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declClass
+              (kClass)
+              (declTypes
+                (kType)
+                (declType
+                  (identifier)
+                  (kEq)
+                  (type
+                    (declClass
+                      (kClass)
+                      (typeref
+                        (identifier))))))
+              (declSection
+                (kPrivate)
+                (declField
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (kEnd))))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))

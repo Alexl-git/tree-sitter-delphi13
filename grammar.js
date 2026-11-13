@@ -515,7 +515,7 @@ module.exports = grammar({
 		// are surrounded by brackets. (`declProcFwd` left this list in v1.4.7:
 		// `tree-sitter generate` reported it as an unnecessary conflict since v1.4.3.)
 		...enable_if(rtti,
-			[ $.declVars], [ $.declConsts ], [ $.declTypes]
+			[ $.declVars], [ $.declConsts ], [ $.declTypes], [ $._declTypesNested ]
 		),
 		// `procedure (` could be a declaration of an anonymous procedure or
 		// the call of a function named "procedure" (which doesn't actually
@@ -1271,7 +1271,10 @@ module.exports = grammar({
 			$.declUses, $.declLabels, $.declExports
 		)),
 		_classDeclarations: $ => repeat1(choice(
-			$.declTypes, $.declVars, $.declConsts, $.declProc, $.declProp
+			// Nested type section: no classBodyOrphan here (see there) -- inside a
+			// class a visibility word after a type section starts the next section.
+			alias($._declTypesNested, $.declTypes),
+			$.declVars, $.declConsts, $.declProc, $.declProp
 		)),
 
 		defaultValue:    $ => seq($.kEq, $._initializer),
@@ -1317,8 +1320,22 @@ module.exports = grammar({
 
 		declTypes:       $ => seq(
 			$.kType,
-			repeat($.declType)
+			// 2026-11-13 (issue 4): classBodyOrphan, see there.
+			repeat(choice($.declType, $.classBodyOrphan))
 		),
+
+		_declTypesNested: $ => seq($.kType, repeat($.declType)),
+
+		// A class body with no header in a type section. THEN-wins reads
+		//   {$IFDEF X} TFoo = class(TOther); {$ELSE} TFoo = class(TBase) {$ENDIF}
+		//     protected ... end;
+		// as the complete short class of the THEN branch; the header that opens
+		// the body sits in the skipped ELSE branch (GExperts GX_IdeDock). The
+		// members are kept as a sibling of that declType instead of an ERROR.
+		// Narrow on purpose: it must start with a visibility section, which no
+		// type declaration can, and it is not offered in a type section nested
+		// in a class (_declTypesNested), where that word starts the next section.
+		classBodyOrphan: $ => seq(repeat1($.declSection), $.kEnd, ';'),
 
 		declVars:        $ => seq(
 			optional($.kClass),
