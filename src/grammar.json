@@ -49,7 +49,7 @@
             },
             {
               "type": "SYMBOL",
-              "name": "_definitions"
+              "name": "_incDefinitions"
             }
           ]
         },
@@ -57,6 +57,31 @@
           "type": "BLANK"
         }
       ]
+    },
+    "_incDefinitions": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "_definition"
+          },
+          {
+            "type": "PREC",
+            "value": -1,
+            "content": {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "declProcInc"
+              },
+              "named": true,
+              "value": "declProc"
+            }
+          }
+        ]
+      }
     },
     "trailingText": {
       "type": "TOKEN",
@@ -89,23 +114,32 @@
                 {
                   "type": "STRING",
                   "value": ";"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "_definitions"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
                 }
               ]
             },
             {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_definitions"
-            },
-            {
-              "type": "BLANK"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_incDefinitions"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             }
           ]
         },
@@ -7926,6 +7960,40 @@
         }
       ]
     },
+    "declProcInc": {
+      "type": "PREC_DYNAMIC",
+      "value": -1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "rttiAttributes"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_declProcLenient"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_declOperator"
+              }
+            ]
+          }
+        ]
+      }
+    },
     "declVar": {
       "type": "SEQ",
       "members": [
@@ -14074,6 +14142,14 @@
     ],
     [
       "procExternal"
+    ],
+    [
+      "declProc",
+      "declProcInc"
+    ],
+    [
+      "_declProc",
+      "_declProcLenient"
     ],
     [
       "declVars"
