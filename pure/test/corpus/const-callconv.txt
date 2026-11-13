@@ -1,0 +1,129 @@
+==================
+procedural typed const with a calling convention before its = (Indy 10.7 IdZLibHeaders shape)
+==================
+
+unit A;
+interface
+const
+  adler32 : function(adler: LongWord; buf: PByte; len: Cardinal): LongWord; cdecl = System.ZLib.adler32;
+  G : function(A: Integer): Integer; stdcall = nil;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (type
+            (declProcRef
+              (kFunction)
+              (declArgs
+                (declArg
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier))))
+                (declArg
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier))))
+                (declArg
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (typeref
+                (identifier))))
+          (kCdecl)
+          (defaultValue
+            (kEq)
+            (exprDot
+              (exprDot
+                (identifier)
+                (kDot)
+                (identifier))
+              (kDot)
+              (identifier))))
+        (declConst
+          (identifier)
+          (type
+            (declProcRef
+              (kFunction)
+              (declArgs
+                (declArg
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (typeref
+                (identifier))))
+          (kStdcall)
+          (defaultValue
+            (kEq)
+            (kNil)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
+
+==================
+procedural typed const without a convention is unchanged (regression guard)
+==================
+
+unit A;
+interface
+const
+  F : function(A: Integer): Integer = nil;
+  N : Integer = 1;
+implementation
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declConsts
+        (kConst)
+        (declConst
+          (identifier)
+          (type
+            (declProcRef
+              (kFunction)
+              (declArgs
+                (declArg
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (typeref
+                (identifier))))
+          (defaultValue
+            (kEq)
+            (kNil)))
+        (declConst
+          (identifier)
+          (type
+            (typeref
+              (identifier)))
+          (defaultValue
+            (kEq)
+            (literalNumber)))))
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
