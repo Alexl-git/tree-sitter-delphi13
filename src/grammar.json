@@ -7122,24 +7122,28 @@
       ]
     },
     "classBodyOrphan": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "REPEAT1",
-          "content": {
+      "type": "PREC_DYNAMIC",
+      "value": -1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "REPEAT1",
+            "content": {
+              "type": "SYMBOL",
+              "name": "declSection"
+            }
+          },
+          {
             "type": "SYMBOL",
-            "name": "declSection"
+            "name": "kEnd"
+          },
+          {
+            "type": "STRING",
+            "value": ";"
           }
-        },
-        {
-          "type": "SYMBOL",
-          "name": "kEnd"
-        },
-        {
-          "type": "STRING",
-          "value": ";"
-        }
-      ]
+        ]
+      }
     },
     "declVars": {
       "type": "SEQ",
