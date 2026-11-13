@@ -1,0 +1,120 @@
+==================
+goto label at the start of an if-else's then (mORMot2 mormot.core.variants shape)
+==================
+
+unit A;
+interface
+implementation
+procedure P(A: Boolean);
+label hdr;
+begin
+  if A then
+hdr: WriteLn('hdr')
+  else
+    goto hdr;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier)
+          (declArgs
+            (declArg
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))))
+        (declLabels
+          (kLabel)
+          (declLabel
+            (identifier)))
+        (block
+          (kBegin)
+          (ifElse
+            (kIf)
+            (identifier)
+            (kThen)
+            (label
+              (identifier))
+            (statement
+              (exprCall
+                (identifier)
+                (exprArgs
+                  (literalString))))
+            (kElse)
+            (goto
+              (kGoto)
+              (identifier)))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
+
+==================
+if-else whose then has no label is unchanged (regression guard)
+==================
+
+unit A;
+interface
+implementation
+procedure P(A: Boolean);
+begin
+  if A then
+    WriteLn('a')
+  else
+    WriteLn('b');
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier)
+          (declArgs
+            (declArg
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))))
+        (block
+          (kBegin)
+          (ifElse
+            (kIf)
+            (identifier)
+            (kThen)
+            (statement
+              (exprCall
+                (identifier)
+                (exprArgs
+                  (literalString))))
+            (kElse)
+            (statement
+              (exprCall
+                (identifier)
+                (exprArgs
+                  (literalString)))))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

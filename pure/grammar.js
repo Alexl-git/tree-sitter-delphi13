@@ -129,9 +129,11 @@ function statements(trailing) {
 
 		// Dynamic precedence +1, as exprIf's is -1: where both read the same
 		// text, the statement wins (see exprIf).
+		// The then may start with a body label, as the else may:
+		// `if A then hdr: X else goto hdr` (mORMot2 mormot.core.variants).
 		[rn('ifElse'),      $ => prec.dynamic(1, prec.right(1, seq(
 			$.kIf, field('condition', $._expr), $.kThen,
-			field('then', optional(choice(tr($,'_statement'), $.if))),
+			field('then', optional(seq(bodyLabel($), choice(tr($,'_statement'), $.if)))),
 			$.kElse,
 			field('else', lastStatement($))
 		)))],
