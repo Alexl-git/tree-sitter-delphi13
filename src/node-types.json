@@ -838,6 +838,25 @@
     }
   },
   {
+    "type": "classBodyOrphan",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "declSection",
+          "named": true
+        },
+        {
+          "type": "kEnd",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "constInline",
     "named": true,
     "fields": {
@@ -1494,6 +1513,10 @@
           "named": true
         },
         {
+          "type": "kCdecl",
+          "named": true
+        },
+        {
           "type": "kDeprecated",
           "named": true
         },
@@ -1506,6 +1529,10 @@
           "named": true
         },
         {
+          "type": "kInline",
+          "named": true
+        },
+        {
           "type": "kLibrary",
           "named": true
         },
@@ -1514,11 +1541,31 @@
           "named": true
         },
         {
+          "type": "kPascal",
+          "named": true
+        },
+        {
           "type": "kPlatform",
           "named": true
         },
         {
+          "type": "kRegister",
+          "named": true
+        },
+        {
+          "type": "kSafecall",
+          "named": true
+        },
+        {
+          "type": "kStdcall",
+          "named": true
+        },
+        {
           "type": "kTrue",
+          "named": true
+        },
+        {
+          "type": "kWinapi",
           "named": true
         },
         {
@@ -2472,6 +2519,10 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "literalNumber",
             "named": true
           }
         ]
@@ -3692,6 +3743,36 @@
     }
   },
   {
+    "type": "declStringCodePage",
+    "named": true,
+    "fields": {
+      "base": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "codePage": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "literalNumber",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "declType",
     "named": true,
     "fields": {
@@ -3728,14 +3809,6 @@
         "required": true,
         "types": [
           {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
             "type": "declClass",
             "named": true
           },
@@ -3748,7 +3821,7 @@
             "named": true
           },
           {
-            "type": "identifier",
+            "type": "declStringCodePage",
             "named": true
           },
           {
@@ -3877,6 +3950,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "classBodyOrphan",
+          "named": true
+        },
         {
           "type": "declType",
           "named": true
@@ -6883,6 +6960,10 @@
         {
           "type": "kGoto",
           "named": true
+        },
+        {
+          "type": "literalNumber",
+          "named": true
         }
       ]
     }
@@ -7299,7 +7380,7 @@
         ]
       },
       "then": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -7340,6 +7421,10 @@
           },
           {
             "type": "ifElse",
+            "named": true
+          },
+          {
+            "type": "label",
             "named": true
           },
           {
@@ -7649,6 +7734,10 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "literalNumber",
           "named": true
         }
       ]
