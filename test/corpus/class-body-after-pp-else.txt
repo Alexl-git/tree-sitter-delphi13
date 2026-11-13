@@ -219,3 +219,69 @@ end.
       (kImplementation))
     (kEnd)
     (kEndDot)))
+
+==================
+control: after an error, a variant record field in a class of a nested type section, then a visibility section (System.Types TMultiWaitEvent)
+==================
+
+  end;
+type
+  TMultiWaitEvent = class abstract
+  protected type
+    TMultiWaiter = class
+      FStatus:
+        record
+          case Boolean of
+            False: (FiredEvent: Integer);
+        end;
+    end;
+  private
+  end;
+
+---
+
+(root
+  (ERROR
+    (identifier))
+  (declTypes
+    (kType)
+    (declType
+      (identifier)
+      (kEq)
+      (type
+        (declClass
+          (kClass)
+          (kAbstract)
+          (declSection
+            (kProtected)
+            (declTypes
+              (kType)
+              (declType
+                (identifier)
+                (kEq)
+                (type
+                  (declClass
+                    (kClass)
+                    (declField
+                      (identifier)
+                      (type
+                        (declClass
+                          (kRecord)
+                          (declVariant
+                            (kCase)
+                            (typeref
+                              (identifier))
+                            (kOf)
+                            (declVariantClause
+                              (caseLabel
+                                (kFalse))
+                              (declField
+                                (identifier)
+                                (type
+                                  (typeref
+                                    (identifier))))))
+                          (kEnd))))
+                    (kEnd))))))
+          (declSection
+            (kPrivate))
+          (kEnd))))))

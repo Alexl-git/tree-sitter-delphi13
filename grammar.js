@@ -1335,7 +1335,10 @@ module.exports = grammar({
 		// Narrow on purpose: it must start with a visibility section, which no
 		// type declaration can, and it is not offered in a type section nested
 		// in a class (_declTypesNested), where that word starts the next section.
-		classBodyOrphan: $ => seq(repeat1($.declSection), $.kEnd, ';'),
+		// prec.dynamic(-1): wherever a reading without the orphan also parses, that
+		// one wins (v1.4.11 gate: System.Types TMultiWaitEvent, an early-closed
+		// outer class plus an orphan was preferred after an earlier error).
+		classBodyOrphan: $ => prec.dynamic(-1, seq(repeat1($.declSection), $.kEnd, ';')),
 
 		declVars:        $ => seq(
 			optional($.kClass),
