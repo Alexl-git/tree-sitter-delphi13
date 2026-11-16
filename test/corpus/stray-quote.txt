@@ -1,0 +1,69 @@
+==================
+a double quote opens no string: the error stays where it is, the root whole
+==================
+
+program P;
+const
+  MyRec : TMyRec = (Name: "Dave");
+begin
+  Writeln(MyRec.Name);
+end.
+
+---
+
+(root
+  (program
+    (kProgram)
+    (moduleName
+      (identifier))
+    (declConsts
+      (kConst)
+      (declConst
+        (identifier)
+        (type
+          (typeref
+            (identifier)))
+        (defaultValue
+          (kEq)
+          (recInitializer
+            (recInitializerField
+              (identifier)
+              (ERROR
+                (UNEXPECTED '"'))
+              (identifier))
+            (ERROR
+              (UNEXPECTED '"'))))))
+    (block
+      (kBegin)
+      (statement
+        (exprCall
+          (identifier)
+          (exprArgs
+            (exprDot
+              (identifier)
+              (kDot)
+              (identifier)))))
+      (kEnd))
+    (kEndDot)))
+
+==================
+a quote inside an asm block is still part of its body
+==================
+
+procedure P;
+asm
+  mov al, ''''
+  cmp al, 'x'
+end;
+
+---
+
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (asm
+      (kAsm)
+      (asmBody)
+      (kEnd))))

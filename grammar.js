@@ -548,7 +548,10 @@ module.exports = grammar({
 		// NOTE: `(.|\s)*` rather than `[\s\S]*` — tree-sitter's regex engine
 		// compiles the latter to a non-greedy/empty match (token stopped after
 		// one char; observed 2026-07-16).
-		trailingText:       $ => token(prec(-2, /[^\s](.|\s)*/)),
+		// Not from a quote: a quote that opens no string (one being typed,
+		// `(Name: ');`, or a `"`) matches no other token, and this took the
+		// rest of the file as one token.
+		trailingText:       $ => token(prec(-2, /[^\s'"](.|\s)*/)),
 
 		// HIGH LEVEL ----------------------------------------------------------
 
@@ -711,36 +714,47 @@ module.exports = grammar({
 		// boundary. Alternations: any non-e/E char, e/E not followed by n/N,
 		// en/EN not followed by d/D, end immediately followed by ident-char
 		// (so it's NOT the keyword, e.g. 'endif' / 'endloop').
-		asmBody: $ => token(prec(-1, repeat1(choice(
-			// Iter 2026-07-16: consume a whole COMMENT as one chunk, so a bare
-			// `end` *inside* a comment doesn't falsely terminate the asm block.
-			//   add edi,ecx {point EDI to end of destination}   <-- AsyncPro AwFView
-			//   mov eax,1   // end of loop
-			// `{$IFDEF}`-style directives were already safe (the `end[A-Za-z0-9_]`
-			// alternative below covers `endif`), but a comment containing the bare
-			// WORD `end` was not. Brace comments do not nest in Delphi, so
-			// `[^}]*` is exact. These must precede the single-char alternatives:
-			// the lexer takes the longest match, so `{...}` wins over `[^eE]`.
-			/\{[^}]*\}/,
-			/\/\/[^\n]*/,
-			// Identifier not starting with e/E — consume as a unit so an
-			// embedded `end` substring (like in `addend` or `xchg ext`)
-			// doesn't falsely terminate the body.
-			/[a-df-zA-DF-Z_][a-zA-Z0-9_]*/,
-			// Phase 3b iter 18: local asm labels `@@end:` / `@@loop:` etc.
-			// Without this the `@@end` parses as `@@` (two `[^eE]`) + `end`
-			// (asm terminator), falsely closing the asm block.
-			// Match `@@<ident>` as one chunk so `end` after `@@` doesn't
-			// terminate.
-			/@@[a-zA-Z_][a-zA-Z0-9_]*/,
-			/@[a-zA-Z_][a-zA-Z0-9_]*/,
-			// Single-char alternatives — preserve the original e/E word-boundary
-			// detection: stop when we see the bare `end` keyword.
-			/[^eE]/,
-			/[eE][^nN]/,
-			/[eE][nN][^dD]/,
-			/[eE][nN][dD][A-Za-z0-9_]/
-		)))),
+		//
+		// The first piece may not be a quote, as trailingText may not start
+		// with one: a quote that opens no string otherwise matched only these
+		// catch-alls, and the rest of the file became one token. `single` is
+		// the single-character piece, the one that differs.
+		asmBody: $ => {
+			const pieces = single => [
+				// Iter 2026-07-16: consume a whole COMMENT as one chunk, so a bare
+				// `end` *inside* a comment doesn't falsely terminate the asm block.
+				//   add edi,ecx {point EDI to end of destination}   <-- AsyncPro AwFView
+				//   mov eax,1   // end of loop
+				// `{$IFDEF}`-style directives were already safe (the `end[A-Za-z0-9_]`
+				// alternative below covers `endif`), but a comment containing the bare
+				// WORD `end` was not. Brace comments do not nest in Delphi, so
+				// `[^}]*` is exact. These must precede the single-char alternatives:
+				// the lexer takes the longest match, so `{...}` wins over `[^eE]`.
+				/\{[^}]*\}/,
+				/\/\/[^\n]*/,
+				// Identifier not starting with e/E — consume as a unit so an
+				// embedded `end` substring (like in `addend` or `xchg ext`)
+				// doesn't falsely terminate the body.
+				/[a-df-zA-DF-Z_][a-zA-Z0-9_]*/,
+				// Phase 3b iter 18: local asm labels `@@end:` / `@@loop:` etc.
+				// Without this the `@@end` parses as `@@` (two `[^eE]`) + `end`
+				// (asm terminator), falsely closing the asm block.
+				// Match `@@<ident>` as one chunk so `end` after `@@` doesn't
+				// terminate.
+				/@@[a-zA-Z_][a-zA-Z0-9_]*/,
+				/@[a-zA-Z_][a-zA-Z0-9_]*/,
+				// Single-char alternatives — preserve the original e/E word-boundary
+				// detection: stop when we see the bare `end` keyword.
+				single,
+				/[eE][^nN]/,
+				/[eE][nN][^dD]/,
+				/[eE][nN][dD][A-Za-z0-9_]/
+			];
+			return token(prec(-1, seq(
+				choice(...pieces(/[^eE'"]/)),
+				repeat(choice(...pieces(/[^eE]/))),
+			)));
+		},
 
 		// EXPRESSIONS ---------------------------------------------------------
 
