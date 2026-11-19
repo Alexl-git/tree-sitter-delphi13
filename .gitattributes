@@ -9,3 +9,6 @@ pure/src/parser.c -text
 pure/src/grammar.json -text
 pure/src/node-types.json -text
 pure/src/tree_sitter/*.h -text
+# CRLF bytes ARE the test (line comment must not swallow the CR); never normalise.
+test/corpus/line-comment-crlf.txt -text
+pure/test/corpus/line-comment-crlf.txt -text

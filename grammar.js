@@ -2495,7 +2495,7 @@ module.exports = grammar({
 		// refusing blocks that wrap structural decls so they parse normally.
 		pp:                $ => /\{\$[^}]*\}/,
 		comment:           $ => token(choice(
-			seq('//', /.*/),
+			seq('//', /[^\r\n]*/),   // not /.*/: tree-sitter's . excludes only \n, so a CRLF file's \r ended up inside the node
 			seq('{', /([^$}][^}]*)?/, '}'),
 			/[(][*]([^*]*[*]+[^)*])*[^*]*[*]+[)]/
 		)),

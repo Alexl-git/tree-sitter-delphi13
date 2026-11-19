@@ -1,0 +1,39 @@
+================================================================================
+Line comment in a CRLF file: the node stops before the CR
+================================================================================
+
+unit uR;
+interface
+const
+  A = 1;   // note // dl:shared A
+  B = 2;   //
+implementation
+end.
+
+--------------------------------------------------------------------------------
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declConsts
+        (kConst)
+        (declConst
+          name: (identifier)
+          defaultValue: (defaultValue
+            (kEq)
+            (literalNumber)))
+        (comment)
+        (declConst
+          name: (identifier)
+          defaultValue: (defaultValue
+            (kEq)
+            (literalNumber)))))
+    (comment)
+    (implementation
+      (kImplementation))
+    (kEnd)
+    (kEndDot)))
