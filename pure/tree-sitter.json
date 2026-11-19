@@ -11,7 +11,7 @@
     }
   ],
   "metadata": {
-    "version": "1.4.13",
+    "version": "1.4.14",
     "license": "MIT",
     "description": "Pure Delphi 13 sub-tree-sitter — knows no IFDEFs"
   },
