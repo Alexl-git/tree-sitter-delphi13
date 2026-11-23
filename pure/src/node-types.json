@@ -9407,11 +9407,31 @@
           "named": true
         },
         {
+          "type": "kAnd",
+          "named": true
+        },
+        {
           "type": "kDiv",
           "named": true
         },
         {
           "type": "kMod",
+          "named": true
+        },
+        {
+          "type": "kOr",
+          "named": true
+        },
+        {
+          "type": "kShl",
+          "named": true
+        },
+        {
+          "type": "kShr",
+          "named": true
+        },
+        {
+          "type": "kXor",
           "named": true
         },
         {

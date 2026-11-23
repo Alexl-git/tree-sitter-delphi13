@@ -416,7 +416,9 @@ module.exports = grammar({
 		// Same alias set on const names (`Default = $00010203;` etc.)
 		[$.declConst],
 		// Qualified-id subrange `TFoo.Bar..TFoo.Baz` vs `_typeref` (typerefDot).
-		[$._typeref, $._subrangeBound],
+		[$._typeref, $._sbRef],
+		// `T = (N)` is an enum, `T = (N) .. 5` a subrange: decided after the `)`.
+		[$.declEnumValue, $._sbRef],
 		// Iter 58: exprTpl args narrowed to typeref — generic-arg identifier
 		// vs general expression-ref identifier conflict.
 		[$._ref, $._typeref],
@@ -1437,70 +1439,43 @@ module.exports = grammar({
 
 		// Narrow subrange specialization used only as a type-declaration RHS,
 		// to avoid the precedence/conflict cascade that `range` (uses _expr)
-		// triggers in this position. Accepts numeric literals, negative
-		// numbers, simple identifiers, and call-like `Func(arg)` forms which
-		// covers Low/High/Ord patterns.
+		// triggers in this position. See _subrangeBound.
 		subrangeType:    $ => seq(
 			$._subrangeBound, '..', $._subrangeBound
 		),
-		_subrangeBound: $ => choice(
+		// A subrange bound is a constant ordinal EXPRESSION (`0 .. N * 2`,
+		// `0 .. High(Byte) - 1`, `1 .. (A + B) div 2`). It used to be a list of
+		// corpus shapes, so each unlisted one was an ERROR (2026-11-22, M2022:
+		// `set of 1 .. MAXCOLUMNCOUNT * 2`). `_expr` is still not used here: as a
+		// type-declaration RHS it would conflict with `_typeref`, generics, `=`
+		// and `(`enum`)`. This small recursive rule covers the constant-expression
+		// subset and stays hidden and flat: the terms are direct children of
+		// subrangeType, as before.
+		_subrangeBound: $ => seq($._sbTerm, repeat(seq($._sbOp, $._sbTerm))),
+		_sbOp: $ => choice(
+			'-', '+', '*', '/', $.kDiv, $.kMod, $.kAnd, $.kOr, $.kXor, $.kShl, $.kShr,
+		),
+		_sbTerm: $ => choice(
 			// A character bound: `TDigits = '0'..'9'`, `set of 'a'..'z'`.
 			// The quoted form only; `#65` is already an integer-like bound.
 			alias(token(/'([^'\r\n]|'')*'/), $.literalString),
 			$._literalInt,
 			$._literalFloat,
-			seq('-', $._literalInt),
-			seq('+', $._literalInt),
-			// Phase 3b iter 25: `-$7FFFFFFF-1..$7FFFFFFF` (System.UITypes TColor)
-			// signed-hex with explicit binary correction: `-$N-K` / `+$N+K`.
-			seq(choice('-','+'), $._literalInt, choice('-','+'), $._literalInt),
-			// Phase 3b iter 5: `-Identifier` / `+Identifier` form for
-			// `THelpContext = -MaxInt..MaxInt` (System.Classes pattern).
-			seq('-', $.identifier),
-			seq('+', $.identifier),
-			$.identifier,
-			// Qualified identifier `TFoo.Bar` (DevExpress enum-class subrange:
-			//   TdxChartActualToolTipMode = TdxChartToolTipMode.None .. TdxChartToolTipMode.Crosshair;
-			// Narrow form: two-level only; full qualified-name uses _ref which
-			// conflicts with typerefDot in this position.)
-			seq($.identifier, '.', $.identifier),
-			seq($.identifier, '(', $.identifier, ')'),
-			// Iter 2026-07-17: nested const-expr call bound —
-			// `2 .. Succ(High(TDigitValue))` (JCL JclSysUtils TNumericSystemBase).
-			// dcc accepts any constant ordinal expression as a bound; the grammar
-			// stays with the narrow corpus-driven enumeration (a wide `_expr`
-			// bound blows the parser tables, see above), adding just the one
-			// real shape: `Ident( Ident(Ident) )`, one level of call nesting.
-			seq($.identifier, '(', seq($.identifier, '(', $.identifier, ')'), ')'),
-			// `hid - 1`, `MaxN + 2` — narrow `identifier OP integer` form for
-			// real-corpus patterns like `TNmbrRange = 0 .. hid - 1;`.
-			// Kept narrow (no full _expr) to avoid the conflict cascade hit
-			// when wider _expr was tried earlier.
-			seq($.identifier, choice('-', '+'), $._literalInt),
-			// `SizeOf(Integer) * 8 - 1`-style binary chain — narrow
-			// `ident(ident) OP int OP int` form for the DevExpress pattern
-			// `TcxContainerStyleValue = 0..SizeOf(Integer) * 8 - 1;`.
-			seq($.identifier, '(', $.identifier, ')',
-				choice('*', '/'), $._literalInt,
-				choice('-', '+'), $._literalInt),
 			// `#NN` numeric char-literal bound: `TCodeLetter = #64..#82;`.
-			// (Excluding `^X` external char_literal — narrower keeps Spring4D
-			// safe from the earlier regression.)
 			seq('#', $._literalInt),
-			// Phase 3b iter 41: parenthesized binary then trailing op + arg
-			// for `(MaxInt div SizeOf(JOCTET))-1` (Vcl.Imaging.jpeg) and
-			// `(High(Integer) - $F) div SizeOf(DWORD)` (EBorDebug). Narrow
-			// shape: paren-wrap a 3-term binary then one more op + literal-or-call.
-			seq(
-				'(',
-				choice($.identifier, seq($.identifier, '(', $.identifier, ')')),
-				choice('-', '+', '*', '/', $.kDiv, $.kMod),
-				choice($.identifier, $._literalInt, seq($.identifier, '(', $.identifier, ')')),
-				')',
-				choice('-', '+', '*', '/', $.kDiv, $.kMod),
-				choice($._literalInt, seq($.identifier, '(', $.identifier, ')')),
-			),
+			// `-MaxInt..MaxInt`, `-$7FFFFFFF-1..$7FFFFFFF`, `-(N + 1)..0`.
+			seq(choice('-', '+'), choice($._literalInt, $._sbRef, $._sbParen)),
+			$._sbRef,
+			$._sbParen,
 		),
+		// `N`, the two-level `TFoo.Bar`, and a one-argument call: Low/High/Ord/
+		// Succ/Pred/SizeOf, nested to any depth (`Succ(High(T))`).
+		_sbRef: $ => choice(
+			$.identifier,
+			seq($.identifier, '.', $.identifier),
+			seq($.identifier, '(', $._subrangeBound, ')'),
+		),
+		_sbParen: $ => seq('(', $._subrangeBound, ')'),
 
 		declProc:        $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),

@@ -1,0 +1,123 @@
+==================
+subrange bound: const expression in a type, a set and an array element (2026-11-22)
+==================
+
+type
+  TA = 1 .. N * 2;
+  TB = set of 1 .. MAXCOLUMNCOUNT * 2;
+  TC = array[0 .. N * 2] of 0 .. N + M;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (subrangeType
+        (identifier)))
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declSet
+          (kSet)
+          (kOf)
+          (subrangeType
+            (identifier)))))
+    (declType
+      name: (identifier)
+      (kEq)
+      type: (type
+        (declArray
+          (kArray)
+          (range
+            (literalNumber)
+            (exprBinary
+              lhs: (identifier)
+              operator: (kMul)
+              rhs: (literalNumber)))
+          (kOf)
+          (subrangeType
+            (identifier)
+            (identifier)))))))
+
+==================
+subrange bound: const expression in a local var section
+==================
+
+procedure P;
+var
+  Available: set of 1 .. MAXCOLUMNCOUNT * 2;
+  B: 0 .. High(Byte) - 1;
+begin
+end;
+
+---
+
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (declVars
+      (kVar)
+      (declVar
+        (identifier)
+        (type
+          (declSet
+            (kSet)
+            (kOf)
+            (subrangeType
+              (identifier)))))
+      (declVar
+        (identifier)
+        (subrangeType
+          (identifier)
+          (identifier))))
+    (block
+      (kBegin)
+      (kEnd))))
+
+==================
+subrange bound: operators, parentheses, lower bound; a one-name enum stays an enum
+==================
+
+type
+  TA = N div 2 .. (N - 1) * 2 + 1;
+  TB = 0 .. N shl 1 or 3;
+  TC = (N) .. 100;
+  TD = (N);
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      (identifier)
+      (kEq)
+      (subrangeType
+        (identifier)
+        (kDiv)
+        (identifier)))
+    (declType
+      (identifier)
+      (kEq)
+      (subrangeType
+        (identifier)
+        (kShl)
+        (kOr)))
+    (declType
+      (identifier)
+      (kEq)
+      (subrangeType
+        (identifier)))
+    (declType
+      (identifier)
+      (kEq)
+      (type
+        (declEnum
+          (declEnumValue
+            (identifier)))))))
